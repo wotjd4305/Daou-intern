@@ -2,12 +2,15 @@ package com.daoumarket;
 
 import static org.junit.Assert.assertEquals;
 
+import javax.transaction.Transactional;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.daoumarket.dao.ItemDao;
@@ -39,14 +42,14 @@ public class ItemTest {
 				.content(content).build();
 	}
 	
-	@Test
 	@Ignore
+	@Test
 	public void testGetCount_물건개수확인() {
 		assertEquals(itemDao.getCount(), 0);
 	}
 	
-	@Test
 	@Ignore
+	@Test
 	public void testGetItemById_id로물건가져오기() {
 		
 		long id = 1;
@@ -60,8 +63,9 @@ public class ItemTest {
 		assertEquals(expectedItem.getContent(), item.getCategory());
 	}
 	
-	@Test
 	@Ignore
+	@Rollback
+	@Test
 	public void testInsertItem_물건등록() throws Exception {
 		int nowCnt = itemDao.getCount();
 		
