@@ -19,6 +19,9 @@ const accountStore = {
   actions: {
     // Login
     postAuthData2({ commit }, info) {
+
+      router.push({name: "Home"});
+
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
           commit('SET_TOKEN', res.data, { root: true })
