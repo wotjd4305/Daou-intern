@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="item">
+
+	<select id="getItemById" parameterType="long" resultType="itemResponse">
+		select id, title, price, content, category, status, date
+		from item
+		where id = #{id}
+	</select>
+	
+	<insert id="insertItem" parameterType="itemSaveRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="item.id">
+		insert into item(user_id, title, price, category, content, date)
+		values(#{userId}, #{title}, #{price}, #{category}, #{content}, now())
+	</insert>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from item
+	</select>
+
+</mapper>
