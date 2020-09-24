@@ -25,7 +25,7 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfo("Daou Market APIs", "For Daou Market API SERVER descriptions.", "v1.0", "Daou",
-				new Contact("unithis", "http://daoumarket.daou.co.kr", "daoumarket@daou.co.kr"), "License of API", "",
+				new Contact("daou", "http://daoumarket.daou.co.kr", "daoumarket@daou.co.kr"), "License of API", "",
 				Collections.emptyList());
 	}
 }
