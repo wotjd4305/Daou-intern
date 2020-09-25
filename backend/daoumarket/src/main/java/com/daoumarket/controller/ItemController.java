@@ -3,6 +3,7 @@ package com.daoumarket.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
-import com.daoumarket.dto.ItemSaveRequest;
+import com.daoumarket.dto.ItemInsertRequestDto;
+import com.daoumarket.dto.ItemUpdateRequestDto;
 import com.daoumarket.service.IItemService;
 
 import io.swagger.annotations.ApiOperation;
@@ -40,13 +42,29 @@ public class ItemController {
 													@RequestParam String category, @RequestParam String content) {
 		log.info("ItemController : insertItem");
 		
-		ItemSaveRequest item = ItemSaveRequest.builder()
+		ItemInsertRequestDto item = ItemInsertRequestDto.builder()
 				.userId(userId)
 				.price(price)
 				.category(category)
 				.content(content).build();
 		
 		return itemService.insertItem(item);
+	}
+	
+	@PatchMapping("/item")
+	@ApiOperation("물건 정보 수정하기")
+	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequestDto item) {
+		log.info("ItemController : updateItemInfo");
+		
+		return itemService.updateItemInfo(item);
+	}
+	
+	@PatchMapping("/item")
+	@ApiOperation("물건 상태 수정하기(판매중, 예약중, 판매완료)")
+	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequestDto item) {
+		log.info("ItemController : updateItemStatus");
+		
+		return itemService.updateItemStatus(item);
 	}
 	
 	@GetMapping("/category")

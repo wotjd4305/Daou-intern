@@ -4,19 +4,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="item">
 
-	<select id="getItemById" parameterType="long" resultType="itemResponse">
+	<select id="getCount" resultType="int">
+		select count(*) from item
+	</select>
+
+	<select id="getItemById" parameterType="long" resultType="itemResponseDto">
 		select id, title, price, content, category, status, date
 		from item
 		where id = #{id}
 	</select>
 	
-	<insert id="insertItem" parameterType="itemSaveRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="item.id">
+	<insert id="insertItem" parameterType="itemInsertRequestDto" useGeneratedKeys="true" keyProperty="id" keyColumn="item.id">
 		insert into item(user_id, title, price, category, content, date)
 		values(#{userId}, #{title}, #{price}, #{category}, #{content}, now())
 	</insert>
 	
-	<select id="getCount" resultType="int">
-		select count(*) from item
-	</select>
+	<update id="updateItem" parameterType="itemUpdateRequestDto">
+		update item
+		set title=#{title}, price=#{price}, category=#{category}, content=#{content}, date=now()
+		where id=#{id}
+	</update>
+	
+	<update id="updateStatusItem" parameterType="itemUpdateRequestDto">
+		update item
+		set status=#{status}
+		where id=#{id}
+	</update>
 
 </mapper>

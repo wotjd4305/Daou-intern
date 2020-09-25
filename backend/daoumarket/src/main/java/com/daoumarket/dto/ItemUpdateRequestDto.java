@@ -6,21 +6,26 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class ItemSaveRequest {
+public class ItemUpdateRequestDto {
 	
 	long id;
-	long userId;
 	String title;
 	int price;
 	String category;
 	String content;
+	String status;
 	
 	@Builder
-	public ItemSaveRequest(long userId, String title, int price, String category, String content) {
-		this.userId = userId;
+	public ItemUpdateRequestDto(long id, String title, int price, String category, String content, String status) {
+		this.id = id;
 		this.title = title;
 		this.price = price;
 		this.category = category;
 		this.content = content;
+		this.status = status;
+	}
+	
+	public void updateStatus(String status) {
+		this.status = status;
 	}
 }

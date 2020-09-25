@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.daoumarket.dao.IItemDao;
 import com.daoumarket.dto.BasicResponse;
-import com.daoumarket.dto.ItemSaveRequest;
+import com.daoumarket.dto.ItemInsertRequestDto;
+import com.daoumarket.dto.ItemUpdateRequestDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +35,7 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> insertItem(ItemSaveRequest item) {
+	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequestDto item) {
 		
 		BasicResponse response = new BasicResponse();
 		
@@ -49,7 +50,42 @@ public class ItemService implements IItemService {
 		response.data = "저장 실패";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
+	
+	@Override
+	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequestDto item) {
+		
+		BasicResponse response = new BasicResponse();
+		
+		int result = itemDao.updateItemInfo(item);
+		if(result == 1) {
+			response.status = true;
+			response.data = "물건 정보 수정 성공";
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		
+		response.data = "물건 정보 수정 실패";
+		
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+	
+	@Override
+	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequestDto item) {
+		
+		BasicResponse response = new BasicResponse();
+		
+		int result = itemDao.updateItemStatus(item);
+		if(result == 1) {
+			response.status = true;
+			response.data = "물건 상태 수정 성공";
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		
+		response.data = "물건 상태 수정 실패";
+		
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
 
+	
 	@Override
 	public ResponseEntity<BasicResponse> getCategory() {
 		
