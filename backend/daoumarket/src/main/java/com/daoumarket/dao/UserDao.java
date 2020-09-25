@@ -42,5 +42,10 @@ public class UserDao implements IUserDao{
 		return sqlSession.selectOne(ns + "getUserLogin", dto);
 	}
 	
+	// edit user
+	@Override
+	public int updateUser(UserDto dto) {
+		return sqlSession.update(ns + "updateUser", dto);
+	}
 	
 }

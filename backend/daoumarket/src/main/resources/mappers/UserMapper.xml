@@ -15,5 +15,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getUserLogin" parameterType="userDto" resultType="userDto">
 		select * from user where num=#{num} and password=#{password}
 	</select>
+	
+	<update id="updateUser" parameterType="userDto">
+		update user set password=#{password}, department=#{department}, image=#{image} where num=#{num}
+	</update>
 
 </mapper>

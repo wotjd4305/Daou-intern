@@ -30,4 +30,10 @@ public class UserService implements IUserService {
 	public UserDto getUserLogin(UserDto dto) {
 		return userDao.getUserLogin(dto);
 	}
+	
+	// edit user
+	@Override
+	public int updateUser(UserDto dto) {
+		return userDao.updateUser(dto);
+	}
 }

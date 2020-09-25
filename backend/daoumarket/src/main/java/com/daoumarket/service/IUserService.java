@@ -9,4 +9,7 @@ public interface IUserService {
 	
 	// login
 	public UserDto getUserLogin(UserDto dto);
+	
+	// edit user
+	public int updateUser(UserDto dto);
 }

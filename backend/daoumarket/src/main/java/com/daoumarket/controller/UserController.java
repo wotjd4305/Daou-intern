@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
@@ -18,6 +20,7 @@ import com.daoumarket.util.EncodePassword;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
+@RequestMapping("/api")
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
@@ -27,7 +30,7 @@ public class UserController {
 	private final IJWTService jwtService;
 	
 	// sign up
-	@PostMapping("/api/user")
+	@PostMapping("/user")
 	@ApiOperation("회원가입")
 	public ResponseEntity<BasicResponse> insertUser(@RequestBody UserDto dto) {
 		ResponseEntity<BasicResponse> responseEntity = null;
@@ -52,7 +55,7 @@ public class UserController {
 	}
 	
 	
-	@GetMapping("/api/{num}")
+	@GetMapping("/{num}")
 	@ApiOperation("아이디 중복 체크")
 	public ResponseEntity<BasicResponse> getNum(@PathVariable long num) {
 		ResponseEntity<BasicResponse> responseEntity = null;
@@ -75,7 +78,7 @@ public class UserController {
 	}
 	
 	// login
-	@PostMapping("/api/login")
+	@PostMapping("/login")
 	@ApiOperation("로그인")
 	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody UserDto dto){
 		ResponseEntity<BasicResponse> responseEntity = null;
@@ -107,7 +110,7 @@ public class UserController {
 		return responseEntity;
 	}
 	
-	@PostMapping("/api/token")
+	@PostMapping("/token")
 	@ApiOperation("토큰 검증")
 	public ResponseEntity<BasicResponse> token(@RequestBody String accessToken){
 		ResponseEntity<BasicResponse> responseEntity = null;
@@ -134,7 +137,40 @@ public class UserController {
 		}
 		
 		return responseEntity;
+	}
+	
+	// edit user
+	@PostMapping("/edit")
+	@ApiOperation("정보수정")
+	public ResponseEntity<BasicResponse> updateUser(@RequestBody UserDto dto){
+		ResponseEntity<BasicResponse> responseEntity = null;
+		BasicResponse basicResponse = new BasicResponse();
 		
+		UserDto encodePasswordDto = EncodePassword.Encode(dto);
+		int res = userService.updateUser(encodePasswordDto);
+		
+		if (res > 0) {
+			
+			try {
+				String token = jwtService.makeJwt(encodePasswordDto);
+				
+				basicResponse.object = token;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			basicResponse.status = true;
+			basicResponse.data = "Modify";
+			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			
+		} else {
+			basicResponse.status = false;
+			basicResponse.data = "Unable to Modify";
+			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+		}
+		
+		return responseEntity;
 	}
 	
 }

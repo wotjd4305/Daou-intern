@@ -9,4 +9,7 @@ public interface IUserDao {
 	
 	// login
 	public UserDto getUserLogin(UserDto dto);
+	
+	// edit user
+	public int updateUser(UserDto dto);
 }
