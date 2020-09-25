@@ -66,12 +66,5 @@ public class ItemController {
 		
 		return itemService.updateItemStatus(item);
 	}
-	
-	@GetMapping("/category")
-	@ApiOperation("카테고리 가져오기")
-	public ResponseEntity<BasicResponse> getCategory() {
-		log.info("ItemController : getCategory");
-		
-		return itemService.getCategory();
-	}
+
 }
