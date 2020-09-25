@@ -128,12 +128,46 @@
 
     <!-- 3D 캐러셀 -->
     <div class="mt-5">
-        <carousel-3d :width="300" :height="300">
+        <carousel-3d :width="450" :height="400">
             <div v-for="(num, i) in slidesLength" :key="i">
             <slide id="carousel_card" :index="i">
-                <div class="m-3">
-                <h2 class="mb-2"> 안녕 </h2>
+                <!-- 이미지 사원설명 제품명 가격 -->
+                <div class="item-card">
+                    <!-- 이미지 -->
+                    <div class="row item-list-row-2 p-3 pl-5 pr-5">
+                         <img
+                            class="item-list-img"
+                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg"
+                            
+                            />
+                    </div>
+                    <!--/이미지 -->
+
+                    <!-- 사원 -->
+                    <div class="row pl-5 pr-5">
+                        <div class="col">
+                            <img
+                            class="item-list-profile-img"
+                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg"
+                            />
+                        </div>
+                        <div class="col">
+                                김사원 사원
+                        </div>
+                    </div>
+                    
+                    <!-- 제품명 -->
+                    <div class="row">
+                        제품명
+                    </div>
+
+                    <!-- 가격 -->
+                    <div class="row">
+                        가격
+                    </div>
+                    
                 </div>
+                 <!--/ 이미지 사원설명 제품명 가격 -->
             </slide>
             </div>
         </carousel-3d>
@@ -201,6 +235,37 @@ export default {
     font-weight: bold;
     color:#000000;
 }
+
+
+/* item */
+.item-card{
+    background-color: #f8f8f8;
+    height: 100%;
+}
+.item-list-img{
+    width: 100%;
+    height: 100%;
+}
+
+.item-list-row-2{
+    height: 70%;
+}
+
+.item-list-profile-img{
+    height: 100%;
+    width: 100%;
+}
+
+/* 케러세 중복정의 */
+.carousel-3d-slide{
+    border-radius: 5px;
+    border-width:1.5px !important;
+    border-color: #2682ba;
+    background-color : #f8f8f8 !important;
+}
+
+
+
 
 
 </style>

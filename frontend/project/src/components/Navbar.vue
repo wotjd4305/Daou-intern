@@ -3,53 +3,37 @@
 
    <!-- 채팅 사이드바 -->
     <b-sidebar id="sidebar-right" right shadow no-header>
-      <div>
-        <b-tabs class="m-3 card  vertical" align="center">
-          <b-tab title="채팅1" active>
-            asdf
-          </b-tab>
-          <b-tab title="채팅2">
-            <b-card-text>hi</b-card-text>
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          <b-tab title="채팅2">
-
-          </b-tab>
-          
-        </b-tabs>
+      <div class="col-1">
+          <div v-b-toggle.sidebar-right style="outline:none;">
+            <img
+                class=""
+                src="@/assets/img/icons8-delete-message-120.png"
+                style="width: 2rem; height: 2rem;"
+                >
+          </div>
       </div>
+      <div>
+        <b-card no-body>
+          <b-tabs pills m-3 card  class="m-3" align="center">
+              <b-tab title="채팅1">
+                <Chat/>
+              </b-tab>
+              <b-tab title="채팅2">
+                <Chat/>
+              </b-tab>
+              <b-tab title="채팅2">
+                <Chat/>
+              </b-tab>
+              <b-tab title="채팅2">
+                <Chat/>
+              </b-tab>
+              <b-tab title="채팅2">
+                <Chat/>
+              </b-tab>
+            
+          </b-tabs>
+        </b-card>
+      </div> 
     </b-sidebar>
     <!--/ 채팅 사이드바 -->
 
@@ -141,7 +125,7 @@
 
 <script>
 import ConfirmPassword from "../views/accounts/ConfirmPassword.vue";
-//import Chat from "../views/chat/Chat.vue"
+import Chat from "../views/chat/Chat.vue"
 
 export default {
   
@@ -153,7 +137,7 @@ export default {
    };
   },
   components: { ConfirmPassword,
-  //Chat
+  Chat
    },
   computed: {
     
@@ -241,4 +225,13 @@ export default {
   font-weight: bold;
   color:#ffffff
 }
+#sidebar-right ::-webkit-scrollbar {
+    background-color: #dddddd;
+    box-shadow: inset 0px 0px 5px white;  
+  }
+#sidebar-right ::-webkit-scrollbar-thumb {
+    background-color: #2682ba;
+    border-radius: 10px;
+  }
+
 </style>
