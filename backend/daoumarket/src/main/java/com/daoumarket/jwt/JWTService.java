@@ -10,7 +10,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.stereotype.Service;
 
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,27 +24,27 @@ public class JWTService implements IJWTService {
     private String secretKey = "ThisisDaouMarketSecretKeyWelcomeJwt";
     
     @Override
-    public String makeJwt(UserDto res) throws Exception {
+    public String makeJwt(User user) throws Exception {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         Date expireTime = new Date();
-        // ÅäÅ« ¸¸·á ½Ã°£ : 20ºĞ
+        // í† í° ë§Œë£Œì‹œê°„ : 20ë¶„
         expireTime.setTime(expireTime.getTime() + 1000 * 60 * 20);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
 
-        // Çì´õ¿¡ alg¿Í typ¸¦ ¼³Á¤
+        // í—¤ë”ì— algì™€ typì„ ì„¤ì •
         headerMap.put("typ","JWT");
         headerMap.put("alg","HS256");
 
         Map<String, Object> map= new HashMap<String, Object>();
 
-        long id = res.getId();
-        long num = res.getNum();
-        String name = res.getName();
-        String department = res.getDepartment();
-        String image = res.getImage();
+        long id = user.getId();
+        long num = user.getNum();
+        String name = user.getName();
+        String department = user.getDepartment();
+        String image = user.getImage();
 
         map.put("id", id);
         map.put("num", num);
@@ -61,28 +61,28 @@ public class JWTService implements IJWTService {
     }
 
     @Override
-    public UserDto checkJwt(String jwt) throws Exception {
-    	// checkJwt¸Ş¼Òµå¿¡¼­´Â try¹®¿¡¼­ ¹Ş¾Æ¿Â Jwt¸¦ ÀÌ¿ëÇÏ¿© ÆÄ½Ì
-    	UserDto dto = new UserDto();
+    public User checkJwt(String accessToken) throws Exception {
+    	// checkJwtë©§ë“œì—ì„œëŠ” tryë¬¸ì—ì„œ ë°›ì•„ì˜¨ Jwtë¥¼ ì´ìš©í•˜ì—¬ íŒŒì‹±
+    	User user = new User();
         try {
+        	// ì •ìƒìˆ˜ìƒëœë‹¤ë©´ í•´ë‹¹ í† í°ì€ ì •ìƒ í† í°ìœ¼ë¡œ ê°„ì£¼í•˜ê³  íŒŒì‹±ë˜ì§€ ì•ŠëŠ”ë‹¤ë©´ catchë¬¸ì—ì„œ ì¡íˆë„ë¡ ìˆ˜í–‰
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                    .parseClaimsJws(jwt).getBody(); // Á¤»ó ¼öÇàµÈ´Ù¸é ÇØ´ç ÅäÅ«Àº Á¤»óÅäÅ«
+                    .parseClaimsJws(accessToken).getBody(); 
 //            System.out.println("expireTime :" + claims.getExpiration());
             
-            dto.setId(Long.valueOf(claims.get("id") + ""));
-            dto.setNum(Long.valueOf(claims.get("num") + ""));
-            dto.setName((String) claims.get("name") + "");
-            dto.setDepartment((String) claims.get("department") + "");
-            dto.setImage((String) claims.get("image") + "");
+            user.setId(Long.valueOf(claims.get("id") + ""));
+            user.setNum(Long.valueOf(claims.get("num") + ""));
+            user.setName((String) claims.get("name") + "");
+            user.setDepartment((String) claims.get("department") + "");
+            user.setImage((String) claims.get("image") + "");
             
-            return dto;
+            return user;
         
-        // Á¤»óÀûÀÎ ÅäÅ«À¸·Î °£ÁÖÇÏ°í ¿©±â¼­ ÆÄ½ÌÀÌ µÇÁö ¾Ê´Â´Ù¸é catch¹® ÀâÈû
         } catch (ExpiredJwtException exception) {
-            return dto;
+            return user;
             
         } catch (JwtException exception) {
-            return dto;
+            return user;
         }
     }
 }

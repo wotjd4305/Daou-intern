@@ -1,15 +1,15 @@
 package com.daoumarket.service;
 
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 
 public interface IUserService {
 	// sign up
-	public int insertUser(UserDto dto);
-	public UserDto getNum(long num);
+	public int insertUser(User user);
+	public User getNum(long num);
 	
 	// login
-	public UserDto getUserLogin(UserDto dto);
+	public User getUserLogin(User user);
 	
 	// edit user
-	public int updateUser(UserDto dto);
+	public int updateUser(User user);
 }

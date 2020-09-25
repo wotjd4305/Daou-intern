@@ -4,7 +4,7 @@ package com.daoumarket.service;
 import org.springframework.stereotype.Service;
 
 import com.daoumarket.dao.IUserDao;
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,24 +16,24 @@ public class UserService implements IUserService {
 	
 	// sign up
 	@Override
-	public int insertUser(UserDto dto) {
-		return userDao.insertUser(dto);
+	public int insertUser(User user) {
+		return userDao.insertUser(user);
 	}
 	
 	@Override
-	public UserDto getNum(long num) {
+	public User getNum(long num) {
 		return userDao.getNum(num);
 	}
 	
 	// login
 	@Override
-	public UserDto getUserLogin(UserDto dto) {
-		return userDao.getUserLogin(dto);
+	public User getUserLogin(User user) {
+		return userDao.getUserLogin(user);
 	}
 	
 	// edit user
 	@Override
-	public int updateUser(UserDto dto) {
-		return userDao.updateUser(dto);
+	public int updateUser(User user) {
+		return userDao.updateUser(user);
 	}
 }
