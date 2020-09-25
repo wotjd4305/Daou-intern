@@ -24,27 +24,27 @@ public class JWTService implements IJWTService {
     private String secretKey = "ThisisDaouMarketSecretKeyWelcomeJwt";
     
     @Override
-    public String makeJwt(User res) throws Exception {
+    public String makeJwt(User user) throws Exception {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         Date expireTime = new Date();
-        // ��ū ���� �ð� : 20��
+        // 토큰 만료시간 : 20분
         expireTime.setTime(expireTime.getTime() + 1000 * 60 * 20);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
 
-        // ����� alg�� typ�� ����
+        // 헤더에 alg와 typ을 설정
         headerMap.put("typ","JWT");
         headerMap.put("alg","HS256");
 
         Map<String, Object> map= new HashMap<String, Object>();
 
-        long id = res.getId();
-        long num = res.getNum();
-        String name = res.getName();
-        String department = res.getDepartment();
-        String image = res.getImage();
+        long id = user.getId();
+        long num = user.getNum();
+        String name = user.getName();
+        String department = user.getDepartment();
+        String image = user.getImage();
 
         map.put("id", id);
         map.put("num", num);
@@ -61,28 +61,28 @@ public class JWTService implements IJWTService {
     }
 
     @Override
-    public User checkJwt(String jwt) throws Exception {
-    	// checkJwt�޼ҵ忡���� try������ �޾ƿ� Jwt�� �̿��Ͽ� �Ľ�
-    	User dto = new User();
+    public User checkJwt(String accessToken) throws Exception {
+    	// checkJwt멧드에서는 try문에서 받아온 Jwt를 이용하여 파싱
+    	User user = new User();
         try {
+        	// 정상수생된다면 해당 토큰은 정상 토큰으로 간주하고 파싱되지 않는다면 catch문에서 잡히도록 수행
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                    .parseClaimsJws(jwt).getBody(); // ���� ����ȴٸ� �ش� ��ū�� ������ū
+                    .parseClaimsJws(accessToken).getBody(); 
 //            System.out.println("expireTime :" + claims.getExpiration());
             
-            dto.setId(Long.valueOf(claims.get("id") + ""));
-            dto.setNum(Long.valueOf(claims.get("num") + ""));
-            dto.setName((String) claims.get("name") + "");
-            dto.setDepartment((String) claims.get("department") + "");
-            dto.setImage((String) claims.get("image") + "");
+            user.setId(Long.valueOf(claims.get("id") + ""));
+            user.setNum(Long.valueOf(claims.get("num") + ""));
+            user.setName((String) claims.get("name") + "");
+            user.setDepartment((String) claims.get("department") + "");
+            user.setImage((String) claims.get("image") + "");
             
-            return dto;
+            return user;
         
-        // �������� ��ū���� �����ϰ� ���⼭ �Ľ��� ���� �ʴ´ٸ� catch�� ����
         } catch (ExpiredJwtException exception) {
-            return dto;
+            return user;
             
         } catch (JwtException exception) {
-            return dto;
+            return user;
         }
     }
 }

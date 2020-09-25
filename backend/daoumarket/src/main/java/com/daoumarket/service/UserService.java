@@ -16,8 +16,8 @@ public class UserService implements IUserService {
 	
 	// sign up
 	@Override
-	public int insertUser(User dto) {
-		return userDao.insertUser(dto);
+	public int insertUser(User user) {
+		return userDao.insertUser(user);
 	}
 	
 	@Override
@@ -27,13 +27,13 @@ public class UserService implements IUserService {
 	
 	// login
 	@Override
-	public User getUserLogin(User dto) {
-		return userDao.getUserLogin(dto);
+	public User getUserLogin(User user) {
+		return userDao.getUserLogin(user);
 	}
 	
 	// edit user
 	@Override
-	public int updateUser(User dto) {
-		return userDao.updateUser(dto);
+	public int updateUser(User user) {
+		return userDao.updateUser(user);
 	}
 }

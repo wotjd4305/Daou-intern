@@ -31,14 +31,14 @@ public class UserController {
 	
 	// sign up
 	@PostMapping("/user")
-	@ApiOperation("ȸ������")
-	public ResponseEntity<BasicResponse> insertUser(@RequestBody User dto) {
+	@ApiOperation("회원가입")
+	public ResponseEntity<BasicResponse> insertUser(@RequestBody User user) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		User encodePasswordDto = EncodePassword.Encode(dto);
+		User encodePassword = EncodePassword.Encode(user);
 		
-		int res = userService.insertUser(encodePasswordDto);
+		int res = userService.insertUser(encodePassword);
 
 		if (res > 0) {
 			basicResponse.status = true;
@@ -56,14 +56,14 @@ public class UserController {
 	
 	
 	@GetMapping("/{num}")
-	@ApiOperation("���̵� �ߺ� üũ")
+	@ApiOperation("사번 중복 체크")
 	public ResponseEntity<BasicResponse> getNum(@PathVariable long num) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		User res = userService.getNum(num);
+		User userRes = userService.getNum(num);
 		
-		if (res == null) {
+		if (userRes == null) {
 			basicResponse.status = false;
 			basicResponse.data = "No Duplication of Employee Number";
 			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
@@ -79,15 +79,15 @@ public class UserController {
 	
 	// login
 	@PostMapping("/login")
-	@ApiOperation("�α���")
-	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody User dto){
+	@ApiOperation("로그인")
+	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody User user){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		User encodePasswordDto = EncodePassword.Encode(dto);
-		User res = userService.getUserLogin(encodePasswordDto);
+		User encodePassword = EncodePassword.Encode(user);
+		User userRes = userService.getUserLogin(encodePassword);
 		
-		if (res == null) {
+		if (userRes == null) {
 			basicResponse.status = false;
 			basicResponse.data = "Discorrect";
 			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
@@ -96,7 +96,7 @@ public class UserController {
 			basicResponse.data = "Correct";
 			
 			try {
-				String token = jwtService.makeJwt(res);
+				String token = jwtService.makeJwt(userRes);
 				
 				basicResponse.object = token;
 				
@@ -111,16 +111,16 @@ public class UserController {
 	}
 	
 	@PostMapping("/token")
-	@ApiOperation("��ū ����")
+	@ApiOperation("토큰 검증")
 	public ResponseEntity<BasicResponse> token(@RequestBody String accessToken){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
-		User jwt = null;
+		User userJwt = null;
 
 		try {
-			jwt = jwtService.checkJwt(accessToken);
+			userJwt = jwtService.checkJwt(accessToken);
 			
-			if (jwt == null) {
+			if (userJwt == null) {
 				basicResponse.status = false;
 				basicResponse.data = "Token Mismatch";
 				responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
@@ -128,7 +128,7 @@ public class UserController {
 			} else {
 				basicResponse.status = true;
 				basicResponse.data = "Token Match";
-				basicResponse.object = jwt;
+				basicResponse.object = userJwt;
 				responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
 			}
 			
@@ -141,18 +141,18 @@ public class UserController {
 	
 	// edit user
 	@PostMapping("/edit")
-	@ApiOperation("��������")
-	public ResponseEntity<BasicResponse> updateUser(@RequestBody User dto){
+	@ApiOperation("정보수정")
+	public ResponseEntity<BasicResponse> updateUser(@RequestBody User user){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		User encodePasswordDto = EncodePassword.Encode(dto);
-		int res = userService.updateUser(encodePasswordDto);
+		User encodePassword = EncodePassword.Encode(user);
+		int res = userService.updateUser(encodePassword);
 		
 		if (res > 0) {
 			
 			try {
-				String token = jwtService.makeJwt(encodePasswordDto);
+				String token = jwtService.makeJwt(encodePassword);
 				
 				basicResponse.object = token;
 				

@@ -13,18 +13,18 @@ import com.daoumarket.dto.User;
 
 public class EncodePassword {
 
-	public static User Encode(User dto) {
+	public static User Encode(User user) {
 		AES256Util aes256 = AES256Util.getInstance();
 		
 		try {
-			String encodePassword = aes256.AES_Encode(dto.getPassword());
-			dto.setPassword(encodePassword);
+			String encodePassword = aes256.AES_Encode(user.getPassword());
+			user.setPassword(encodePassword);
 			
 		} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 		}
 		
-		return dto;
+		return user;
 	}
 }
