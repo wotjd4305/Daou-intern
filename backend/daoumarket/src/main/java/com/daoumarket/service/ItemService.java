@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.daoumarket.dao.IItemDao;
 import com.daoumarket.dto.BasicResponse;
-import com.daoumarket.dto.ItemInsertRequestDto;
-import com.daoumarket.dto.ItemUpdateRequestDto;
+import com.daoumarket.dto.ItemInsertRequest;
+import com.daoumarket.dto.ItemSearchRequest;
+import com.daoumarket.dto.ItemUpdateRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,7 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequestDto item) {
+	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item) {
 		
 		BasicResponse response = new BasicResponse();
 		
@@ -52,7 +53,7 @@ public class ItemService implements IItemService {
 	}
 	
 	@Override
-	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequestDto item) {
+	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequest item) {
 		
 		BasicResponse response = new BasicResponse();
 		
@@ -65,12 +66,11 @@ public class ItemService implements IItemService {
 		}
 		
 		response.data = "물건 정보 수정 실패";
-		
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 	
 	@Override
-	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequestDto item) {
+	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequest item) {
 		
 		BasicResponse response = new BasicResponse();
 		
@@ -83,7 +83,6 @@ public class ItemService implements IItemService {
 		}
 		
 		response.data = "물건 상태 수정 실패";
-		
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -101,7 +100,66 @@ public class ItemService implements IItemService {
 		}
 		
 		response.data = "물건 삭제 실패";
-		
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<BasicResponse> getAllItems() {
+		
+		BasicResponse response = new BasicResponse();
+		
+		response.object = itemDao.getAllItems();
+		
+		if(response.object != null) {
+			response.status = true;
+			response.data = "물건 가져오기 성공";
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		
+		response.data = "물건이 존재하지 않음";
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<BasicResponse> getItemsByCategory(ItemSearchRequest search) {
+		
+		BasicResponse response = new BasicResponse();
+		
+		response.object = itemDao.getItemsByCategory(search);
+		
+		if(response.object != null) {
+			response.status = true;
+			response.data = "물건 가져오기 성공";
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		
+		response.data = "물건이 존재하지 않음";
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<BasicResponse> getItemsByKeyword(ItemSearchRequest search) {
+		
+		BasicResponse response = new BasicResponse();
+		
+		if(search.getCategory().length == 0) { // 카테고리가 선택되어 있지 않은 경우
+			response.object = itemDao.getItemsByKeyword(search);
+			if(response.object != null) {
+				response.status = true;
+				response.data = "물건 가져오기 성공";
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+			response.data = "물건이 존재하지 않음";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		} else { // 카테고리가 선택되어 있는 경우
+			response.object = itemDao.getItemsByCategoryAndKeyword(search);
+			if(response.object != null) {
+				response.status = true;
+				response.data = "물건 가져오기 성공";
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+			response.data = "물건이 존재하지 않음";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 	}
 }

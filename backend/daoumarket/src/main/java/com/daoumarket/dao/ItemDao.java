@@ -1,11 +1,14 @@
 package com.daoumarket.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.daoumarket.dto.ItemInsertRequestDto;
-import com.daoumarket.dto.ItemResponseDto;
-import com.daoumarket.dto.ItemUpdateRequestDto;
+import com.daoumarket.dto.ItemInsertRequest;
+import com.daoumarket.dto.ItemResponse;
+import com.daoumarket.dto.ItemSearchRequest;
+import com.daoumarket.dto.ItemUpdateRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,22 +25,22 @@ public class ItemDao implements IItemDao {
 	}
 	
 	@Override
-	public ItemResponseDto getItemById(long id) {
+	public ItemResponse getItemById(long id) {
 		return sqlSession.selectOne(ns + "getItemById", id);
 	}
 	
 	@Override
-	public int insertItem(ItemInsertRequestDto item) {
+	public int insertItem(ItemInsertRequest item) {
 		return sqlSession.insert(ns + "insertItem", item); 
 	}
 
 	@Override
-	public int updateItemInfo(ItemUpdateRequestDto item) {
+	public int updateItemInfo(ItemUpdateRequest item) {
 		return sqlSession.update(ns + "updateItem", item);
 	}
 
 	@Override
-	public int updateItemStatus(ItemUpdateRequestDto item) {
+	public int updateItemStatus(ItemUpdateRequest item) {
 		return sqlSession.update(ns + "updateStatusItem", item);
 	}
 
@@ -45,5 +48,26 @@ public class ItemDao implements IItemDao {
 	public int deleteItem(long id) {
 		return sqlSession.delete(ns + "deleteItem", id);
 	}
+	
+	@Override
+	public List<ItemResponse> getAllItems() {
+		return sqlSession.selectList(ns + "getAllItems");
+	}
+
+	@Override
+	public List<ItemResponse> getItemsByCategory(ItemSearchRequest search) {
+		return sqlSession.selectList(ns + "getItemsByCategory", search);
+	}
+
+	@Override
+	public List<ItemResponse> getItemsByKeyword(ItemSearchRequest search) {
+		return sqlSession.selectList(ns + "getItemsByKeyword", search);
+	}
+
+	@Override
+	public List<ItemResponse> getItemsByCategoryAndKeyword(ItemSearchRequest search) {
+		return sqlSession.selectList(ns + "getItemsByCategoryAndKeyword", search);
+	}
+	
 
 }

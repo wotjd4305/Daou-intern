@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class ItemResponseDto {
+public class ItemResponse {
 
 	long id;
 	long userId;
@@ -20,10 +20,11 @@ public class ItemResponseDto {
 	String status;
 	boolean delflag;
 	LocalDateTime date;
+	User user;
 	
 	@Builder
-	public ItemResponseDto(long id, long userId, long name, String title, int price, String category, String content,
-			String status, LocalDateTime date) {
+	public ItemResponse(long id, long userId, long name, String title, int price, String category, String content,
+			String status, LocalDateTime date, User user) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
@@ -33,5 +34,6 @@ public class ItemResponseDto {
 		this.content = content;
 		this.status = status;
 		this.date = date;
+		this.user = user;
 	}
 }

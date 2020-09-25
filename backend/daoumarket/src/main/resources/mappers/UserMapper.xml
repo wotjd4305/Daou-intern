@@ -4,19 +4,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="user">
-	<insert id="insertUser" parameterType="userDto">
+	<insert id="insertUser" parameterType="user">
 		insert into user(num, name, password, department) values(#{num}, #{name}, #{password}, #{department})
 	</insert>
 
-	<select id="getNum" parameterType="long" resultType="userDto">
+	<select id="getNum" parameterType="long" resultType="user">
 		select * from user where num=#{num}
 	</select>
 	
-	<select id="getUserLogin" parameterType="userDto" resultType="userDto">
+	<select id="getUserLogin" parameterType="user" resultType="user">
 		select * from user where num=#{num} and password=#{password}
 	</select>
 	
-	<update id="updateUser" parameterType="userDto">
+	<update id="updateUser" parameterType="user">
 		update user set password=#{password}, department=#{department}, image=#{image} where num=#{num}
 	</update>
 

@@ -2,9 +2,9 @@ package com.daoumarket;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,9 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.daoumarket.dao.IItemDao;
-import com.daoumarket.dto.ItemInsertRequestDto;
-import com.daoumarket.dto.ItemResponseDto;
-import com.daoumarket.dto.ItemUpdateRequestDto;
+import com.daoumarket.dto.ItemInsertRequest;
+import com.daoumarket.dto.ItemResponse;
+import com.daoumarket.dto.ItemSearchRequest;
+import com.daoumarket.dto.ItemUpdateRequest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -28,7 +29,7 @@ public class ItemTest {
 	private static String category = "기타";
 	private static String content = "테스트입니다";
 	
-	private static ItemInsertRequestDto item;
+	private static ItemInsertRequest item;
 	
 	@Autowired
 	private IItemDao itemDao;
@@ -36,7 +37,7 @@ public class ItemTest {
 	
 	@Before
 	public void setUp() {
-		item = ItemInsertRequestDto.builder()
+		item = ItemInsertRequest.builder()
 				.userId(userId)
 				.title(title)
 				.price(price)
@@ -67,7 +68,7 @@ public class ItemTest {
 	@Test
 	public void testGetItemById_id로물건가져오기() {
 		
-		ItemResponseDto expectedItem = itemDao.getItemById(id);
+		ItemResponse expectedItem = itemDao.getItemById(id);
 		
 		assertEquals(expectedItem.getId(), id);
 		assertEquals(expectedItem.getTitle(), item.getTitle());
@@ -84,7 +85,7 @@ public class ItemTest {
 		String category = "카테고리수정";
 		String content = "수정되었습니다";
 		
-		ItemUpdateRequestDto expectedItem = ItemUpdateRequestDto.builder()
+		ItemUpdateRequest expectedItem = ItemUpdateRequest.builder()
 				.id(id)
 				.title(title)
 				.price(price)
@@ -93,7 +94,7 @@ public class ItemTest {
 
 		itemDao.updateItemInfo(expectedItem);
 		
-		ItemResponseDto actualItem = itemDao.getItemById(id);
+		ItemResponse actualItem = itemDao.getItemById(id);
 		
 		assertEquals(expectedItem.getTitle(), actualItem.getTitle());
 		assertEquals(expectedItem.getPrice(), actualItem.getPrice());
@@ -106,7 +107,7 @@ public class ItemTest {
 	public void testUpdateStatusItem_물건상태정보수정하기() {
 		String status = "예약중";
 		
-		ItemUpdateRequestDto expectedItem = ItemUpdateRequestDto.builder()
+		ItemUpdateRequest expectedItem = ItemUpdateRequest.builder()
 				.id(id)
 				.status(status).build();
 		
@@ -128,13 +129,65 @@ public class ItemTest {
 	}
 	
 	@Ignore
-	@After
 	@Test
 	public void deleteItem_물건삭제하기() {
 		
 		itemDao.deleteItem(id);
 		
 		assertNull(itemDao.getItemById(id));
+	}
+	
+	@Ignore
+	@Test
+	public void getAllItems_모든물건가져오기() {
+		
+		List<ItemResponse> items = itemDao.getAllItems();
+		
+		assertEquals(items.size(), 2);
+	}
+	
+	@Ignore
+	@Test
+	public void getItemsByCategory_카테고리로물건들가져오기() {
+		
+		String[] category = {"디지털/가전", "가구/인테리어"};
+		
+		ItemSearchRequest search = ItemSearchRequest.builder()
+				.category(category).build();
+		
+		List<ItemResponse> items = itemDao.getItemsByCategory(search);
+		
+		assertEquals(items.size(), 2);
+	}
+	
+	@Ignore
+	@Test
+	public void getItemsByKeyword_키워드로물건가져오기() {
+		
+		String keyword = "농구";
+		
+		ItemSearchRequest search = ItemSearchRequest.builder()
+				.keyword(keyword).build();
+		
+		List<ItemResponse> items = itemDao.getItemsByKeyword(search);
+		
+		assertEquals(items.size(), 3);
+	}
+	
+	@Ignore
+	@Test
+	public void getItemsByCategoryAndKeyword_카테고리와키워드로로물건가져오기() {
+		
+		String[] category = {"스포츠/레저", "기타"};
+		String keyword = "농구";
+		
+		ItemSearchRequest search = ItemSearchRequest.builder()
+				.category(category)
+				.keyword(keyword).build();
+		
+		List<ItemResponse> items = itemDao.getItemsByCategoryAndKeyword(search);
+		
+		assertEquals(items.size(), 3);
 	}
 	
 }
