@@ -10,7 +10,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.stereotype.Service;
 
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,17 +24,17 @@ public class JWTService implements IJWTService {
     private String secretKey = "ThisisDaouMarketSecretKeyWelcomeJwt";
     
     @Override
-    public String makeJwt(UserDto res) throws Exception {
+    public String makeJwt(User res) throws Exception {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         Date expireTime = new Date();
-        // ÅäÅ« ¸¸·á ½Ã°£ : 20ºÐ
+        // ï¿½ï¿½Å« ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ : 20ï¿½ï¿½
         expireTime.setTime(expireTime.getTime() + 1000 * 60 * 20);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
 
-        // Çì´õ¿¡ alg¿Í typ¸¦ ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ algï¿½ï¿½ typï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         headerMap.put("typ","JWT");
         headerMap.put("alg","HS256");
 
@@ -61,12 +61,12 @@ public class JWTService implements IJWTService {
     }
 
     @Override
-    public UserDto checkJwt(String jwt) throws Exception {
-    	// checkJwt¸Þ¼Òµå¿¡¼­´Â try¹®¿¡¼­ ¹Þ¾Æ¿Â Jwt¸¦ ÀÌ¿ëÇÏ¿© ÆÄ½Ì
-    	UserDto dto = new UserDto();
+    public User checkJwt(String jwt) throws Exception {
+    	// checkJwtï¿½Þ¼Òµå¿¡ï¿½ï¿½ï¿½ï¿½ tryï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ Jwtï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ ï¿½Ä½ï¿½
+    	User dto = new User();
         try {
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                    .parseClaimsJws(jwt).getBody(); // Á¤»ó ¼öÇàµÈ´Ù¸é ÇØ´ç ÅäÅ«Àº Á¤»óÅäÅ«
+                    .parseClaimsJws(jwt).getBody(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È´Ù¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½Å«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å«
 //            System.out.println("expireTime :" + claims.getExpiration());
             
             dto.setId(Long.valueOf(claims.get("id") + ""));
@@ -77,7 +77,7 @@ public class JWTService implements IJWTService {
             
             return dto;
         
-        // Á¤»óÀûÀÎ ÅäÅ«À¸·Î °£ÁÖÇÏ°í ¿©±â¼­ ÆÄ½ÌÀÌ µÇÁö ¾Ê´Â´Ù¸é catch¹® ÀâÈû
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å«ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´Ù¸ï¿½ catchï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         } catch (ExpiredJwtException exception) {
             return dto;
             

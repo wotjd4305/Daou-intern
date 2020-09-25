@@ -9,11 +9,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 
 public class EncodePassword {
 
-	public static UserDto Encode(UserDto dto) {
+	public static User Encode(User dto) {
 		AES256Util aes256 = AES256Util.getInstance();
 		
 		try {

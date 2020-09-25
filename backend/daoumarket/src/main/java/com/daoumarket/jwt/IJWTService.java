@@ -1,12 +1,12 @@
 package com.daoumarket.jwt;
 
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 
 public interface IJWTService {
-	// Jwt¸¦ »ý¼ºÇØÁÖ´Â ¸Þ¼Òµå
-	public String makeJwt(UserDto res) throws Exception;
+	// Jwtï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Þ¼Òµï¿½
+	public String makeJwt(User res) throws Exception;
 	
-	// jwt°¡ ÀÎÁõµÈ ÅäÅ«ÀÎÁö °Ë»çÇÏ´Â ¸Þ¼Òµå
-	public UserDto checkJwt(String jwt) throws Exception;
+	// jwtï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å«ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼Òµï¿½
+	public User checkJwt(String jwt) throws Exception;
 
 }

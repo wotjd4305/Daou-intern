@@ -12,7 +12,7 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 import com.daoumarket.util.AES256Util;
 import com.daoumarket.util.EncodePassword;
 
@@ -27,24 +27,24 @@ public class UserDao implements IUserDao{
 
 	// sign up
 	@Override
-	public int insertUser(UserDto dto) {
+	public int insertUser(User dto) {
 		return sqlSession.insert(ns + "insertUser", dto);
 	}
 
 	@Override
-	public UserDto getNum(long num) {
+	public User getNum(long num) {
 		return sqlSession.selectOne(ns + "getNum", num);
 	}
 
 	// login
 	@Override
-	public UserDto getUserLogin(UserDto dto) {
+	public User getUserLogin(User dto) {
 		return sqlSession.selectOne(ns + "getUserLogin", dto);
 	}
 	
 	// edit user
 	@Override
-	public int updateUser(UserDto dto) {
+	public int updateUser(User dto) {
 		return sqlSession.update(ns + "updateUser", dto);
 	}
 	

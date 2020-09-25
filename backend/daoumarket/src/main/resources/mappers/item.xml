@@ -4,28 +4,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="item">
 
+	<resultMap type="user" id="user">
+		<result column="name" property="name"/>
+		<result column="image" property="image"/>
+	</resultMap>
+	
+	<resultMap type="itemResponse" id="itemResponse">
+		<result column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="title" property="title"/>
+		<result column="price" property="price"/>
+		<result column="content" property="content"/>
+		<result column="category" property="category"/>
+		<result column="status" property="status"/>
+		<result column="date" property="date"/>
+		<collection property="user" resultMap="user"/>
+	</resultMap>
+
 	<select id="getCount" resultType="int">
 		select count(*) from item
 	</select>
 
-	<select id="getItemById" parameterType="long" resultType="itemResponseDto">
-		select id, title, price, content, category, status, delflag, date
-		from item
-		where id=#{id} and delflag=0;
+	<select id="getItemById" parameterType="long" resultMap="itemResponse">
+		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		from item i, user u
+		where i.id = u.id and i.id = #{id} and delflag = 0;
 	</select>
 	
-	<insert id="insertItem" parameterType="itemInsertRequestDto" useGeneratedKeys="true" keyProperty="id" keyColumn="item.id">
+	<insert id="insertItem" parameterType="itemInsertRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="item.id">
 		insert into item(user_id, title, price, category, content, date)
 		values(#{userId}, #{title}, #{price}, #{category}, #{content}, now())
 	</insert>
 	
-	<update id="updateItem" parameterType="itemUpdateRequestDto">
+	<update id="updateItem" parameterType="itemUpdateRequest">
 		update item
 		set title=#{title}, price=#{price}, category=#{category}, content=#{content}, date=now()
 		where id=#{id}
 	</update>
 	
-	<update id="updateStatusItem" parameterType="itemUpdateRequestDto">
+	<update id="updateStatusItem" parameterType="itemUpdateRequest">
 		update item
 		set status=#{status}
 		where id=#{id}
@@ -36,5 +53,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		set delflag=1
 		where id=#{id}
 	</update>
-
+	
+	<select id="getAllItems" resultMap="itemResponse">
+		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		from item i, user u
+		where i.user_id = u.id and i.delflag = 0
+		order by date desc
+	</select>
+	
+	
+	<select id="getItemsByCategory" parameterType="itemSearchRequest" resultMap="itemResponse">
+		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		from item i, user u
+		where (i.user_id = u.id and i.delflag = 0) and category like 
+		<foreach collection="category" item="cate" separator=" or i.category like ">
+		 	concat('%', #{cate}, '%')
+		</foreach>
+		order by date desc;
+	</select>
+	
+	
+	<select id="getItemsByKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
+		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		from item i, user u
+		where (i.user_id = u.id and i.delflag = 0) and title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')
+		order by date desc;
+	</select>
+	
+	<select id="getItemsByCategoryAndKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
+		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		from item i, user u
+		where (i.user_id = u.id and i.delflag = 0) and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
+		and category like 
+		<foreach collection="category" item="cate" separator=" or i.category like ">
+		 	concat('%', #{cate}, '%')
+		</foreach>
+		order by date desc;
+	</select>
+	
 </mapper>

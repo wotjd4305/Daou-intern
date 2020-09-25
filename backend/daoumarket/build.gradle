@@ -43,13 +43,9 @@ dependencies {
 	compile group: 'commons-io', name: 'commons-io', version: '2.7'
 	compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 	
-<<<<<<< HEAD
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
 	
-	
-=======
 	testCompile group: 'org.unitils', name: 'unitils-core', version: '3.4.6'
->>>>>>> 5d2e1ceab330e71aeffb9e62859894e397c0904f
 	
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

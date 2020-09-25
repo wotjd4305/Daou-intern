@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 import com.daoumarket.jwt.IJWTService;
 import com.daoumarket.service.IUserService;
 import com.daoumarket.util.EncodePassword;
@@ -31,12 +31,12 @@ public class UserController {
 	
 	// sign up
 	@PostMapping("/user")
-	@ApiOperation("È¸¿ø°¡ÀÔ")
-	public ResponseEntity<BasicResponse> insertUser(@RequestBody UserDto dto) {
+	@ApiOperation("È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
+	public ResponseEntity<BasicResponse> insertUser(@RequestBody User dto) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		UserDto encodePasswordDto = EncodePassword.Encode(dto);
+		User encodePasswordDto = EncodePassword.Encode(dto);
 		
 		int res = userService.insertUser(encodePasswordDto);
 
@@ -56,12 +56,12 @@ public class UserController {
 	
 	
 	@GetMapping("/{num}")
-	@ApiOperation("¾ÆÀÌµð Áßº¹ Ã¼Å©")
+	@ApiOperation("ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ßºï¿½ Ã¼Å©")
 	public ResponseEntity<BasicResponse> getNum(@PathVariable long num) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		UserDto res = userService.getNum(num);
+		User res = userService.getNum(num);
 		
 		if (res == null) {
 			basicResponse.status = false;
@@ -79,13 +79,13 @@ public class UserController {
 	
 	// login
 	@PostMapping("/login")
-	@ApiOperation("·Î±×ÀÎ")
-	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody UserDto dto){
+	@ApiOperation("ï¿½Î±ï¿½ï¿½ï¿½")
+	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody User dto){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		UserDto encodePasswordDto = EncodePassword.Encode(dto);
-		UserDto res = userService.getUserLogin(encodePasswordDto);
+		User encodePasswordDto = EncodePassword.Encode(dto);
+		User res = userService.getUserLogin(encodePasswordDto);
 		
 		if (res == null) {
 			basicResponse.status = false;
@@ -111,11 +111,11 @@ public class UserController {
 	}
 	
 	@PostMapping("/token")
-	@ApiOperation("ÅäÅ« °ËÁõ")
+	@ApiOperation("ï¿½ï¿½Å« ï¿½ï¿½ï¿½ï¿½")
 	public ResponseEntity<BasicResponse> token(@RequestBody String accessToken){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
-		UserDto jwt = null;
+		User jwt = null;
 
 		try {
 			jwt = jwtService.checkJwt(accessToken);
@@ -141,12 +141,12 @@ public class UserController {
 	
 	// edit user
 	@PostMapping("/edit")
-	@ApiOperation("Á¤º¸¼öÁ¤")
-	public ResponseEntity<BasicResponse> updateUser(@RequestBody UserDto dto){
+	@ApiOperation("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
+	public ResponseEntity<BasicResponse> updateUser(@RequestBody User dto){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		UserDto encodePasswordDto = EncodePassword.Encode(dto);
+		User encodePasswordDto = EncodePassword.Encode(dto);
 		int res = userService.updateUser(encodePasswordDto);
 		
 		if (res > 0) {

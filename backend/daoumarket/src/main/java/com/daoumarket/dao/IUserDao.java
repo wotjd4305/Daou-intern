@@ -1,15 +1,15 @@
 package com.daoumarket.dao;
 
-import com.daoumarket.dto.UserDto;
+import com.daoumarket.dto.User;
 
 public interface IUserDao {
 	// sing up
-	public int insertUser(UserDto dto);
-	public UserDto getNum(long num);
+	public int insertUser(User dto);
+	public User getNum(long num);
 	
 	// login
-	public UserDto getUserLogin(UserDto dto);
+	public User getUserLogin(User dto);
 	
 	// edit user
-	public int updateUser(UserDto dto);
+	public int updateUser(User dto);
 }

@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
-import com.daoumarket.dto.ItemInsertRequestDto;
-import com.daoumarket.dto.ItemUpdateRequestDto;
+import com.daoumarket.dto.ItemInsertRequest;
+import com.daoumarket.dto.ItemSearchRequest;
+import com.daoumarket.dto.ItemUpdateRequest;
 import com.daoumarket.service.IItemService;
 
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +44,7 @@ public class ItemController {
 													@RequestParam String category, @RequestParam String content) {
 		log.info("ItemController : insertItem");
 		
-		ItemInsertRequestDto item = ItemInsertRequestDto.builder()
+		ItemInsertRequest item = ItemInsertRequest.builder()
 				.userId(userId)
 				.price(price)
 				.category(category)
@@ -54,7 +55,7 @@ public class ItemController {
 	
 	@PatchMapping("/item/info")
 	@ApiOperation("물건 정보 수정하기")
-	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequestDto item) {
+	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequest item) {
 		log.info("ItemController : updateItemInfo");
 		
 		return itemService.updateItemInfo(item);
@@ -62,7 +63,7 @@ public class ItemController {
 	
 	@PatchMapping("/item/status")
 	@ApiOperation("물건 상태 수정하기(판매중, 예약중, 판매완료)")
-	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequestDto item) {
+	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequest item) {
 		log.info("ItemController : updateItemStatus");
 		
 		return itemService.updateItemStatus(item);
@@ -74,5 +75,29 @@ public class ItemController {
 		log.info("ItemController : deleteItem");
 		
 		return itemService.deleteItem(id);
+	}
+	
+	@GetMapping("/item")
+	@ApiOperation("모든 물건 가져오기")
+	public ResponseEntity<BasicResponse> getAllItems() {
+		log.info("ItemController : getAllItems");
+		
+		return itemService.getAllItems();
+	}
+	
+	@GetMapping("/item/category")
+	@ApiOperation("선택된 카테고리의 물건 가져오기")
+	public ResponseEntity<BasicResponse> getItemsByCategory(ItemSearchRequest search) {
+		log.info("ItemController : getItemsByCategory");
+		
+		return itemService.getItemsByCategory(search);
+	}
+	
+	@GetMapping("/item/category")
+	@ApiOperation("카테고리로 물건 가져오기")
+	public ResponseEntity<BasicResponse> getItemsByKeyword(ItemSearchRequest search) {
+		log.info("ItemController : getItemsByKeyword");
+		
+		return itemService.getItemsByKeyword(search);
 	}
 }
