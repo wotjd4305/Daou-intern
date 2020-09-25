@@ -10,4 +10,5 @@ public interface IItemDao {
 	public int insertItem(ItemInsertRequestDto item);
 	public int updateItemInfo(ItemUpdateRequestDto item);
 	public int updateItemStatus(ItemUpdateRequestDto item);
+	public int deleteItem(long id);
 }

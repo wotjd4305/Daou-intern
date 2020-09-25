@@ -18,6 +18,7 @@ public class ItemResponseDto {
 	String category;
 	String content;
 	String status;
+	boolean delflag;
 	LocalDateTime date;
 	
 	@Builder

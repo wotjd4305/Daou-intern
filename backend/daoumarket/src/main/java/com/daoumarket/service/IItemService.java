@@ -11,4 +11,5 @@ public interface IItemService {
 	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequestDto item);
 	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequestDto item);
 	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequestDto item);
+	public ResponseEntity<BasicResponse> deleteItem(long id);
 }

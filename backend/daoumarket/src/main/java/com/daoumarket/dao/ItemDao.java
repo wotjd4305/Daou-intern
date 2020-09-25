@@ -40,4 +40,10 @@ public class ItemDao implements IItemDao {
 	public int updateItemStatus(ItemUpdateRequestDto item) {
 		return sqlSession.update(ns + "updateStatusItem", item);
 	}
+
+	@Override
+	public int deleteItem(long id) {
+		return sqlSession.delete(ns + "deleteItem", id);
+	}
+
 }

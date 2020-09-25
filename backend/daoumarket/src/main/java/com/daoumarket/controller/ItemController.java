@@ -2,6 +2,7 @@ package com.daoumarket.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +52,7 @@ public class ItemController {
 		return itemService.insertItem(item);
 	}
 	
-	@PatchMapping("/item")
+	@PatchMapping("/item/info")
 	@ApiOperation("물건 정보 수정하기")
 	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequestDto item) {
 		log.info("ItemController : updateItemInfo");
@@ -59,12 +60,19 @@ public class ItemController {
 		return itemService.updateItemInfo(item);
 	}
 	
-	@PatchMapping("/item")
+	@PatchMapping("/item/status")
 	@ApiOperation("물건 상태 수정하기(판매중, 예약중, 판매완료)")
 	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequestDto item) {
 		log.info("ItemController : updateItemStatus");
 		
 		return itemService.updateItemStatus(item);
 	}
-
+	
+	@DeleteMapping("/item/{id}")
+	@ApiOperation("물건 삭제하기")
+	public ResponseEntity<BasicResponse> deleteItem(long id) {
+		log.info("ItemController : deleteItem");
+		
+		return itemService.deleteItem(id);
+	}
 }

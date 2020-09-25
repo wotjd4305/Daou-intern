@@ -57,6 +57,7 @@ public class ItemService implements IItemService {
 		BasicResponse response = new BasicResponse();
 		
 		int result = itemDao.updateItemInfo(item);
+		
 		if(result == 1) {
 			response.status = true;
 			response.data = "물건 정보 수정 성공";
@@ -74,6 +75,7 @@ public class ItemService implements IItemService {
 		BasicResponse response = new BasicResponse();
 		
 		int result = itemDao.updateItemStatus(item);
+		
 		if(result == 1) {
 			response.status = true;
 			response.data = "물건 상태 수정 성공";
@@ -81,6 +83,24 @@ public class ItemService implements IItemService {
 		}
 		
 		response.data = "물건 상태 수정 실패";
+		
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<BasicResponse> deleteItem(long id) {
+		
+		BasicResponse response = new BasicResponse();
+		
+		int result = itemDao.deleteItem(id);
+		
+		if(result == 1) {
+			response.status = true;
+			response.data = "물건 삭제 성공";
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		
+		response.data = "물건 삭제 실패";
 		
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}

@@ -1,8 +1,11 @@
 package com.daoumarket;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.daoumarket.dao.ItemDao;
+import com.daoumarket.dao.IItemDao;
 import com.daoumarket.dto.ItemInsertRequestDto;
 import com.daoumarket.dto.ItemResponseDto;
 import com.daoumarket.dto.ItemUpdateRequestDto;
@@ -28,11 +31,11 @@ public class ItemTest {
 	private static ItemInsertRequestDto item;
 	
 	@Autowired
-	private ItemDao itemDao;
+	private IItemDao itemDao;
 	
 	
-	@BeforeClass
-	public static void setUp() {
+	@Before
+	public void setUp() {
 		item = ItemInsertRequestDto.builder()
 				.userId(userId)
 				.title(title)
@@ -108,17 +111,30 @@ public class ItemTest {
 				.status(status).build();
 		
 		itemDao.updateItemStatus(expectedItem);
+		
 		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
 		
 		status = "판매완료";
 		expectedItem.updateStatus(status);
 		itemDao.updateItemStatus(expectedItem);
+		
 		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
 		
 		status = "판매중";
 		expectedItem.updateStatus(status);
 		itemDao.updateItemStatus(expectedItem);
+		
 		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
+	}
+	
+	@Ignore
+	@After
+	@Test
+	public void deleteItem_물건삭제하기() {
+		
+		itemDao.deleteItem(id);
+		
+		assertNull(itemDao.getItemById(id));
 	}
 	
 }

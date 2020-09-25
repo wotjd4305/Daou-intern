@@ -9,9 +9,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="getItemById" parameterType="long" resultType="itemResponseDto">
-		select id, title, price, content, category, status, date
+		select id, title, price, content, category, status, delflag, date
 		from item
-		where id = #{id}
+		where id=#{id} and delflag=0;
 	</select>
 	
 	<insert id="insertItem" parameterType="itemInsertRequestDto" useGeneratedKeys="true" keyProperty="id" keyColumn="item.id">
@@ -28,6 +28,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateStatusItem" parameterType="itemUpdateRequestDto">
 		update item
 		set status=#{status}
+		where id=#{id}
+	</update>
+	
+	<update id="deleteItem" parameterType="long">
+		update item
+		set delflag=1
 		where id=#{id}
 	</update>
 
