@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.UserDto;
+import com.daoumarket.jwt.IJWTService;
 import com.daoumarket.service.IUserService;
 import com.daoumarket.util.EncodePassword;
 
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	
 	private final IUserService userService;
+	private final IJWTService jwtService;
 	
 	// sign up
 	@PostMapping("/api/user")
@@ -31,9 +33,9 @@ public class UserController {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		new EncodePassword(dto);
+		UserDto encodePasswordDto = EncodePassword.Encode(dto);
 		
-		int res = userService.insertUser(dto);
+		int res = userService.insertUser(encodePasswordDto);
 
 		if (res > 0) {
 			basicResponse.status = true;
@@ -74,13 +76,13 @@ public class UserController {
 	
 	// login
 	@PostMapping("/api/login")
+	@ApiOperation("로그인")
 	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody UserDto dto){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		new EncodePassword(dto);
-		
-		UserDto res = userService.getUserLogin(dto);
+		UserDto encodePasswordDto = EncodePassword.Encode(dto);
+		UserDto res = userService.getUserLogin(encodePasswordDto);
 		
 		if (res == null) {
 			basicResponse.status = false;
@@ -89,17 +91,50 @@ public class UserController {
 		} else {
 			basicResponse.status = true;
 			basicResponse.data = "Correct";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
 			
+			try {
+				String token = jwtService.makeJwt(res);
+				
+				basicResponse.object = token;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);		
 		}
 		
 		return responseEntity;
 	}
 	
-	
-	
-	
+	@PostMapping("/api/token")
+	@ApiOperation("토큰 검증")
+	public ResponseEntity<BasicResponse> token(@RequestBody String accessToken){
+		ResponseEntity<BasicResponse> responseEntity = null;
+		BasicResponse basicResponse = new BasicResponse();
+		UserDto jwt = null;
 
-	
+		try {
+			jwt = jwtService.checkJwt(accessToken);
+			
+			if (jwt == null) {
+				basicResponse.status = false;
+				basicResponse.data = "Token Mismatch";
+				responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			
+			} else {
+				basicResponse.status = true;
+				basicResponse.data = "Token Match";
+				basicResponse.object = jwt;
+				responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return responseEntity;
+		
+	}
 	
 }

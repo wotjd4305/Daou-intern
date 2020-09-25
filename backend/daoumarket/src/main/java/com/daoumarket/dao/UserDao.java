@@ -28,7 +28,6 @@ public class UserDao implements IUserDao{
 	// sign up
 	@Override
 	public int insertUser(UserDto dto) {
-		new EncodePassword(dto);
 		return sqlSession.insert(ns + "insertUser", dto);
 	}
 
@@ -40,7 +39,6 @@ public class UserDao implements IUserDao{
 	// login
 	@Override
 	public UserDto getUserLogin(UserDto dto) {
-		new EncodePassword(dto);
 		return sqlSession.selectOne(ns + "getUserLogin", dto);
 	}
 	

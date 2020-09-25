@@ -13,7 +13,7 @@ import com.daoumarket.dto.UserDto;
 
 public class EncodePassword {
 
-	public EncodePassword(UserDto dto) {
+	public static UserDto Encode(UserDto dto) {
 		AES256Util aes256 = AES256Util.getInstance();
 		
 		try {
@@ -24,5 +24,7 @@ public class EncodePassword {
 				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 		}
+		
+		return dto;
 	}
 }
