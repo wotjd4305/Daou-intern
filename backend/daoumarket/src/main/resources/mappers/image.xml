@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="image">
+
+	<insert id="insertItemimage" parameterType="image">
+		insert into image(item_id, picture)
+		values(#{itemId}, #{picture})
+	</insert>
+	
+	<update id="updateUserImage" parameterType="image">
+		update user
+		set image = #{picture}
+		where id = #{id}
+	</update>
+	
+	<!-- <select id="getItemImage" parameterType="long" resultType="image">
+		select picture
+		from image 
+		where item_id = #{id}
+	</select> -->
+
+</mapper>

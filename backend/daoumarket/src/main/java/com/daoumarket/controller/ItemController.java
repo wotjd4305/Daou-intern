@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.ItemInsertRequest;
@@ -41,7 +43,8 @@ public class ItemController {
 	@PostMapping("/item")
 	@ApiOperation("물건 등록")
 	public ResponseEntity<BasicResponse> insertItem(@RequestParam long userId, @RequestParam int price,
-													@RequestParam String category, @RequestParam String content) {
+													@RequestParam String category, @RequestParam String content,
+													@RequestPart MultipartFile[] images) {
 		log.info("ItemController : insertItem");
 		
 		ItemInsertRequest item = ItemInsertRequest.builder()
@@ -50,7 +53,7 @@ public class ItemController {
 				.category(category)
 				.content(content).build();
 		
-		return itemService.insertItem(item);
+		return itemService.insertItem(item, images);
 	}
 	
 	@PatchMapping("/item/info")
@@ -93,8 +96,8 @@ public class ItemController {
 		return itemService.getItemsByCategory(search);
 	}
 	
-	@GetMapping("/item/category")
-	@ApiOperation("카테고리로 물건 가져오기")
+	@GetMapping("/item/keyword")
+	@ApiOperation("키워드 물건 가져오기")
 	public ResponseEntity<BasicResponse> getItemsByKeyword(ItemSearchRequest search) {
 		log.info("ItemController : getItemsByKeyword");
 		

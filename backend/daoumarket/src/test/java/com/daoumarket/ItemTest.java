@@ -34,7 +34,6 @@ public class ItemTest {
 	@Autowired
 	private IItemDao itemDao;
 	
-	
 	@Before
 	public void setUp() {
 		item = ItemInsertRequest.builder()
@@ -189,5 +188,4 @@ public class ItemTest {
 		
 		assertEquals(items.size(), 3);
 	}
-	
 }

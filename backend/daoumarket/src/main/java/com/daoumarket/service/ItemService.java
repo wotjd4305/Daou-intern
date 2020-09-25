@@ -3,6 +3,7 @@ package com.daoumarket.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dao.IItemDao;
 import com.daoumarket.dto.BasicResponse;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class ItemService implements IItemService {
 
 	private final IItemDao itemDao;
+	private final IImageService imageService;
 	
 	@Override
 	public ResponseEntity<BasicResponse> getItemById(long id) {
@@ -36,20 +38,29 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item) {
+	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item, MultipartFile[] images) {
 		
 		BasicResponse response = new BasicResponse();
 		
-		int result = itemDao.insertItem(item);
+		int resultCnt = 0;
+		int id = itemDao.insertItem(item);
 		
-		if(result == 1) {
-			response.status = true;
-			response.data = "저장 성공";
-			return new ResponseEntity<>(response, HttpStatus.OK);
+		if(id == 0) {
+			response.data = "저장 실패";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		response.data = "저장 실패";
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		if(images.length > 0) {
+			id += imageService.insertItemImage(images, id);
+		}
+		
+		if(id == 1)
+		
+		response.status = true;
+		response.data = "저장 성공";
+		return new ResponseEntity<>(response, HttpStatus.OK);
+		
+		
 	}
 	
 	@Override
