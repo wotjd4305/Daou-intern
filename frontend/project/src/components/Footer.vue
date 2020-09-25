@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    Copyright © 온새미로 All Rights Reserved.
+    Copyright 2020. 온새미로 all rights reserved.
   </div>
 </template>
 
@@ -21,5 +21,14 @@ export default {
   text-align: center;
   padding: 10px 0;
   z-index: 9;
+}
+
+/* footer 글씨체 카피라이트는 고딕으로하는 것이 약속임 */
+.footer {
+  font-family: Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #ffffff;
 }
 </style>

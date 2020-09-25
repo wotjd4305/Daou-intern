@@ -8,6 +8,9 @@ import Signup from '@/views/accounts/Signup'
 //Boards
 import Home from '@/views/boards/Home'
 
+//Chat Test
+import Chat from '@/views/chat/Chat'
+
 
 
 //PageNotFound
@@ -35,6 +38,12 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home
+  },
+  //Chat Test
+  {
+    path : '/chat',
+    name : 'Chat',
+    component: Chat
   },
 
   //PageNotFound

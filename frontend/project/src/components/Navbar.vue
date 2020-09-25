@@ -1,5 +1,59 @@
 <template>
   <div id="navigationBar">
+
+   <!-- 채팅 사이드바 -->
+    <b-sidebar id="sidebar-right" right shadow no-header>
+      <div>
+        <b-tabs class="m-3 card  vertical" align="center">
+          <b-tab title="채팅1" active>
+            asdf
+          </b-tab>
+          <b-tab title="채팅2">
+            <b-card-text>hi</b-card-text>
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          <b-tab title="채팅2">
+
+          </b-tab>
+          
+        </b-tabs>
+      </div>
+    </b-sidebar>
+    <!--/ 채팅 사이드바 -->
+
+   <!-- 네비게이션 바 -->
    <b-navbar id="pageMenue">
         <b-navbar-nav style="display:contents">
         
@@ -47,6 +101,25 @@
                       </div>
                     </b-modal>
                   </b-dropdown-item>
+                  
+                  <b-dropdown-item v-b-toggle.sidebar-right href="#" >
+                    채팅
+                    <!--
+                    <b-modal id="chat" hide-footer>
+                      <template v-slot:modal-title>채팅 테스트</template>
+                      <div class="d-block text-center">
+                        <Chat />
+                      </div>
+                    </b-modal> -->
+
+                    <div v-b-toggle.sidebar-right style="outline:none;">
+                      
+                    </div>
+
+                  </b-dropdown-item>
+                  
+
+
                 </b-dropdown>
             </b-nav-item>
           </div>
@@ -68,6 +141,7 @@
 
 <script>
 import ConfirmPassword from "../views/accounts/ConfirmPassword.vue";
+//import Chat from "../views/chat/Chat.vue"
 
 export default {
   
@@ -78,11 +152,16 @@ export default {
     profileImgsrc:"@/assets/img/log.png"
    };
   },
-  components: { ConfirmPassword },
+  components: { ConfirmPassword,
+  //Chat
+   },
   computed: {
     
   },
   methods: {
+    goToChatTest(){
+      this.$router.push({ name: "Chat" });
+    }
   },
 };
 </script>

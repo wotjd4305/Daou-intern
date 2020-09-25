@@ -3,9 +3,11 @@
     <Navbar />
 
     <!-- 네비게이션 바 만큼 내려주기 -->
-    <div id="c-blank"></div>
+    <div id="c-blank-top"></div>
     
     <router-view />
+    <div id="c-blank-bottom"></div>
+    
     <Footer />
   </div>
 </template>
@@ -30,11 +32,16 @@ export default {
   src:url('./assets/fonts/DAKIL.TTF');
 }
 
-#c-blank{
+#c-blank-top{
   margin-top:10rem;
 }
 
-#app {
+#c-blank-bottom{
+  margin-bottom:10rem;
+}
+
+
+#app{
   font-family: Daki ,Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -12,13 +12,15 @@
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.5",
+    "sockjs-client": "^1.5.0",
     "sweetalert2": "^10.3.2",
     "vue": "^2.6.12",
     "vue-carousel-3d": "^0.2.0",
     "vue-cookies": "^1.7.4",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.4.3",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.6",

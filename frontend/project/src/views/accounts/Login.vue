@@ -191,7 +191,7 @@ export default {
       }
     },
     validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
+      var va = /^(?=.*\d)(?=.*[a-zA-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{8,}$/;
       return va.test(password);
     },
     clickSignup() {
