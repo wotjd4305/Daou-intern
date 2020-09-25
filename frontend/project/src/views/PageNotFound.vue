@@ -11,6 +11,11 @@
 
 export default {
   name: "PageNotFound",
+  methods:{
+    gotoMain() {
+      this.$router.push({name: "Login"});
+    },
+  }
 }
 </script>
 
@@ -31,7 +36,8 @@ export default {
   color: white;
   padding: 10px;
 }
-#Bstn:hover {
+#Btn:hover {
   cursor: pointer;
+  background-color: #7a63ff55
 }
 </style>

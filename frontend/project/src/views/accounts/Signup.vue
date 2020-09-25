@@ -1,72 +1,112 @@
 <template>
   <div class="background">
-    <div class="container p-3 mt-5 bg-light-ivory signup-form">
+    <div class="container p-1 mt-5 bg-light-ivory signup-form">
       <h3>회원가입</h3>
 
-      <div class="input-with-label">
-        <input 
-          v-model="signupData.nickName"
-          v-bind:class="{error: error.nickName, complete:!error.nickName&&signupData.nickName.length!==0}"
-          class="inputs"
-          id="nickName"
-          placeholder="닉네임" 
-          type="text" 
-          autocapitalize="none"
-          autocorrect="none"
-          style="text-transform:lowercase"
-        />
-        <label for="nickName"></label>
-        <div class="error-text ml-3" v-if="error.nickName">{{error.nickName}}</div>
+      <!-- 프로필과 입력창 -->
+      <div class="row">
+
+        <!-- 프로필 -->
+        <b-col align-self="stretch center">
+              <b-form-text class="mb-2" id="profile-help">프로필 클릭 시, 이미지 변경이 가능합니다.</b-form-text>
+              <input
+                type="file"
+                ref="profileImg"
+                style="display: none"
+                accept="image/jpeg, jpg, png/"
+                @change="uploadImage($event)"
+              />
+
+              <button class="pro-button" id="profileImgBtn" @click="$refs.profileImg.click()">
+                <img
+                  class="profileImg"
+                  ref="uploadItemImage"
+                  accept="image/jpeg, jpg, png/"
+                  src="@/assets/img/icons8-male-user-90.png"
+                  style="width: 10rem; height: 10rem;"
+                />
+              </button>
+              <br />
+              <!-- 프로필 삭제 아직 덜만듦!!!!! -->
+              <b-button
+                class="mt-2"
+                size="sm"
+                variant="light"
+                id="deleteImg"
+                @click="deleteP()"
+              >프로필 삭제</b-button>
+        </b-col>
+
+        <!-- 입력창 -->
+        <div class="col">
+          <div class="input-with-label">
+            <input 
+              v-model="signupData.name"
+              v-bind:class="{error: error.name, complete:!error.name&&signupData.name.length!==0}"
+              class="inputs"
+              id="Name"
+              placeholder="이름" 
+              type="text" 
+              autocapitalize="none"
+              autocorrect="none"
+              style="text-transform:lowercase"
+            />
+            <label for="Name"></label>
+            <div class="error-text ml-3" v-if="error.name">{{error.name}}</div>
+          </div>
+
+          <div class="input-with-label">
+            <input 
+              v-model="signupData.sabun" 
+              v-bind:class="{error : error.sabun, complete:!error.sabun&&signupData.sabun.length!==0}"
+              class="inputs"
+              id="sabun" 
+              placeholder="사번" 
+              type="text" 
+              autocapitalize="none"
+              autocorrect="none"
+              style="text-transform:lowercase"
+              required
+              />
+            <label for="sabun"></label>
+            <div class="error-text ml-3" v-if="error.sabun">{{error.sabun}}</div>
+          </div>
+
+          <div class="input-with-label">
+            <input 
+              v-model="signupData.password" 
+              
+              v-bind:class="{error : error.password, complete:!error.password&&signupData.password.length!==0}"
+              class="inputs"
+              id="password" 
+              type="password"
+              placeholder="비밀번호를 입력하세요." 
+              required
+            />
+            <label for="password"></label>
+            <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
+          </div>
+
+          <div class="input-with-label">
+            <input
+              v-model="signupData.passwordConfirm"
+              type="password"
+              id="password-confirm"
+              v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&signupData.passwordConfirm.length!==0}"
+              placeholder="비밀번호를 다시 입력해주세요."
+              class="inputs"
+              required
+              @keyup.enter="clickSignup"
+            />
+            <label for="password-confirm"></label>
+            <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
+          </div>
+        </div>
+
       </div>
 
-      <div class="input-with-label">
-        <input 
-          v-model="signupData.email" 
-          v-bind:class="{error : error.email, complete:!error.email&&signupData.email.length!==0}"
-          class="inputs"
-          id="email" 
-          placeholder="이메일" 
-          type="text" 
-          autocapitalize="none"
-          autocorrect="none"
-          style="text-transform:lowercase"
-          required
-          />
-        <label for="email"></label>
-        <div class="error-text ml-3" v-if="error.email">{{error.email}}</div>
-      </div>
-
-      <div class="input-with-label">
-        <input 
-          v-model="signupData.password" 
-          
-          v-bind:class="{error : error.password, complete:!error.password&&signupData.password.length!==0}"
-          class="inputs"
-          id="password" 
-          type="password"
-          placeholder="비밀번호를 입력하세요." 
-          required
-        />
-        <label for="password"></label>
-        <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
-      </div>
-
-      <div class="input-with-label">
-        <input
-          v-model="signupData.passwordConfirm"
-          type="password"
-          id="password-confirm"
-          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&signupData.passwordConfirm.length!==0}"
-          placeholder="비밀번호를 다시 입력해주세요."
-          class="inputs"
-          required
-          @keyup.enter="clickSignup"
-        />
-        <label for="password-confirm"></label>
-        <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
-      </div>
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup">가입하기</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup">회원가입</button>
       </div>
       <p class="my-3">
         <span class="items" @click="toLogin">로그인하기</span>
@@ -82,14 +122,14 @@ export default {
   data() {
     return {
       signupData: {
-        email: "",
+        sabun: "",
         password: "",
         passwordConfirm: "",
-        nickName: "",
+        name: "",
       },
       error: {
-        email: false,
-        nickName: false,
+        sabun: false,
+        name: false,
         password: false,
         passwordConfirm: false,
       },
@@ -103,30 +143,29 @@ export default {
     signupData: {
       deep: true,
       handler() {
-        this.checknickNameForm();
-        this.checkEmailForm();
+        this.checkNameForm();
+        this.checkSabunForm();
         this.checkPasswordForm();
         this.checkPasswordConfirmationForm();
       }
     }
   },
   methods: {
-    checknickNameForm() {
-      if ( this.signupData.nickName.length > 0) {
-        this.error.nickName = false;
+    checkNameForm() {
+      if ( this.signupData.name.length > 0) {
+        this.error.Name = false;
       }
-      else this.error.nickName="닉네임을 입력해주세요."
+      else this.error.Name="이름을 입력하세요."
     },
-    checkEmailForm() {
-      if ( this.signupData.email.length > 0 && !this.validEmail(this.signupData.email) ) {
-        this.error.email = "올바른 이메일 형식이 아니에요"   
+    checkSabunForm() {
+      if ( this.signupData.sabun.length > 0 && !this.validSabun(this.signupData.sabun) ) {
+        this.error.sabun = "숫자만 입력하세요."   
       }
-      else this.error.email = false;
+      else this.error.sabun = false;
     },
-    validEmail(email) {
-      // eslint-disable-next-line
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
+    validSabun(sabun) {
+      var re = /^[0-9]*$/;
+      return re.test(sabun);
     },
     checkPasswordForm() {
       if (this.signupData.password.length > 0 && this.signupData.password.length < 8) {
@@ -147,7 +186,7 @@ export default {
       }
       
       // 버튼 활성화
-      if (this.signupData.nickName.length > 0 && this.signupData.email.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0){
+      if (this.signupData.name.length > 0 && this.signupData.sabun.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0){
         let isSubmit = true;
         Object.values(this.error).map(v => {
           if (v) isSubmit = false;
@@ -171,7 +210,7 @@ export default {
 
 <style scoped>
 .container {
-  width: 30%;
+  width: 50%;
   border-radius: 25px;
 }
 h3 {
@@ -191,23 +230,13 @@ h3 {
 .signup-button{
   background-color: #88A498;
   color: #F8F8F8;
-  width: 70%;
+  width: 50%;
 }
 .divide {
   width: 10%;
   border-top: 1px solid #88A498;
   margin-left: auto;
   margin-right: auto;
-}
-.kakao {
-  background-color: #ffe812;
-  border-radius: 5px;
-  width: 70%;
-}
-.google {
-  background-color:  #FFFFFF;
-  border-radius: 5px;
-  width: 70%;
 }
 .inputs:focus {
   border-style: none;
@@ -235,20 +264,28 @@ input[type="password"] {
   cursor: inherit;
 }
 .background {
-  background-image: url("https://user-images.githubusercontent.com/25967949/90751489-27ce4480-e311-11ea-93aa-2ab9d1f41b4e.png");
-  position: absolute;
+  background-image: url("../../assets/img/background.jpg");
+ position: absolute;
+  height: 100%;
+  width:100%;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background-repeat: repeat;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .signup-form {
-  margin-top: 20vh !important;
+  margin-top: 15vh !important;
   opacity: 0.9;
 }
 .items:hover {
   cursor: pointer;
   color: #d6cbbd;
+}
+.pro-button{
+  border: 0;
+  background-color: #f7f7f7;
+  opacity: 0.5;
 }
 </style>

@@ -5,6 +5,13 @@ import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
 
+//Boards
+import Home from '@/views/boards/Home'
+
+//Chat Test
+import Chat from '@/views/chat/Chat'
+
+
 
 //PageNotFound
 import PageNotFound from '@/views/PageNotFound'
@@ -24,6 +31,19 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+
+  //게시판 홈
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home
+  },
+  //Chat Test
+  {
+    path : '/chat',
+    name : 'Chat',
+    component: Chat
   },
 
   //PageNotFound

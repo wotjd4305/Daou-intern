@@ -1,49 +1,68 @@
 <template>
   <div class="background">
     <div class="container p-3 mt-5 bg-light-ivory login-form">
-      <h3 class="login-title">
-        <strong>로그인</strong>
-      </h3>
+      
+      <!-- 설명과 로그인창 -->
+      <div class="row">
 
-      <div class="input-with-label">
-        <input
-          v-model="loginData.email"
-          v-bind:class="{error : error.email, complete:!error.email&&loginData.email.length!==0}"
-          class="inputs"
-          id="email"
-          placeholder="이메일"
-          type="text"
-          autocapitalize="none"
-          autocorrect="none"
-          style="text-transform:lowercase"
-          required
-        />
-        <label for="email"></label>
-        <div class="error-text ml-3" v-if="error.email">{{error.email}}</div>
-      </div>
-      <div class="input-with-label">
-        <input
-          v-model="loginData.password"
-          v-bind:class="{error : error.password, complete:!error.password&&loginData.password.length!==0}"
-          class="inputs"
-          id="password"
-          type="password"
-          placeholder="비밀번호를 입력하세요."
-          required
-          @keyup.enter="clickLogin"
-        />
-        <label for="password"></label>
-        <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
-      </div>
-      <p class="my-3">
-        <span class="items" @click="clickSignup">회원가입하기</span>ㆍ
-        <span class="items" @click="clickPasswordFind">비밀번호 찾기</span>
-      </p>
-      <div class="buttons mt-3">
-        <button class="btn login-button" :class="{disabled: !isSubmit}" @click="clickLogin">로그인하기</button>
-      </div>
+        <!-- 설명 -->
+        <div class="col">
+          <h3 class="dsc-title">
+            <strong>다우마켓</strong>
+          </h3>
+          <div class="dsc-contents mt-5">
+            <div class="mt-5"><p> 다우기술의 임직원들을 위한 <strong>'다우마켓'</strong>으로 뜨거운 정을 나누자! </p> </div>
+          </div>
+        </div>
 
-      <hr class="divide" />
+        <!-- 로그인창 -->
+        <div class="col">
+          <h3 class="login-title">
+            <strong>로그인</strong>
+          </h3>
+
+          <div class="input-with-label">
+            <input
+              v-model="loginData.sabun"
+              v-bind:class="{error : error.sabun, complete:!error.sabun&&loginData.sabun.length!==0}"
+              class="inputs"
+              id="sabun"
+              placeholder="사원번호"
+              type="text"
+              autocapitalize="none"
+              autocorrect="none"
+              style="text-transform:lowercase"
+              required
+            />
+            <label for="sabun"></label>
+            <div class="error-text ml-3" v-if="error.sabun">{{error.sabun}}</div>
+          </div>
+          <div class="input-with-label">
+            <input
+              v-model="loginData.password"
+              v-bind:class="{error : error.password, complete:!error.password&&loginData.password.length!==0}"
+              class="inputs"
+              id="password"
+              type="text"
+              placeholder="비밀번호를 입력하세요."
+              required
+              @keyup.enter="clickLogin"
+            />
+            <label for="password"></label>
+            <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
+          </div>
+          <p class="my-3">
+            <span class="items" @click="clickSignup">회원가입하기</span>ㆍ
+            <span class="items" @click="clickPasswordFind">비밀번호 찾기</span>
+          </p>
+          <div class="buttons mt-3">
+            <button class="btn login-button" :class="{disabled: !isSubmit}" @click="clickLogin">로그인하기</button>
+          </div>
+
+          <hr class="divide" />
+        </div> 
+
+      </div>
 
     </div>
   </div>
@@ -59,11 +78,11 @@ export default {
   data() {
     return {
       loginData: {
-        email: "",
+        sabun: "",
         password: "",
       },
       error: {
-        email: false,
+        sabun: false,
         password: false,
       },
       isSubmit: false,
@@ -76,7 +95,7 @@ export default {
     loginData: {
       deep: true,
       handler() {
-        this.checkEmailForm();
+        this.checkSabunForm();
         this.checkPasswordForm();
       },
     },
@@ -85,12 +104,7 @@ export default {
     ...mapMutations(["SET_TOKEN"]),
     ...mapActions("accountStore", ["login"]),
     async handleClickSignIn() {
-      const googleUser = await this.$gAuth.signIn();
-      const profile = googleUser.getBasicProfile();
       const userInfo = {
-        nickName: profile.getName(),
-        email: profile.getEmail(),
-        platformType: "GOOGLE",
       };
       axios
         .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
@@ -134,39 +148,40 @@ export default {
     },
     clickLogin() {
       if (this.isSubmit) {
+        console.log("hi")
         this.login(this.loginData);
+        
       }
     },
 
-    checkEmailForm() {
+    checkSabunForm() {
       if (
-        this.loginData.email.length > 0 &&
-        !this.validEmail(this.loginData.email)
+        this.loginData.sabun.length > 0 &&
+        !this.validSabun(this.loginData.sabun)
       ) {
-        this.error.email = "올바른 이메일 형식이 아니에요";
-      } else this.error.email = false;
+        this.error.sabun = "숫자만 입력해 주세요.";
+      } else this.error.sabun = false;
     },
-    validEmail(email) {
-      // eslint-disable-next-line
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
+    validSabun(sabun) {
+      var re = /^[0-9]*$/;
+      return re.test(sabun);
     },
     checkPasswordForm() {
       if (
         this.loginData.password.length > 0 &&
         this.loginData.password.length < 8
       ) {
-        this.error.password = "비밀번호가 너무 짧아요";
+        this.error.password = "비밀 번호는 8자리 이상 필요합니다.";
       } else if (
         this.loginData.password.length >= 8 &&
         !this.validPassword(this.loginData.password)
       ) {
-        this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
+        this.error.password = "영문, 숫자 포함 8 자리 이상 필요합니다.";
       } else this.error.password = false;
       // 버튼 활성화
       if (
         this.loginData.password.length > 0 &&
-        this.loginData.email.length > 0
+        this.loginData.sabun.length > 0
       ) {
         let isSubmit = true;
         Object.values(this.error).map((v) => {
@@ -176,7 +191,7 @@ export default {
       }
     },
     validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
+      var va = /^(?=.*\d)(?=.*[a-zA-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{8,}$/;
       return va.test(password);
     },
     clickSignup() {
@@ -190,12 +205,24 @@ export default {
 </script>
 
 <style scoped>
+
+.dsc-title{
+  color:#2682ba;
+  font-size:2.8rem;
+  text-align: left;
+  padding-left: 5%;
+}
+
+.dsc-contents p strong{
+  color:#2682ba;
+  font-size:1.5rem;
+}
 .login-form {
-  margin-top: 20vh !important;
+  margin-top: 15vh !important;
   opacity: 0.9;
 }
 .container {
-  width: 30%;
+  width: 60%;
   border-radius: 25px;
 }
 h3 {
@@ -215,7 +242,7 @@ h3 {
 .login-button {
   background-color: #88a498;
   color: #f8f8f8;
-  width: 80%;
+  width: 50%;
 }
 .divide {
   width: 10%;
