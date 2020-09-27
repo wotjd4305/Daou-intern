@@ -93,11 +93,11 @@ public class ItemController {
 		return itemService.getItemsByCategory(search);
 	}
 	
-	@GetMapping("/item/category")
-	@ApiOperation("카테고리로 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByKeyword(ItemSearchRequest search) {
-		log.info("ItemController : getItemsByKeyword");
-		
-		return itemService.getItemsByKeyword(search);
-	}
+//	@GetMapping("/item/category")
+//	@ApiOperation("카테고리로 물건 가져오기")
+//	public ResponseEntity<BasicResponse> getItemsByKeyword(ItemSearchRequest search) {
+//		log.info("ItemController : getItemsByKeyword");
+//		
+//		return itemService.getItemsByKeyword(search);
+//	}
 }
