@@ -23,13 +23,13 @@ public class ImageDao implements IImageDao {
 	}
 
 	@Override
-	public int insertUserImage(Image image) {
-		return sqlSession.insert(ns + "insertUserImage", image);
+	public int updateUserImage(Image image) {
+		return sqlSession.update(ns + "updateUserImage", image);
 	}
 	
 	@Override
-	public List<Image> getImage(long id) {
-		return sqlSession.selectList(ns + "getImage", id);
+	public List<String> getItemImages(long id) {
+		return sqlSession.selectList(ns + "getItemImages", id);
 	}
 	
 }

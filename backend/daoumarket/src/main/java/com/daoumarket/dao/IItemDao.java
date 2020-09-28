@@ -18,4 +18,5 @@ public interface IItemDao {
 	public List<ItemResponse> getItemsByCategory(ItemSearchRequest search);
 	public List<ItemResponse> getItemsByKeyword(ItemSearchRequest search);
 	public List<ItemResponse> getItemsByCategoryAndKeyword(ItemSearchRequest search);
+	public List<ItemResponse> getItemsByUserId(long id);
 }

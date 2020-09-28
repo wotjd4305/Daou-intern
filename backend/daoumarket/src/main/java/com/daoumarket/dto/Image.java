@@ -11,11 +11,14 @@ import lombok.ToString;
 public class Image {
 
 	long id;
-	String picture;
+	String image;
+	String[] picture;
 	
 	@Builder
-	public Image(long id, String picture) {
+	public Image(long id, String image, String[] picture) {
 		this.id = id;
+		this.image = image;
 		this.picture = picture;
 	}
+	
 }
