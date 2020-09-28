@@ -27,7 +27,7 @@
           @keyup="sendMessage"
           placeholder="내용 입력하세요." 
         >
-        <button class="ml-1 btn search-button" @click="sendMessageBtn">
+        <button class="ml-1 mt-2 btn search-button" @click="sendMessageBtn">
           전송
         </button>
       </div>

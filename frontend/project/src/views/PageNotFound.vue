@@ -19,7 +19,7 @@ export default {
 }
 </script>
 
-<style>
+<style >
 #pageNotFound {
   width: 80%;
   margin: 50px auto;

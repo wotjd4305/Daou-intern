@@ -53,6 +53,12 @@ export default {
 input.myclass
     {-webkit-text-security:disc;font-family:dotsfont;}
 
+/* placeholder 글자색 바꾸기 */
+input::placeholder {
+  color: #2682baaa;
+}
+
+
 #nav {
   padding: 30px;
 }

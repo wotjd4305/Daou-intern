@@ -16,6 +16,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(VueCookies)
 Vue.use(VueMoment)
 Vue.use(BootstrapVue)
+Vue.use(VueMoment)
 
 Vue.config.productionTip = false
 

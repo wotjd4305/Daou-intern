@@ -60,7 +60,7 @@
 
           <div class=" nav-middle-position">
            <b-nav-item  class="nav-mid-position ml-5" href="#">
-              <router-link id="rlink" :to="{ path: `/boards/board` }"
+              <router-link id="rlink" :to="{ path: `/board` }"
                 ><strong>게시판</strong></router-link
               >
             </b-nav-item>

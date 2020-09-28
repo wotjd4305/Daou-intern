@@ -1,7 +1,7 @@
 <template>
   <!-- 검색 창 -->
     <div class="container">
-      <div class="custom_search_container">
+      <div>
         <form
           class="fleft"
           name="topSearchForm"
@@ -176,7 +176,7 @@
                         </div>
                          <div class="col-4 align-self-center">
                                  <div class="item-list-detail-btn">
-                                    <button class="btn btn-info"  @click="clickSignup">상세보기</button>
+                                    <button class="btn btn-info"  @click="goToDetail">상세보기</button>
                                 </div>
                         </div>
 
@@ -225,6 +225,9 @@ export default {
   
   },
   methods: {
+      goToDetail(){
+            this.$router.push({ path: "/board/detail" });
+        }
   }
 };
 </script>

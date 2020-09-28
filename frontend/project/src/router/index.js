@@ -7,6 +7,8 @@ import Signup from '@/views/accounts/Signup'
 
 //Boards
 import Home from '@/views/boards/Home'
+import Board from '@/views/boards/Board'
+import BoardDetail from '@/views/boards/BoardDetail'
 
 //Chat Test
 import Chat from '@/views/chat/Chat'
@@ -38,6 +40,16 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/board',
+    name: 'Board',
+    component: Board  
+  },
+  {
+    path: '/board/detail',
+    name: 'BoardDetail',
+    component: BoardDetail
   },
   //Chat Test
   {
