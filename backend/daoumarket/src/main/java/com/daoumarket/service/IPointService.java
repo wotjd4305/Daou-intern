@@ -1,9 +1,9 @@
 package com.daoumarket.service;
 
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
-import com.daoumarket.dto.Rank;
+import com.daoumarket.dto.BasicResponse;
 
 public interface IPointService {
-	public List<Rank> getRank();
+	public ResponseEntity<BasicResponse> getRank();
 }

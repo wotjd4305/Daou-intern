@@ -14,5 +14,5 @@ public class Point {
 	private long id;
 	private LocalDateTime date;
 	private int score;
-	private long user_id;
+	private long userId;
 }
