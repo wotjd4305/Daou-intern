@@ -3,23 +3,30 @@ package com.daoumarket.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.User;
 import com.daoumarket.dto.UserLoginRequest;
 import com.daoumarket.jwt.IJWTService;
+import com.daoumarket.service.IImageService;
 import com.daoumarket.service.IUserService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/api")
+@Slf4j
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +34,7 @@ public class UserController {
 	
 	private final IUserService userService;
 	private final IJWTService jwtService;
+	private final IImageService imageService;
 	
 	@PostMapping("/user")
 	@ApiOperation("회원가입")
@@ -80,6 +88,22 @@ public class UserController {
 	@ApiOperation("정보수정")
 	public ResponseEntity<BasicResponse> updateUser(@RequestBody User user){
 		return userService.updateUser(user);
+	}
+	
+	@PatchMapping("/user/{id}/image")
+	@ApiOperation("유저 프로필 사진 변경하기")
+	public ResponseEntity<BasicResponse> updateUserImage(@RequestPart MultipartFile image, @PathVariable long id) {
+		log.info("userController : updateUserImage");
+		
+		return imageService.updateUserImage(image, id);
+	}
+	
+	@DeleteMapping("/user/{id}/image")
+	@ApiOperation("유저 프로필 사진 삭제하기")
+	public ResponseEntity<BasicResponse> deleteUserImage(@PathVariable long id) {
+		log.info("userController : deleteUserImage");
+		
+		return imageService.deleteUserImage(id);
 	}
 	
 }

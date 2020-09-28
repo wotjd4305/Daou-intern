@@ -7,11 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dao.IImageDao;
+import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.Image;
 import com.daoumarket.dto.ItemResponse;
 
@@ -65,8 +68,10 @@ public class ImageService implements IImageService {
     
 	@Transactional
     @Override
-	public int updateUserImage(MultipartFile image, long userId) { // 유저 이미지 업로드
+	public ResponseEntity<BasicResponse> updateUserImage(MultipartFile image, long userId) { // 유저 이미지 업로드
     	
+		BasicResponse response = new BasicResponse();
+		
     	String imageName = image.getOriginalFilename();
 		String imageExtension = FilenameUtils.getExtension(imageName).toLowerCase();
 		File destinationImage;
@@ -83,9 +88,12 @@ public class ImageService implements IImageService {
 			imageDao.updateUserImage(Image.builder().id(userId).image(destinationImageName).build());
 		} catch (RuntimeException | IOException e) {
 			log.error("파일 업로드에 실패했습니다.");
-			return 0;
+			response.data = "업로드 실패";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
-		return 1;
+		
+		response.data = "업로드 성공";
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
     
 	@Override
@@ -97,5 +105,21 @@ public class ImageService implements IImageService {
 			item.getPicture().add(filename);
 		}
     }
+
+	@Override
+	public ResponseEntity<BasicResponse> deleteUserImage(long id) {
+		
+		BasicResponse response = new BasicResponse();
+		
+		int result = imageDao.deleteUserImage(id);
+		
+		if(result == 0) {
+			response.data = "삭제 실패";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+		
+		response.data = "삭제 성공";
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 }
