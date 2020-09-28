@@ -114,4 +114,5 @@ public class ItemController {
 		
 		return itemService.getItemsByUserId(id);
 	}
+
 }

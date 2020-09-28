@@ -1,15 +1,14 @@
 package com.daoumarket.service;
 
+import org.springframework.http.ResponseEntity;
+
+import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.User;
+import com.daoumarket.dto.UserLoginRequest;
 
 public interface IUserService {
-	// sign up
-	public int insertUser(User user);
-	public User getNum(long num);
-	
-	// login
-	public User getUserLogin(User user);
-	
-	// edit user
-	public int updateUser(User user);
+	public ResponseEntity<BasicResponse> insertUser(User user);
+	public ResponseEntity<BasicResponse> getNum(long num);
+	public ResponseEntity<BasicResponse> getUserLogin(UserLoginRequest userLogin);
+	public ResponseEntity<BasicResponse> updateUser(User user);
 }
