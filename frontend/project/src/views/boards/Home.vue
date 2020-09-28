@@ -1,7 +1,7 @@
 <template>
   <!-- 검색 창 -->
     <div class="container">
-      <div class="custom_search_container">
+      <div>
         <form
           class="fleft"
           name="topSearchForm"
@@ -62,7 +62,7 @@
                 <img
                 class="headerProfile mr-2"
                 :src="prizeProfileImgsrc"
-                style="width: 2rem; height: 2rem;"
+                style="width: 2.5rem; height: 2.5rem;"
                 />
             </div>
             <div class="col-5 prize-name align-self-center">
@@ -85,7 +85,7 @@
                 <img
                 class="headerProfile mr-2"
                 :src="prizeProfileImgsrc"
-                style="width: 2rem; height: 2rem;"
+                style="width: 2.5rem; height: 2.5rem;"
                 />
             </div>
             <div class="col-5 prize-name align-self-center">
@@ -108,7 +108,7 @@
                 <img
                 class="headerProfile mr-2"
                 :src="prizeProfileImgsrc"
-                style="width: 2rem; height: 2rem;"
+                style="width: 2.5rem; height: 2.5rem;"
                 />
             </div>
             <div class="col-5 prize-name align-self-center">
@@ -128,9 +128,9 @@
 
     <!-- 3D 캐러셀 -->
     <div class="mt-5">
-        <carousel-3d :width="450" :height="400">
+        <carousel-3d  :width="450" :height="400">
             <div v-for="(num, i) in slidesLength" :key="i">
-            <slide id="carousel_card" :index="i">
+            <slide class="shadow01" id="carousel_card" :index="i">
                 <!-- 이미지 사원설명 제품명 가격 -->
                 <div class="item-card">
                     <!-- 이미지 -->
@@ -145,26 +145,48 @@
 
                     <!-- 사원 -->
                     <div class="row pl-5 pr-5">
-                        <div class="col">
-                            <img
-                            class="item-list-profile-img"
-                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg"
-                            />
+                        <div class="col-3 pr-3">
+                            <div>
+                                <img
+                                class="headerProfile"
+                                :src="prizeProfileImgsrc"
+                                style="width: 2.5rem; height: 2.5rem;"      
+                                />
+                            </div>
+                            <div class="  item-list-title-text">
+                                제품명 : 
+                            </div>
+                            <div class="item-list-title-text">
+                                가격 : 
+                            </div>
                         </div>
-                        <div class="col">
-                                김사원 사원
+
+                        <div class="col-5 align-self-center">
+                             <div class="item-list-profile-text">
+                                 <div>
+                                    김사원 사원
+                                 </div>
+                            </div>
+                             <div class="item-list-product-text align-self-center">
+                                    나들이 꽃나들
+                            </div>
+                             <div class=" item-list-price-text align-self-center">
+                                    10,300
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- 제품명 -->
-                    <div class="row">
-                        제품명
+                         <div class="col-4 align-self-center">
+                                 <div class="item-list-detail-btn">
+                                    <button class="btn btn-info"  @click="goToDetail">상세보기</button>
+                                </div>
+                        </div>
+
+
+
                     </div>
 
-                    <!-- 가격 -->
-                    <div class="row">
-                        가격
-                    </div>
+                    
+                    
+                   
                     
                 </div>
                  <!--/ 이미지 사원설명 제품명 가격 -->
@@ -203,6 +225,9 @@ export default {
   
   },
   methods: {
+      goToDetail(){
+            this.$router.push({ path: "/board/detail" });
+        }
   }
 };
 </script>
@@ -240,7 +265,7 @@ export default {
 /* item */
 .item-card{
     background-color: #f8f8f8;
-    height: 100%;
+    height: 100%;   
 }
 .item-list-img{
     width: 100%;
@@ -255,6 +280,30 @@ export default {
     height: 100%;
     width: 100%;
 }
+.item-list-profile-text{
+    font-weight: bold;
+    height: 2.5rem; 
+    padding-top:4%
+    
+}
+.item-list-title-text{
+    font-weight: bold;
+}
+.item-list-price-text{
+    font-weight: bold;
+    color: #2682ba;
+}
+
+.item-list-product-text{
+    font-weight: bold;
+    color: #2682ba;
+     overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.item-list-detail-btn{
+    height: 80%;
+}
 
 /* 케러세 중복정의 */
 .carousel-3d-slide{
@@ -262,8 +311,14 @@ export default {
     border-width:1.5px !important;
     border-color: #2682ba;
     background-color : #f8f8f8 !important;
+    
+   
+    height: 95% !important;
+    
 }
-
+.shadow01 {
+    box-shadow: 2px 2px 5px 5px #2682ba;
+    }
 
 
 
