@@ -15,7 +15,7 @@
 
 판매를 많이 하거나 나눔을 많이한 임직원을 확인할 수 있음(추후 순위권에 있는 임직원들에게 소정의 선물 증정 가능)
 
-#### 3) 1:1대화(메신저)
+#### 3) 1:1 대화(메신저)
 
 판매자와 구매자 대화 기능 구현
 
@@ -41,7 +41,7 @@
   - ##### Java  
 
     - lowerCamelCase : 변수, 메소드, 객체  
-    - UpperCamelCase : 클래스 명
+    - UpperCamelCase : 클래스명
 
 - ##### Git (feature branch 단위)  
 
@@ -97,10 +97,14 @@
     Rename login_info to loginInfo
     ```
 
+## ERD
+
+![](./images/daou_market_erd.png)
+
 ## Architecture
 
-
+![](./images/daou_market_architecture.jpg)
 
 ## Project Schedule
 
-  20.09.21 ~ 20.10.14  
+2020.09.21 ~ 2020.10.14
