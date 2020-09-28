@@ -68,6 +68,10 @@ public class ItemDao implements IItemDao {
 	public List<ItemResponse> getItemsByCategoryAndKeyword(ItemSearchRequest search) {
 		return sqlSession.selectList(ns + "getItemsByCategoryAndKeyword", search);
 	}
-	
+
+	@Override
+	public List<ItemResponse> getItemsByUserId(long userId) {
+		return sqlSession.selectList(ns + "getItemsByUserId", userId);
+	}
 
 }

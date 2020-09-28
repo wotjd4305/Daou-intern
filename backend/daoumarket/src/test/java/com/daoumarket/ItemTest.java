@@ -34,7 +34,6 @@ public class ItemTest {
 	@Autowired
 	private IItemDao itemDao;
 	
-	
 	@Before
 	public void setUp() {
 		item = ItemInsertRequest.builder()
@@ -105,7 +104,7 @@ public class ItemTest {
 	@Ignore
 	@Test
 	public void testUpdateStatusItem_물건상태정보수정하기() {
-		String status = "예약중";
+		String status = "거래중";
 		
 		ItemUpdateRequest expectedItem = ItemUpdateRequest.builder()
 				.id(id)
@@ -115,7 +114,7 @@ public class ItemTest {
 		
 		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
 		
-		status = "판매완료";
+		status = "거래완료";
 		expectedItem.updateStatus(status);
 		itemDao.updateItemStatus(expectedItem);
 		
@@ -143,7 +142,7 @@ public class ItemTest {
 		
 		List<ItemResponse> items = itemDao.getAllItems();
 		
-		assertEquals(items.size(), 2);
+		assertEquals(2, items.size());
 	}
 	
 	@Ignore
@@ -157,7 +156,7 @@ public class ItemTest {
 		
 		List<ItemResponse> items = itemDao.getItemsByCategory(search);
 		
-		assertEquals(items.size(), 2);
+		assertEquals(2, items.size());
 	}
 	
 	@Ignore
@@ -171,7 +170,7 @@ public class ItemTest {
 		
 		List<ItemResponse> items = itemDao.getItemsByKeyword(search);
 		
-		assertEquals(items.size(), 3);
+		assertEquals(3, items.size());
 	}
 	
 	@Ignore
@@ -187,7 +186,15 @@ public class ItemTest {
 		
 		List<ItemResponse> items = itemDao.getItemsByCategoryAndKeyword(search);
 		
-		assertEquals(items.size(), 3);
+		assertEquals(3, items.size());
 	}
 	
+	@Ignore
+	@Test
+	public void getItemsByUserId_유저의id로유저가등록한물건가져오기() {
+		
+		List<ItemResponse> items = itemDao.getItemsByUserId(userId);
+		
+		assertEquals(3, items.size());
+	}
 }

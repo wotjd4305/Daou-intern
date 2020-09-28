@@ -1,12 +1,18 @@
 package com.daoumarket.service;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dao.IItemDao;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.ItemInsertRequest;
+import com.daoumarket.dto.ItemResponse;
 import com.daoumarket.dto.ItemSearchRequest;
 import com.daoumarket.dto.ItemUpdateRequest;
 
@@ -17,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class ItemService implements IItemService {
 
 	private final IItemDao itemDao;
+	private final IImageService imageService;
 	
 	@Override
 	public ResponseEntity<BasicResponse> getItemById(long id) {
@@ -28,6 +35,7 @@ public class ItemService implements IItemService {
 		if(response.object != null) {
 			response.status = true;
 			response.data = "데이터 존재";
+			imageService.getItemImages((ItemResponse)response.object);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -35,23 +43,39 @@ public class ItemService implements IItemService {
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
+	@Transactional
 	@Override
-	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item) {
+	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item, MultipartFile[] images) {
 		
 		BasicResponse response = new BasicResponse();
+		int resultCnt = 0;
+		int id = itemDao.insertItem(item);
 		
-		int result = itemDao.insertItem(item);
+		if(id == 0) { // 게시물 등록 실패한 경우
+			response.data = "게시물 등록 실패";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 		
-		if(result == 1) {
+		resultCnt++; 
+		if(images.length > 0) { // 이미지 파일이 존재하면 이미지 업로드 진행
+			resultCnt += imageService.insertItemImage(images, id);
+		} else { // 이미지 없는 게시물 등록
 			response.status = true;
-			response.data = "저장 성공";
+			response.data = "게시물 등록 성공!(이미지 파일은 없음)";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "저장 실패";
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		if(resultCnt == 1) {
+			response.data = "게시물은 등록 되었으나, 이미지 파일 업로드 실패";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+		
+		response.status = true;
+		response.data = "게시물과 이미지 등록 성공!";
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@Transactional
 	@Override
 	public ResponseEntity<BasicResponse> updateItemInfo(ItemUpdateRequest item) {
 		
@@ -69,6 +93,7 @@ public class ItemService implements IItemService {
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 	
+	@Transactional
 	@Override
 	public ResponseEntity<BasicResponse> updateItemStatus(ItemUpdateRequest item) {
 		
@@ -86,6 +111,7 @@ public class ItemService implements IItemService {
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
+	@Transactional
 	@Override
 	public ResponseEntity<BasicResponse> deleteItem(long id) {
 		
@@ -108,11 +134,15 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		response.object = itemDao.getAllItems();
+		List<ItemResponse> items = itemDao.getAllItems();
 		
-		if(response.object != null) {
+		if(items != null) {
+			for (ItemResponse item : items) {
+				imageService.getItemImages(item);
+			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";
+			response.object = items;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -125,11 +155,16 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		response.object = itemDao.getItemsByCategory(search);
 		
-		if(response.object != null) {
+		List<ItemResponse> items = itemDao.getItemsByCategory(search);
+		
+		if(items != null) {
+			for (ItemResponse item : items) {
+				imageService.getItemImages(item);
+			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";
+			response.object = items;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -142,24 +177,52 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		if(search.getCategory().length == 0) { // 카테고리가 선택되어 있지 않은 경우
-			response.object = itemDao.getItemsByKeyword(search);
-			if(response.object != null) {
+		if(search.getCategory() == null) { // 카테고리가 선택되어 있지 않은 경우
+			List<ItemResponse> items = itemDao.getItemsByKeyword(search);
+			if(items != null) {
+				for (ItemResponse item : items) {
+					imageService.getItemImages(item);
+				}
 				response.status = true;
 				response.data = "물건 가져오기 성공";
+				response.object = items;
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			response.data = "물건이 존재하지 않음";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		} else { // 카테고리가 선택되어 있는 경우
-			response.object = itemDao.getItemsByCategoryAndKeyword(search);
-			if(response.object != null) {
+			List<ItemResponse> items = itemDao.getItemsByCategoryAndKeyword(search);
+			if(items != null) {
+				for (ItemResponse item : items) {
+					imageService.getItemImages(item);
+				}
 				response.status = true;
 				response.data = "물건 가져오기 성공";
+				response.object = items;
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			response.data = "물건이 존재하지 않음";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@Override
+	public ResponseEntity<BasicResponse> getItemsByUserId(long id) {
+		BasicResponse response = new BasicResponse();
+		
+		List<ItemResponse> items = itemDao.getItemsByUserId(id);
+		
+		if(items != null) {
+			for (ItemResponse item : items) {
+				imageService.getItemImages(item);
+			}
+			response.status = true;
+			response.data = "물건 가져오기 성공";
+			response.object = items;
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		
+		response.data = "물건이 존재하지 않음";
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }
