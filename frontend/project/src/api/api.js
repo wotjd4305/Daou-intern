@@ -1,13 +1,14 @@
 export default {
-    URL: 'https://localhost:3306/api',
+    URL: 'http://localhost:8080/api',
     ROUTES: {
     
       // accounts
-      myaccount: '/users',
-      signup: '/users/signup',
-      login: '/users/signin',
+      myaccount: '/token',
+      signup: '/user',
+      login: '/login',
       password: '/users/password',
-      changepassword: '/users/resetPassword',
-  
+      changepassword: '/edit',
+      checkreduplication: '/'
+
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="container p-1 mt-5 bg-light-ivory signup-form">
-      <h3>회원가입</h3>
+      <h3>회원 수정.. 아직 안건듬</h3>
 
       <!-- 프로필과 입력창 -->
       <div class="row">
