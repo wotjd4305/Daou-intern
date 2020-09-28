@@ -17,4 +17,5 @@ public interface IItemService {
 	public ResponseEntity<BasicResponse> getAllItems();
 	public ResponseEntity<BasicResponse> getItemsByCategory(ItemSearchRequest search);
 	public ResponseEntity<BasicResponse> getItemsByKeyword(ItemSearchRequest search);
+	public ResponseEntity<BasicResponse> getItemsByUserId(long id);
 }

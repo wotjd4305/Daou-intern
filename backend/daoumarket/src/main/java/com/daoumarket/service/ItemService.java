@@ -153,7 +153,7 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		if(search.getCategory().length == 0) { // 카테고리가 선택되어 있지 않은 경우
+		if(search.getCategory() == null) { // 카테고리가 선택되어 있지 않은 경우
 			response.object = itemDao.getItemsByKeyword(search);
 			if(response.object != null) {
 				response.status = true;
@@ -172,5 +172,21 @@ public class ItemService implements IItemService {
 			response.data = "물건이 존재하지 않음";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@Override
+	public ResponseEntity<BasicResponse> getItemsByUserId(long id) {
+		BasicResponse response = new BasicResponse();
+		
+		response.object = itemDao.getItemsByUserId(id);
+		
+		if(response.object != null) {
+			response.status = true;
+			response.data = "물건 가져오기 성공";
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		
+		response.data = "물건이 존재하지 않음";
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }
