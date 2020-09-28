@@ -31,5 +31,10 @@ public class ImageDao implements IImageDao {
 	public List<String> getItemImages(long id) {
 		return sqlSession.selectList(ns + "getItemImages", id);
 	}
+
+	@Override
+	public int deleteUserImage(long id) {
+		return sqlSession.update(ns + "deleteUserImage", id);
+	}
 	
 }
