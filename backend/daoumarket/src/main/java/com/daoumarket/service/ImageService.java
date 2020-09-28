@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dao.IImageDao;
 import com.daoumarket.dto.Image;
+import com.daoumarket.dto.ItemResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,10 @@ public class ImageService implements IImageService {
 	
 	@Transactional
 	@Override
-    public int insertItemImage(MultipartFile[] images, long id) { // 물건 이미지 업로드
+    public int insertItemImage(MultipartFile[] images, long itemId) { // 물건 이미지 업로드
+		
+		String[] picture = new String[images.length];
+		
 		for (int i = 0; i < images.length; i++) {
     		String imageName = images[i].getOriginalFilename();
     		String imageExtension = FilenameUtils.getExtension(imageName).toLowerCase();
@@ -44,19 +48,24 @@ public class ImageService implements IImageService {
     		log.info("Image uploaded : {}", destinationImageName);
     		try {
     			images[i].transferTo(destinationImage);
-    			imageDao.insertItemImage(Image.builder().id(id).picture(destinationImageName).build());
+    			picture[i] = destinationImageName;
     		} catch (RuntimeException | IOException e) {
     			log.error("파일 업로드에 실패했습니다.");
     			return 0;
     		}
 		}
+		
+		int result = imageDao.insertItemImage(Image.builder().id(itemId).picture(picture).build());
+		
+		if(result == 0)
+			return 0;
 
         return 1;
     }
     
 	@Transactional
     @Override
-	public int insertUserImage(MultipartFile image, long id) { // 유저 이미지 업로드
+	public int updateUserImage(MultipartFile image, long userId) { // 유저 이미지 업로드
     	
     	String imageName = image.getOriginalFilename();
 		String imageExtension = FilenameUtils.getExtension(imageName).toLowerCase();
@@ -71,7 +80,7 @@ public class ImageService implements IImageService {
 		log.info("Image uploaded : {}", destinationImageName);
 		try {
 			image.transferTo(destinationImage);
-			imageDao.insertUserImage(Image.builder().id(id).picture(destinationImageName).build());
+			imageDao.updateUserImage(Image.builder().id(userId).image(destinationImageName).build());
 		} catch (RuntimeException | IOException e) {
 			log.error("파일 업로드에 실패했습니다.");
 			return 0;
@@ -80,8 +89,13 @@ public class ImageService implements IImageService {
 	}
     
 	@Override
-    public List<Image> getImage(long id) {
-    	return imageDao.getImage(id);
+    public void getItemImages(ItemResponse item) {
+    	
+		List<String> images = imageDao.getItemImages(item.getId());
+		
+		for (String filename : images) {
+			item.getPicture().add(filename);
+		}
     }
 
 }

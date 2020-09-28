@@ -36,7 +36,7 @@ public class ItemController {
 	@GetMapping("/item/{id}")
 	@ApiOperation("물건 상세정보 조회")
 	public ResponseEntity<BasicResponse> getItemById(@PathVariable long id) {
-		log.info("ItemController : getItemById => {id}", id);
+		log.info("ItemController : getItemById => {}", id);
 		
 		return itemService.getItemById(id);
 	}
@@ -110,7 +110,7 @@ public class ItemController {
 	@GetMapping("/item/{id}/list")
 	@ApiOperation("id를 가진 유저의 게시물 가져오기")
 	public ResponseEntity<BasicResponse> getItemsByUserId(@PathVariable long id) {
-		log.info("ItemController : getItemsByUserId");
+		log.info("ItemController : getItemsByUserId => {}", id);
 		
 		return itemService.getItemsByUserId(id);
 	}

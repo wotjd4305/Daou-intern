@@ -4,21 +4,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="image">
 
-	<insert id="insertItemimage" parameterType="image">
+	<insert id="insertItemImage" parameterType="image">
 		insert into image(item_id, picture)
-		values(#{itemId}, #{picture})
+		values
+		<foreach collection="picture" item="pic" separator=", ">
+		 	(#{id}, #{pic})
+		</foreach>
 	</insert>
 	
 	<update id="updateUserImage" parameterType="image">
 		update user
-		set image = #{picture}
+		set image = #{image}
 		where id = #{id}
 	</update>
 	
-	<!-- <select id="getItemImage" parameterType="long" resultType="image">
+	<select id="getItemImages" parameterType="long" resultType="string">
 		select picture
 		from image 
 		where item_id = #{id}
-	</select> -->
+	</select>
 
 </mapper>
