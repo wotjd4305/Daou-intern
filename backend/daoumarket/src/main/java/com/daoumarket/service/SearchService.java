@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.daoumarket.dao.ISearchDao;
 import com.daoumarket.dto.BasicResponse;
-import com.daoumarket.dto.Search;
+import com.daoumarket.dto.SearchInsertResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,13 +17,13 @@ public class SearchService implements ISearchService {
 	public final ISearchDao searchDao;
 
 	@Override
-	public ResponseEntity<BasicResponse> insertSearch(Search search) {
+	public ResponseEntity<BasicResponse> insertSearch(SearchInsertResponse searchInsertResponse) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		System.out.println(search);
+		System.out.println(searchInsertResponse);
 		
-		int res = searchDao.insertSearch(search);
+		int res = searchDao.insertSearch(searchInsertResponse);
 		
 		if (res > 0) {
 			basicResponse.status = true;

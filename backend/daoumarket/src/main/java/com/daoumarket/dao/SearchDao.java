@@ -3,7 +3,7 @@ package com.daoumarket.dao;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.daoumarket.dto.Search;
+import com.daoumarket.dto.SearchInsertResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,8 +15,9 @@ public class SearchDao implements ISearchDao {
 	private String ns = "searchKeyword.";
 	
 	@Override
-	public int insertSearch(Search search) {
-		return sqlSession.insert(ns + "insertSearch", search);
+	public int insertSearch(SearchInsertResponse searchInsertResponse) {
+		sqlSession.update(ns + "insertSearch", searchInsertResponse);
+		return searchInsertResponse.getResult();
 	}
 
 }

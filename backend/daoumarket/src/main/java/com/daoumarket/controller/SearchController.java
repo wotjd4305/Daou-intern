@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
-import com.daoumarket.dto.Search;
+import com.daoumarket.dto.SearchInsertResponse;
 import com.daoumarket.service.ISearchService;
 
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +23,7 @@ public class SearchController {
 	
 	@PostMapping("/search")
 	@ApiOperation("키워드 검색")
-	public ResponseEntity<BasicResponse> insertSearch(@RequestBody Search search){
-		return searchService.insertSearch(search);
+	public ResponseEntity<BasicResponse> insertSearch(@RequestBody SearchInsertResponse searchInsertResponse){
+		return searchService.insertSearch(searchInsertResponse);
 	}
 }

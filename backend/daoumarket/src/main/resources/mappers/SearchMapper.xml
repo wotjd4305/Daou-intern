@@ -3,9 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="searchKeyword">
-	<insert id="insertSearch" parameterType="search">
+	<!-- <insert id="insertSearch" parameterType="search">
 		insert into search(keyword, date, user_id) values(#{keyword}, now(), #{user_id})
-	</insert>
+	</insert> -->
+	
+	<update id="insertSearch" statementType="CALLABLE" parameterType="searchInsertResponse">
+		{call insertsearch(#{user_id, mode=IN, jdbcType=BIGINT, javaType=long}, #{keyword, mode=IN, jdbcType=CHAR, javaTyp=String}, #{result, mode=OUT, jdbcType=INTEGER, javaType=int})
+	</update>
+	
 	
 	<delete id="deleteSearch" parameterType="long">
 	

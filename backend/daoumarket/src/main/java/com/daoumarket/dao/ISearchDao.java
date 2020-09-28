@@ -1,7 +1,7 @@
 package com.daoumarket.dao;
 
-import com.daoumarket.dto.Search;
+import com.daoumarket.dto.SearchInsertResponse;
 
 public interface ISearchDao {
-	public int insertSearch(Search search);
+	public int insertSearch(SearchInsertResponse searchInsertResponse);
 }
