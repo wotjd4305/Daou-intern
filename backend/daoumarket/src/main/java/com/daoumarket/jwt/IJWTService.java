@@ -1,5 +1,6 @@
 package com.daoumarket.jwt;
 
+import com.daoumarket.dto.TokenRequest;
 import com.daoumarket.dto.User;
 
 public interface IJWTService {
@@ -7,6 +8,6 @@ public interface IJWTService {
 	public String makeJwt(User res) throws Exception;
 	
 	// jwt가 인증된 토큰인지 검사하는 메소드
-	public User checkJwt(String jwt) throws Exception;
+	public User checkJwt(TokenRequest accessToken) throws Exception;
 
 }

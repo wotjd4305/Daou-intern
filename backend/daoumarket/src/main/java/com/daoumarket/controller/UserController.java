@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dto.BasicResponse;
+import com.daoumarket.dto.TokenRequest;
 import com.daoumarket.dto.User;
 import com.daoumarket.dto.UserLoginRequest;
 import com.daoumarket.jwt.IJWTService;
@@ -57,7 +59,7 @@ public class UserController {
 	
 	@PostMapping("/user/token")
 	@ApiOperation("토큰 검증")
-	public ResponseEntity<BasicResponse> token(@RequestBody String accessToken){
+	public ResponseEntity<BasicResponse> token(@RequestBody TokenRequest accessToken){
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		User userJwt = null;
