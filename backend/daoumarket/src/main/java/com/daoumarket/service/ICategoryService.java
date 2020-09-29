@@ -5,5 +5,6 @@ import org.springframework.http.ResponseEntity;
 import com.daoumarket.dto.BasicResponse;
 
 public interface ICategoryService {
-	public ResponseEntity<BasicResponse> getCategory();
+	public ResponseEntity<BasicResponse> getItemCategory();
+	public ResponseEntity<BasicResponse> getDepartmentCategory();
 }

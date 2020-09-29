@@ -104,7 +104,7 @@ public class ItemTest {
 	@Ignore
 	@Test
 	public void testUpdateStatusItem_물건상태정보수정하기() {
-		String status = "거래중";
+		char status = 'I'; // Ing : 거래중
 		
 		ItemUpdateRequest expectedItem = ItemUpdateRequest.builder()
 				.id(id)
@@ -114,13 +114,13 @@ public class ItemTest {
 		
 		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
 		
-		status = "거래완료";
+		status = 'C'; // Completed : 판매완료
 		expectedItem.updateStatus(status);
 		itemDao.updateItemStatus(expectedItem);
 		
 		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
 		
-		status = "판매중";
+		status = 'S'; // on Sale : 판매중
 		expectedItem.updateStatus(status);
 		itemDao.updateItemStatus(expectedItem);
 		

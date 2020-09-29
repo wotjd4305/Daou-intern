@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ItemUpdateRequest {
 	
-	long id;
-	String title;
-	int price;
-	String category;
-	String content;
-	String status;
+	private long id;
+	private String title;
+	private int price;
+	private String category;
+	private String content;
+	private char status;
 	
 	@Builder
-	public ItemUpdateRequest(long id, String title, int price, String category, String content, String status) {
+	public ItemUpdateRequest(long id, String title, int price, String category, String content, char status) {
 		this.id = id;
 		this.title = title;
 		this.price = price;
@@ -25,7 +25,7 @@ public class ItemUpdateRequest {
 		this.status = status;
 	}
 	
-	public void updateStatus(String status) {
+	public void updateStatus(char status) {
 		this.status = status;
 	}
 }

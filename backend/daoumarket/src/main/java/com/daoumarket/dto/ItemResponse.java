@@ -18,7 +18,7 @@ public class ItemResponse {
 	int price;
 	String category;
 	String content;
-	String status;
+	char status;
 	boolean delflag;
 	LocalDateTime date;
 	List<String> picture = new LinkedList<>();
@@ -26,7 +26,7 @@ public class ItemResponse {
 	
 	@Builder
 	public ItemResponse(long id, long userId, String title, int price, String category, String content,
-			String status, LocalDateTime date, List<String> picture, User user) {
+			char status, LocalDateTime date, List<String> picture, User user) {
 		this.id = id;
 		this.userId = userId;
 		this.title = title;

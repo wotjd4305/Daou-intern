@@ -46,7 +46,7 @@ public class ItemController {
 	@ApiOperation("물건 등록")
 	public ResponseEntity<BasicResponse> insertItem(@RequestParam long userId, @RequestParam int price,
 													@RequestParam String category, @RequestParam String content,
-													@RequestPart MultipartFile[] images) {
+													@RequestPart(required = false) MultipartFile[] images) {
 		log.info("ItemController : insertItem");
 		
 		ItemInsertRequest item = ItemInsertRequest.builder()
