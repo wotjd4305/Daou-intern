@@ -9,6 +9,7 @@ export default {
       password: '/users/password',
       changepassword: '/edit',
       checkreduplication: '/'
+    
 
     }
 }

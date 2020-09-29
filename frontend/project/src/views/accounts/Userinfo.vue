@@ -113,11 +113,99 @@
       <div class="buttons mt-3">
         <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup">회원가입</button>
       </div>
-      <p class="my-3">
-        <span class="items" @click="toLogin">로그인하기</span>
-      </p>
+      
     </div>
+
+
+
+    <!-- 검색 창 -->
+    <div class="container">
+      
+
+
+       <!-- 목록 창-->
+     <div class="container ">
+        <div class="row ">
+            <div class="col-3 mt-4" v-for="(item, idx) in itemsDummy" :key="idx">
+                <div class="forHover">
+                    <div class="item-list-card shadow01">
+                        <b-img
+                        type="image"
+                        @click="goToDetail()"
+                        style="cursor:pointer"
+                        :src=item.picture
+                        width="200rem"
+                        height="150rem"
+                        class="mt-3 mb-2"
+                        ></b-img>
+
+                        <div class="row">
+                            <div class="ml-5 text-left">
+                                <span class="item-list-title-text">
+                                    제품명 : 
+                                </span>
+                                <span class="  item-list-title-contents">
+                                    {{item.title}} 
+                                </span>
+                            </div>
+                            <div class="ml-5 text-left">
+                                <span class="item-list-title-text">
+                                    카테고리 : 
+                                </span>
+                                <span class="  item-list-title-contents">
+                                    {{item.category}} 
+                                </span>
+                            </div>
+                            <div class="ml-5 text-left">
+                                <span class="item-list-title-text">
+                                    등록일 : 
+                                </span>
+                                <span class="item-list-title-contents">
+                                    {{item.date}} 
+                                </span>
+                            </div>
+                            <div class="ml-5 text-left">
+                                <span class="item-list-title-text">
+                                    가격 : 
+                                </span>
+                                <span class="item-list-title-contents">
+                                    {{item.price}} 
+                                </span>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div>
+                    <hr class="featurette-divider" />
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!--/목록 창-->
+
+
+
+
+
+
+
+
+
+
+    
   </div>
+
+
+
+
+  
+
+
+
+
 </template>
 
 <script>

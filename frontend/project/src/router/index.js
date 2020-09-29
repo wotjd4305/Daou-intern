@@ -10,6 +10,7 @@ import Userinfo from '@/views/accounts/Userinfo'
 import Home from '@/views/boards/Home'
 import Board from '@/views/boards/Board'
 import BoardDetail from '@/views/boards/BoardDetail'
+import BoardWrite from '@/views/boards/BoardWrite'
 
 //Chat Test
 import Chat from '@/views/chat/Chat'
@@ -57,6 +58,12 @@ const routes = [
     name: 'BoardDetail',
     component: BoardDetail
   },
+  {
+    path: '/board/write',
+    name: 'BoardWrite',
+    component: BoardWrite, 
+  }
+  ,
   //Chat Test
   {
     path : '/chat',
@@ -80,8 +87,8 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Login', 'Signup', 'Userinfo'] // 로그인 해야하는 페이지
-  const authPages = ['Login', 'Signup','Userinfo']  // 로그인 안되어 있어야하는 페이지
+  const publicPages = ['Login', 'Signup'] // 로그인 해야하는 페이지
+  const authPages = ['Login', 'Signup']  // 로그인 안되어 있어야하는 페이지
   const authRequired = !publicPages.includes(to.name) // 로그인 필요하면 true
   const unauthRequired = authPages.includes(to.name)
   const isLoggedIn = Vue.$cookies.isKey('auth-token')

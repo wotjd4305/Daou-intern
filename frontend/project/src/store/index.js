@@ -34,12 +34,15 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    
     findMyAccount({ rootGetters, commit}) {
       axios.post(SERVER.URL + SERVER.ROUTES.myaccount, null, rootGetters.config)
         .then(res => {
-            commit('SET_MY_ACCOUNT', res.object)
+            console.log("여기에요!" + res.data.object)
+            commit('SET_MY_ACCOUNT', res.data.object)
         })
-        .catch(err => console.log(err.response.object))
+        .catch(err => 
+          console.log(err.response.object))
     },
     logout({ commit }) {
       commit('SET_TOKEN', null)

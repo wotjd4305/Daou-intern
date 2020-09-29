@@ -208,6 +208,7 @@
 
 <script>
 import { Carousel3d, Slide } from "vue-carousel-3d";
+import { mapActions } from "vuex";
 //import axios from "axios";
 
 export default {
@@ -222,9 +223,11 @@ export default {
     };
   },
   created() {
-  
+      this.findMyaccount();
   },
   methods: {
+       ...mapActions(['findMyAccount']),
+    
       goToDetail(){
             this.$router.push({ path: "/board/detail" });
         }
