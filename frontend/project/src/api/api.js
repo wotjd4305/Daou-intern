@@ -3,12 +3,11 @@ export default {
     ROUTES: {
     
       // accounts
-      myaccount: '/token',
-      signup: '/user',
-      login: '/login',
-      password: '/users/password',
-      changepassword: '/edit',
-      checkreduplication: '/'
+      myaccount: '/user/token',
+      signup: '/user/join',
+      login: '/user/login',
+      checkreduplication: '/',
+      updateuser: '/user/edit'
     
 
     }

@@ -23,18 +23,18 @@
 
           <div class="input-with-label">
             <input
-              v-model="loginData.num"
-              v-bind:class="{error : error.num, complete:!error.num&&loginData.num.length!==0}"
+              v-model="loginData.empNum"
+              v-bind:class="{error : error.empNum, complete:!error.empNum&&loginData.empNum.length!==0}"
               class="inputs"
-              id="num"
+              id="empNum"
               placeholder="사원번호"
               type="text"
               autocapitalize="none"
               autocorrect="none"
               required
             />
-            <label for="num"></label>
-            <div class="error-text ml-3" v-if="error.num">{{error.num}}</div>
+            <label for="empNum"></label>
+            <div class="error-text ml-3" v-if="error.empNum">{{error.empNum}}</div>
           </div>
           <div class="input-with-label">
             <input
@@ -75,11 +75,11 @@ export default {
   data() {
     return {
       loginData: {
-        num: "",
+        empNum: "",
         password: "",
       },
       error: {
-        num: false,
+        empNum: false,
         password: false,
       },
       isSubmit: false,
@@ -111,15 +111,15 @@ export default {
 
     checkSabunForm() {
       if (
-        this.loginData.num.length > 0 &&
-        !this.validSabun(this.loginData.num)
+        this.loginData.empNum.length > 0 &&
+        !this.validSabun(this.loginData.empNum)
       ) {
-        this.error.num = "숫자만 입력해 주세요.";
-      } else this.error.num = false;
+        this.error.empNum = "숫자만 입력해 주세요.";
+      } else this.error.empNum = false;
     },
-    validSabun(num) {
+    validSabun(empNum) {
       var re = /^[0-9]*$/;
-      return re.test(num);
+      return re.test(empNum);
     },
     checkPasswordForm() {
       if (
@@ -136,7 +136,7 @@ export default {
       // 버튼 활성화
       if (
         this.loginData.password.length > 0 &&
-        this.loginData.num.length > 0
+        this.loginData.empNum.length > 0
       ) {
         let isSubmit = true;
         Object.values(this.error).map((v) => {

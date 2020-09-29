@@ -17,10 +17,11 @@ const accountStore = {
 
   },
   actions: {
+
+    //회원가입
     postAuthData1({ commit }, info) {
 
       //alert(SERVER.URL + info.location)
-     
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
           if(res.data.status){
@@ -46,17 +47,15 @@ const accountStore = {
            })
            Toast.fire({
             icon: 'error',
-            title: err.response.data.message
+            title: err.response.data
           })
         })
     },
+
+
     // Login
     postAuthData2({ commit }, info) {
-
-      //router.push({name: "Home"});
-      //alert(SERVER.URL + info.location)
-      //alert(typeof(info.data.sabun))
-      
+ 
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
           if(res.data.status){
@@ -88,6 +87,42 @@ const accountStore = {
           })
         })
     },
+
+    //유저 수정
+    updateUserData({ commit }, info){
+      console.log("유저수정 부분! " + info.location)
+      axios.patch(SERVER.URL + info.location, info.data)
+      .then(res => {
+        if(res.data.status){
+            console.log(res.data.object)
+            commit('SET_TOKEN', res.data.object, { root: true })
+            
+
+            router.push(info.to)
+       }
+       else{
+         alert("에러" + res.data.status)
+       }
+      })
+      .catch(err => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: false,
+          onOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+         })
+         Toast.fire({
+          icon: 'error',
+          title: err.response.data.message
+        })
+      })
+    },
+
     signup({ dispatch }, signupData) {
       const info = {
         data: signupData,
@@ -115,6 +150,14 @@ const accountStore = {
         .catch (err =>{
           console.log(err.response)
         })
+    },
+    updateUser({dispatch}, updateData){
+      const info = {
+        data: updateData,
+        location: SERVER.ROUTES.updateuser,
+        to: '/userinfo'
+      }
+      dispatch('updateUserData', info)
     },
     
   },
