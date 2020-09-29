@@ -15,6 +15,7 @@
 <script>
 import Footer from "./components/Footer.vue";
 import Navbar from "./components/Navbar.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "App",
@@ -22,7 +23,14 @@ export default {
     Footer,
     Navbar,
   },
+  methods:{
+    ...mapActions(['findMyAccount']),
+  },
+  created(){
+    this.findMyAccount()
+  }
 }
+
 </script>
 
 <style>

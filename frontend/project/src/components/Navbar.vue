@@ -44,7 +44,7 @@
         
           <div>
             <b-nav-item class="mr-5" href="#">
-              <router-link class="nav-logo-txt" id="rlink" :to="{ path: `/login` }">
+              <div class="nav-logo-txt" id="rlink" @click="goToHome">
                 <img
                     class="profileImg"
                     ref="uploadItemImage"
@@ -52,21 +52,22 @@
                     src="@/assets/img/logo.png"
                     style="width: 2.5rem; height: 2.5rem;"
                   /> <strong> Daou Market </strong>
-              </router-link
+              </div
               >
+
             </b-nav-item>
           </div>
 
 
           <div class=" nav-middle-position">
-           <b-nav-item  class="nav-mid-position ml-5" href="#">
+           <b-nav-item v-if="authToken != null"  class="nav-mid-position ml-5" href="#">
               <router-link id="rlink" :to="{ path: `/board` }"
                 ><strong>게시판</strong></router-link
               >
             </b-nav-item>
           </div>
           
-          <div class="nav-rigth-position">
+          <div v-if="authToken != null" class="nav-rigth-position">
             <b-nav-item  class="ml-5" href="#">
               <b-dropdown
                 id="dropdown"
@@ -76,18 +77,21 @@
                 variant="text"
                 toggle-class="text-decoration-none"
               >
-                  <b-dropdown-item href="#" @click="$bvModal.show('confirmPassword')">
-                    회원정보 수정
-                    <b-modal id="confirmPassword" hide-footer>
-                      <template v-slot:modal-title>비밀번호 재확인</template>
-                      <div class="d-block text-center">
-                        <ConfirmPassword />
-                      </div>
-                    </b-modal>
+                  <b-dropdown-item href="#">
+                    
+                      <b-nav-item v-if="authToken != null"  class="ml-5" href="#">
+                        <router-link  id="rlink" :to="{ path: `/userinfo` }"
+                          >
+                          <div class="drop-down-item-text">
+                            <strong>회원정보 수정</strong>
+                          </div>
+                          </router-link
+                        >
+                    </b-nav-item>
                   </b-dropdown-item>
                   
                   <b-dropdown-item v-b-toggle.sidebar-right href="#" >
-                    채팅
+                    <div class="drop-down-item-text text-right mr-2"> 채팅</div>
                     <!--
                     <b-modal id="chat" hide-footer>
                       <template v-slot:modal-title>채팅 테스트</template>
@@ -108,10 +112,8 @@
             </b-nav-item>
           </div>
 
-            <b-nav-item  class="ml-3 nav-logout" href="#">
-              <router-link id="rlink" :to="{ path: `/boards/board` }"
-                ><strong>로그아웃</strong></router-link
-              >
+            <b-nav-item v-if="authToken != null" class="ml-3 nav-logout" href="#">
+              <div style="color:white;" @click="logout"><strong>로그아웃</strong></div>
             </b-nav-item>
          
 
@@ -124,7 +126,7 @@
 </template>
 
 <script>
-import ConfirmPassword from "../views/accounts/ConfirmPassword.vue";
+import { mapState,mapActions } from 'vuex'
 import Chat from "../views/chat/Chat.vue"
 
 export default {
@@ -136,15 +138,19 @@ export default {
     profileImgsrc:"@/assets/img/log.png"
    };
   },
-  components: { ConfirmPassword,
+  components: { 
   Chat
    },
   computed: {
-    
+     ...mapState(['myaccount','authToken']),
   },
   methods: {
-    goToChatTest(){
+     ...mapActions(['logout']),
+       goToChatTest(){
       this.$router.push({ name: "Chat" });
+    },
+    goToHome(){
+      this.$router.push({name:"Home"})
     }
   },
 };
@@ -223,7 +229,8 @@ export default {
 
 .nav-text button{
   font-weight: bold;
-  color:#ffffff
+  color:#ffffff;
+  
 }
 #sidebar-right ::-webkit-scrollbar {
     background-color: #dddddd;
@@ -233,5 +240,13 @@ export default {
     background-color: #2682ba;
     border-radius: 10px;
   }
+
+
+
+
+.drop-down-item-text{
+  color:black; 
+  font-weight:bold;
+}
 
 </style>

@@ -13,10 +13,14 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+//JWT
+import VueJwtDecode from 'vue-jwt-decode'
+
 Vue.use(VueCookies)
 Vue.use(VueMoment)
 Vue.use(BootstrapVue)
 Vue.use(VueMoment)
+Vue.use(VueJwtDecode)
 
 Vue.config.productionTip = false
 

@@ -17,31 +17,58 @@ const accountStore = {
 
   },
   actions: {
-    // Login
-    postAuthData2({ commit }, info) {
+    postAuthData1({ commit }, info) {
 
-      router.push({name: "Home"});
-
+      //alert(SERVER.URL + info.location)
+     
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
-          commit('SET_TOKEN', res.data, { root: true })
+          if(res.data.status){
+              console.log(res.data.object)
+              console.log(commit)
+              router.push('/login')
+         }
+         else{
+           alert("에러")
+         }
+        })
+        .catch(err => {
           const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
+            timer: 3000,
+            timerProgressBar: false,
             onOpen: (toast) => {
               toast.addEventListener('mouseenter', Swal.stopTimer)
               toast.addEventListener('mouseleave', Swal.resumeTimer)
               }
            })
            Toast.fire({
-            icon: 'success',
-            title: "로그인에 성공하였습니다."
+            icon: 'error',
+            title: err.response.data.message
           })
+        })
+    },
+    // Login
+    postAuthData2({ commit }, info) {
 
-          router.push('/')
+      //router.push({name: "Home"});
+      //alert(SERVER.URL + info.location)
+      //alert(typeof(info.data.sabun))
+      
+      axios.post(SERVER.URL + info.location, info.data)
+        .then(res => {
+          if(res.data.status){
+              console.log(res.data.object)
+              commit('SET_TOKEN', res.data.object, { root: true })
+              
+
+              router.push('/home')
+         }
+         else{
+           alert("에러" + res.data.status)
+         }
         })
         .catch(err => {
           const Toast = Swal.mixin({
@@ -65,7 +92,7 @@ const accountStore = {
       const info = {
         data: signupData,
         location: SERVER.ROUTES.signup,
-        to: '/signup/email'
+        to: '/signup'
       }
       dispatch('postAuthData1', info)
     },
@@ -73,7 +100,7 @@ const accountStore = {
       const info = {
         data: loginData,
         location: SERVER.ROUTES.login,
-        to: '/'
+        to: '/login'
       }
       dispatch('postAuthData2', info)
     },
