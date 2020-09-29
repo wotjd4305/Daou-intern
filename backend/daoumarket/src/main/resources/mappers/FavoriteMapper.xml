@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="favorite">
+	<insert id="insertFavorite" parameterType="favorite">
+		insert into favorite(user_id, item_id) values(#{userId}, #{itemId})
+	</insert>
+	
+	<delete id="deleteFavorite">
+		delete from favorite where id=#{favoriteId}
+	</delete>
+	
+	<select id="getFavoriteList" resultType="favorite">
+		select * from favorite where user_id=#{userId} order by date desc;
+	</select>
+</mapper>
