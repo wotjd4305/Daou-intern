@@ -24,13 +24,13 @@ public class SearchDao implements ISearchDao {
 	}
 
 	@Override
-	public int deleteSearch(long searchId) {
-		return sqlSession.delete(ns + "deleteSearch", searchId);
+	public int deleteSearchHistory(long searchId) {
+		return sqlSession.delete(ns + "deleteSearchHistory", searchId);
 	}
 
 	@Override
-	public List<Search> getSearch(long userId) {
-		return sqlSession.selectList(ns + "getSearch", userId);
+	public List<Search> getSearchHistory(long userId) {
+		return sqlSession.selectList(ns + "getSearchHistory", userId);
 	}
 	
 	
