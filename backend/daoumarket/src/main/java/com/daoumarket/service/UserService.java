@@ -45,11 +45,11 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public ResponseEntity<BasicResponse> getNum(long num) {
+	public ResponseEntity<BasicResponse> getEmpNum(long empNum) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		User userRes = userDao.getNum(num);
+		User userRes = userDao.getEmpNum(empNum);
 		
 		if (userRes == null) {
 			basicResponse.status = false;
