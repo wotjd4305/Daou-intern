@@ -36,9 +36,13 @@ export default new Vuex.Store({
   actions: {
     
     findMyAccount({ rootGetters, commit}) {
-      axios.post(SERVER.URL + SERVER.ROUTES.myaccount, null, rootGetters.config)
+      console.log(this.state.authToken)
+      console.log(rootGetters.config)
+      
+      axios.post(SERVER.URL + SERVER.ROUTES.myaccount, {token :this.state.authToken})
         .then(res => {
-            console.log("여기에요!" + res.data.object)
+            console.log("여기에요!1" + res.data.data)
+            console.log("여기에요!2" + res.data.object.id)
             commit('SET_MY_ACCOUNT', res.data.object)
         })
         .catch(err => 

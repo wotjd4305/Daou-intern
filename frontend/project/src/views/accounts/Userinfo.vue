@@ -41,42 +41,9 @@
         <div class="col">
           <div class="input-with-label">
             <input 
-              v-model="signupData.name"
-              v-bind:class="{error: error.name, complete:!error.name&&signupData.name.length!==0}"
-              class="inputs"
-              id="Name"
-              placeholder="이름" 
-              type="text" 
-              autocapitalize="none"
-              autocorrect="none"
-              style="text-transform:lowercase"
-            />
-            <label for="Name"></label>
-            <div class="error-text ml-3" v-if="error.name">{{error.name}}</div>
-          </div>
-
-          <div class="input-with-label">
-            <input 
-              v-model="signupData.num" 
-              v-bind:class="{error : error.num, complete:!error.num&&signupData.num.length!==0}"
-              class="inputs"
-              id="num" 
-              placeholder="사번" 
-              type="text" 
-              autocapitalize="none"
-              autocorrect="none"
-              style="text-transform:lowercase"
-              required
-              />
-            <label for="num"></label>
-            <div class="error-text ml-3" v-if="error.num">{{error.num}}</div>
-          </div>
-
-          <div class="input-with-label">
-            <input 
-              v-model="signupData.password" 
+              v-model="userUpdateData.password" 
               
-              v-bind:class="{error : error.password, complete:!error.password&&signupData.password.length!==0}"
+              v-bind:class="{error : error.password, complete:!error.password&&userUpdateData.password.length!==0}"
               class="inputs"
               id="password" 
               type="password"
@@ -89,20 +56,20 @@
 
           <div class="input-with-label">
             <input
-              v-model="signupData.passwordConfirm"
+              v-model="userUpdateData.passwordConfirm"
               type="password"
               id="password-confirm"
-              v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&signupData.passwordConfirm.length!==0}"
+              v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&userUpdateData.passwordConfirm.length!==0}"
               placeholder="비밀번호를 다시 입력해주세요."
               class="inputs"
               required
-              @keyup.enter="clickSignup"
+              @keyup.enter="clickUpdate"
             />
             <label for="password-confirm"></label>
             <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
           </div>
           <div class="input-with-label mt-2">
-            <select v-model="signupData.department" class=" custom-select">
+            <select v-model="userUpdateData.department" class=" custom-select">
               <option  v-for="(depart, idx) in departs" :key="idx">{{ depart }}</option>
             </select>
           </div>
@@ -111,87 +78,10 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup">회원가입</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickUpdate">회원가입</button>
       </div>
       
     </div>
-
-
-
-    <!-- 검색 창 -->
-    <div class="container">
-      
-
-
-       <!-- 목록 창-->
-     <div class="container ">
-        <div class="row ">
-            <div class="col-3 mt-4" v-for="(item, idx) in itemsDummy" :key="idx">
-                <div class="forHover">
-                    <div class="item-list-card shadow01">
-                        <b-img
-                        type="image"
-                        @click="goToDetail()"
-                        style="cursor:pointer"
-                        :src=item.picture
-                        width="200rem"
-                        height="150rem"
-                        class="mt-3 mb-2"
-                        ></b-img>
-
-                        <div class="row">
-                            <div class="ml-5 text-left">
-                                <span class="item-list-title-text">
-                                    제품명 : 
-                                </span>
-                                <span class="  item-list-title-contents">
-                                    {{item.title}} 
-                                </span>
-                            </div>
-                            <div class="ml-5 text-left">
-                                <span class="item-list-title-text">
-                                    카테고리 : 
-                                </span>
-                                <span class="  item-list-title-contents">
-                                    {{item.category}} 
-                                </span>
-                            </div>
-                            <div class="ml-5 text-left">
-                                <span class="item-list-title-text">
-                                    등록일 : 
-                                </span>
-                                <span class="item-list-title-contents">
-                                    {{item.date}} 
-                                </span>
-                            </div>
-                            <div class="ml-5 text-left">
-                                <span class="item-list-title-text">
-                                    가격 : 
-                                </span>
-                                <span class="item-list-title-contents">
-                                    {{item.price}} 
-                                </span>
-                            </div>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-                <div>
-                    <hr class="featurette-divider" />
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!--/목록 창-->
-
-
-
-
-
-
-
 
 
 
@@ -201,71 +91,52 @@
 
 
 
-  
-
-
-
-
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Signup',
   data() {
     return {
       departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
-      signupData: {
-        num: "",
+      userUpdateData: {
+        empNum : "",
         password: "",
         passwordConfirm: "",
-        name: "",
         department: "",
       },
       error: {
-        num: false,
-        name: false,
         password: false,
         passwordConfirm: false,
+        department: false,
       },
       isSubmit: false,
     };
   },
   created() {
-    this.component = this;
+    this.userUpdateData.empNum = this.myaccount.empNum;
   },
   watch: {
-    signupData: {
+    userUpdateData: {
       deep: true,
       handler() {
-        this.checkNameForm();
-        this.checkSabunForm();
         this.checkPasswordForm();
         this.checkPasswordConfirmationForm();
       }
     }
   },
+  computed:{
+    ...mapState(['myaccount'])
+  },
   methods: {
-    checkNameForm() {
-      if ( this.signupData.name.length > 0) {
-        this.error.Name = false;
-      }
-      else this.error.Name="이름을 입력하세요."
-    },
-    checkSabunForm() {
-      if ( this.signupData.num.length > 0 && !this.validSabun(this.signupData.num) ) {
-        this.error.num = "숫자만 입력하세요."   
-      }
-      else this.error.num = false;
-    },
-    validSabun(num) {
-      var re = /^[0-9]*$/;
-      return re.test(num);
-    },
+    ...mapActions("accountStore",["updateUser"]),
+    
+     
     checkPasswordForm() {
-      if (this.signupData.password.length > 0 && this.signupData.password.length < 8) {
+      if (this.userUpdateData.password.length > 0 && this.userUpdateData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
-        } else if ( this.signupData.password.length >= 8 && !this.validPassword(this.signupData.password) ) {
+        } else if ( this.userUpdateData.password.length >= 8 && !this.validPassword(this.userUpdateData.password) ) {
           this.error.password = "영문, 숫자 포함 8 자리 이상이어야 해요.";
         } else this.error.password = false;
     },
@@ -274,14 +145,14 @@ export default {
       return va.test(password);
     },
     checkPasswordConfirmationForm() {
-      if (this.signupData.password.length >= 8 && this.validPassword(this.signupData.password)) {
-         if (this.signupData.password !== this.signupData.passwordConfirm )
+      if (this.userUpdateData.password.length >= 8 && this.validPassword(this.userUpdateData.password)) {
+         if (this.userUpdateData.password !== this.userUpdateData.passwordConfirm )
         this.error.passwordConfirm = "비밀번호가 일치하지 않아요."
       else this.error.passwordConfirm = false;
       }
       
       // 버튼 활성화
-      if (this.signupData.name.length > 0 && this.signupData.num.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0){
+      if (this.userUpdateData.password.length > 0 && this.userUpdateData.passwordConfirm.length > 0 && this.userUpdateData.department.length > 0){
         let isSubmit = true;
         Object.values(this.error).map(v => {
           if (v) isSubmit = false;
@@ -290,15 +161,13 @@ export default {
       }
      
     },
-    clickSignup() {
+
+    clickUpdate() {
       if ( this.isSubmit ){
-        this.signup(this.signupData)
+        //alert(this.userUpdateData.empNum)
+        this.updateUser(this.userUpdateData)
       }
-    },
-    toLogin() {
-      this.$router.push({name: "Login"});
-    },
-    ...mapActions('accountStore', ['signup'])
+    }
   }
 }
 </script>
