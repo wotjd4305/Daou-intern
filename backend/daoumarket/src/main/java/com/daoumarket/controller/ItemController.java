@@ -44,13 +44,14 @@ public class ItemController {
 	
 	@PostMapping(path = "/item", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ApiOperation("물건 등록")
-	public ResponseEntity<BasicResponse> insertItem(@RequestParam long userId, @RequestParam int price,
+	public ResponseEntity<BasicResponse> insertItem(@RequestParam long userId, @RequestParam String title, @RequestParam int price,
 													@RequestParam String category, @RequestParam String content,
 													@RequestPart(required = false) MultipartFile[] images) {
 		log.info("ItemController : insertItem");
 		
 		ItemInsertRequest item = ItemInsertRequest.builder()
 				.userId(userId)
+				.title(title)
 				.price(price)
 				.category(category)
 				.content(content).build();
