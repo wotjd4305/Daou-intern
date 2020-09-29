@@ -3,6 +3,7 @@ package com.daoumarket.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,15 +31,15 @@ public class SearchController {
 		return searchService.insertSearch(searchInsertResponse);
 	}
 	
-	@DeleteMapping("/search/{searchId}")
-	@ApiOperation("키워드 삭제")
-	public ResponseEntity<BasicResponse> deleteSearch(@PathVariable long searchId) {
-		return searchService.deleteSearch(searchId);
+	@DeleteMapping("/search/{id}")
+	@ApiOperation("검색 id를 이용해서 키워드 삭제")
+	public ResponseEntity<BasicResponse> deleteSearchHistory(@PathVariable long id) {
+		return searchService.deleteSearchHistory(id);
 	}
 	
-	@PostMapping("/search/get")
-	@ApiOperation("키워드 탐색")
-	public ResponseEntity<BasicResponse> getSearch(@RequestParam long userId){
-		return searchService.getSearch(userId);
+	@GetMapping("/search/history/{id}")
+	@ApiOperation("유저 id를 이용해서 검색 이력 확인")
+	public ResponseEntity<BasicResponse> getSearchHistory(@RequestParam long id){
+		return searchService.getSearchHistory(id);
 	}
 }
