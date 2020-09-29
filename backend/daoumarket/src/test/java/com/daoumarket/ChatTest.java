@@ -13,14 +13,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.daoumarket.dao.IChatroomDao;
 import com.daoumarket.dto.ChatroomRequest;
+import com.daoumarket.dto.ChatroomResponse;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class ChatTest {
 	private static long id = 1;
-	private static long item_id = 1;
-	private static long seller_id = 1;
-	private static long buyer_id = 2;
+	private static long itemId = 1;
+	private static long sellerId = 1;
+	private static long buyerId = 2;
 	
 	private static ChatroomRequest chatroom;
 	
@@ -31,9 +32,9 @@ public class ChatTest {
 	public void setUp() {
 		chatroom = ChatroomRequest.builder()
 				.id(id)
-				.item_id(item_id)
-				.seller_id(seller_id)
-				.buyer_id(buyer_id).build();
+				.item_id(itemId)
+				.seller_id(sellerId)
+				.buyer_id(buyerId).build();
 	}
 	
 	@Test
@@ -44,7 +45,13 @@ public class ChatTest {
 	
 	@Test
 	public void testGetChatRoom_채팅방정보가져오기() {
-//		ChatRoomResponse chatroom = Chat
+		ChatroomResponse chatroom = ChatroomResponse.builder()
+				.id(id)
+				.sellerId(sellerId)
+				.buyerId(buyerId)
+				.lastMessage("반갑습니다")
+				.unreadMessageCnt(1).build();
+		
 	}
 	
 	@Test
