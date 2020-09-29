@@ -1,5 +1,6 @@
 package com.daoumarket.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,11 +42,11 @@ public class ItemController {
 		return itemService.getItemById(id);
 	}
 	
-	@PostMapping("/item")
+	@PostMapping(path = "/item", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ApiOperation("물건 등록")
 	public ResponseEntity<BasicResponse> insertItem(@RequestParam long userId, @RequestParam int price,
 													@RequestParam String category, @RequestParam String content,
-													@RequestPart MultipartFile[] images) {
+													@RequestPart(required = false) MultipartFile[] images) {
 		log.info("ItemController : insertItem");
 		
 		ItemInsertRequest item = ItemInsertRequest.builder()

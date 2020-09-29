@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Image {
 
-	long id;
-	String image;
-	String[] picture;
+	private long id;
+	private String image;
+	private String[] picture;
 	
 	@Builder
 	public Image(long id, String image, String[] picture) {

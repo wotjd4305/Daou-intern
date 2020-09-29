@@ -10,7 +10,7 @@ import com.daoumarket.dto.BasicResponse;
 public class CategoryService implements ICategoryService {
 
 	@Override
-	public ResponseEntity<BasicResponse> getCategory() {
+	public ResponseEntity<BasicResponse> getItemCategory() {
 		
 		BasicResponse response = new BasicResponse();
 		
@@ -19,7 +19,22 @@ public class CategoryService implements ICategoryService {
 				"게임/취미", "뷰티/미용", "반려동물용품", "도서/티켓/음반", "기타", "무료나눔"};
 		
 		response.status = true;
-		response.data = "카테고리 호출 성공";
+		response.data = "물건 카테고리 호출 성공";
+		response.object = category;
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<BasicResponse> getDepartmentCategory() {
+		
+		BasicResponse response = new BasicResponse();
+		
+		String[] category = {"서비스개발본부", "비즈메시징사업본부", "비즈마케팅사업본부", "커머스사업본부", 
+				"고객지원실", "기타"};
+		
+		response.status = true;
+		response.data = "부서 카테고리 호출 성공";
 		response.object = category;
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);

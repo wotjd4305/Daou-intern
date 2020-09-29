@@ -22,11 +22,19 @@ public class CategoryController {
 	
 	private final ICategoryService categoryService;
 	
-	@GetMapping("/category")
-	@ApiOperation("카테고리 가져오기")
-	public ResponseEntity<BasicResponse> getCategory() {
-		log.info("CategoryController : getCategory");
+	@GetMapping("/item/category")
+	@ApiOperation("물건 카테고리 가져오기")
+	public ResponseEntity<BasicResponse> getItemCategory() {
+		log.info("CategoryController : getItemCategory");
 		
-		return categoryService.getCategory();
+		return categoryService.getItemCategory();
+	}
+	
+	@GetMapping("/department/category")
+	@ApiOperation("부서 카테고리 가져오기")
+	public ResponseEntity<BasicResponse> getDepartmentCategory() {
+		log.info("CategoryController : getDepartmentCategory");
+		
+		return categoryService.getDepartmentCategory();
 	}
 }

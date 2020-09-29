@@ -10,8 +10,8 @@ import lombok.ToString;
 @ToString
 public class ItemSearchRequest {
 	
-	String[] category;
-	String keyword;
+	private String[] category;
+	private String keyword;
 	
 	@Builder
 	public ItemSearchRequest(String[] category, String keyword) {

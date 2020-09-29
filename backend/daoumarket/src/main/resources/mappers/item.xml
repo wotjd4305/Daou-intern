@@ -65,10 +65,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getItemsByCategory" parameterType="itemSearchRequest" resultMap="itemResponse">
 		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
 		from item i, user u
-		where (i.user_id = u.id and i.delflag = 0) and category like 
+		where (i.user_id = u.id and i.delflag = 0) and (category like 
 		<foreach collection="category" item="cate" separator=" or i.category like ">
-		 	concat('%', #{cate}, '%')
-		</foreach>
+		 	#{cate}
+		</foreach>)
 		order by date desc
 	</select>
 	
@@ -86,7 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where (i.user_id = u.id and i.delflag = 0) and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
 		and category like 
 		<foreach collection="category" item="cate" separator=" or i.category like ">
-		 	concat('%', #{cate}, '%')
+		 	#{cate}
 		</foreach>
 		order by date desc
 	</select>

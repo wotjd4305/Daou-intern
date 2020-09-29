@@ -14,23 +14,21 @@ public class ItemResponse {
 
 	long id;
 	long userId;
-	long name;
 	String title;
 	int price;
 	String category;
 	String content;
-	String status;
+	char status;
 	boolean delflag;
 	LocalDateTime date;
 	List<String> picture = new LinkedList<>();
 	User user;
 	
 	@Builder
-	public ItemResponse(long id, long userId, long name, String title, int price, String category, String content,
-			String status, LocalDateTime date, List<String> picture, User user) {
+	public ItemResponse(long id, long userId, String title, int price, String category, String content,
+			char status, LocalDateTime date, List<String> picture, User user) {
 		this.id = id;
 		this.userId = userId;
-		this.name = name;
 		this.title = title;
 		this.price = price;
 		this.category = category;

@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ItemInsertRequest {
 	
-	long id;
-	long userId;
-	String title;
-	int price;
-	String category;
-	String content;
+	private long id;
+	private long userId;
+	private String title;
+	private int price;
+	private String category;
+	private String content;
 	
 	@Builder
 	public ItemInsertRequest(long id, long userId, String title, int price, String category, String content) {
