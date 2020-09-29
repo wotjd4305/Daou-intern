@@ -21,8 +21,8 @@ public class UserDao implements IUserDao{
 	}
 
 	@Override
-	public User getNum(long num) {
-		return sqlSession.selectOne(ns + "getNum", num);
+	public User getEmpNum(long empNum) {
+		return sqlSession.selectOne(ns + "getEmpNum", empNum);
 	}
 
 	@Override

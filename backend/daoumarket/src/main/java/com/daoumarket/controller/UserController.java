@@ -36,26 +36,26 @@ public class UserController {
 	private final IJWTService jwtService;
 	private final IImageService imageService;
 	
-	@PostMapping("/user")
+	@PostMapping("/user/join")
 	@ApiOperation("회원가입")
 	public ResponseEntity<BasicResponse> insertUser(@RequestBody User user) {
 		return userService.insertUser(user);
 	}
 	
 	
-	@GetMapping("/{num}")
+	@GetMapping("/user/{empnum}")
 	@ApiOperation("사번 중복 체크")
-	public ResponseEntity<BasicResponse> getNum(@PathVariable long num) {
-		return userService.getNum(num);
+	public ResponseEntity<BasicResponse> getEmpNum(@PathVariable long empnum) {
+		return userService.getEmpNum(empnum);
 	}
 	
-	@PostMapping("/login")
+	@PostMapping("/user/login")
 	@ApiOperation("로그인")
 	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody UserLoginRequest userLogin){
 		return userService.getUserLogin(userLogin);
 	}
 	
-	@PostMapping("/token")
+	@PostMapping("/user/token")
 	@ApiOperation("토큰 검증")
 	public ResponseEntity<BasicResponse> token(@RequestBody String accessToken){
 		ResponseEntity<BasicResponse> responseEntity = null;
@@ -84,8 +84,8 @@ public class UserController {
 		return responseEntity;
 	}
 	
-	@PostMapping("/edit")
-	@ApiOperation("정보수정")
+	@PatchMapping("/user/edit")
+	@ApiOperation("회원 정보(비밀번호, 부서) 수정하기")
 	public ResponseEntity<BasicResponse> updateUser(@RequestBody User user){
 		return userService.updateUser(user);
 	}

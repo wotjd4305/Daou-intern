@@ -41,13 +41,13 @@ public class JWTService implements IJWTService {
         Map<String, Object> map= new HashMap<String, Object>();
 
         long id = user.getId();
-        long num = user.getNum();
+        long empNum = user.getEmpNum();
         String name = user.getName();
         String department = user.getDepartment();
         String image = user.getImage();
 
         map.put("id", id);
-        map.put("num", num);
+        map.put("empNum", empNum);
         map.put("name", name);
         map.put("department", department);
         map.put("image", image);
@@ -71,7 +71,7 @@ public class JWTService implements IJWTService {
 //            System.out.println("expireTime :" + claims.getExpiration());
             
             user.setId(Long.valueOf(claims.get("id") + ""));
-            user.setNum(Long.valueOf(claims.get("num") + ""));
+            user.setEmpNum(Long.valueOf(claims.get("empNum") + ""));
             user.setName((String) claims.get("name") + "");
             user.setDepartment((String) claims.get("department") + "");
             user.setImage((String) claims.get("image") + "");
