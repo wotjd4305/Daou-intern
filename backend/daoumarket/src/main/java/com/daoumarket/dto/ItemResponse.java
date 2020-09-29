@@ -14,7 +14,6 @@ public class ItemResponse {
 
 	long id;
 	long userId;
-	long name;
 	String title;
 	int price;
 	String category;
@@ -26,11 +25,10 @@ public class ItemResponse {
 	User user;
 	
 	@Builder
-	public ItemResponse(long id, long userId, long name, String title, int price, String category, String content,
+	public ItemResponse(long id, long userId, String title, int price, String category, String content,
 			String status, LocalDateTime date, List<String> picture, User user) {
 		this.id = id;
 		this.userId = userId;
-		this.name = name;
 		this.title = title;
 		this.price = price;
 		this.category = category;
