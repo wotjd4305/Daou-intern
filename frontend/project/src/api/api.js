@@ -6,7 +6,7 @@ export default {
       myaccount: '/user/token',
       signup: '/user/join',
       login: '/user/login',
-      checkreduplication: '/',
+      checkreduplication: '/user',
       updateuser: '/user/edit'
     
 

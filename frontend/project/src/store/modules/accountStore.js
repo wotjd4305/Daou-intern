@@ -139,8 +139,24 @@ const accountStore = {
       }
       dispatch('postAuthData2', info)
     },
-    findPassword(email) {
+    checkEmpNum(empNum){
+      alert(empNum)
       const info = {
+        data: empNum,
+      }
+      axios.get(SERVER.URL + SERVER.ROUTES.checkreduplication + "/" + info.data.empNum)
+        .then (() => {
+          alert(false)
+          return false
+        })
+        .catch (err =>{
+          console.log(err.response)
+          alert(true)
+          return true
+        })
+    },
+    findPassword(email) {
+      const info = { 
         data: email,
       }
       axios.post(SERVER.URL + SERVER.ROUTES.password, info)
