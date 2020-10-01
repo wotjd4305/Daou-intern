@@ -14,7 +14,7 @@
                 ref="profileImg"
                 style="display: none"
                 accept="image/jpeg, jpg, png/"
-                @change="uploadImage($event)"
+                @change="clickuploadImage($event)"
               />
 
               <button class="pro-button" id="profileImgBtn" @click="$refs.profileImg.click()">
@@ -115,7 +115,9 @@ export default {
     };
   },
   created() {
+    this.findMyaccount();
     this.userUpdateData.empNum = this.myaccount.empNum;
+    
   },
   watch: {
     userUpdateData: {
@@ -130,7 +132,8 @@ export default {
     ...mapState(['myaccount'])
   },
   methods: {
-    ...mapActions("accountStore",["updateUser"]),
+    ...mapActions("accountStore",["updateUser","uploadImg"]),
+    ...mapActions(['findMyAccount']),
     
      
     checkPasswordForm() {
@@ -161,7 +164,23 @@ export default {
       }
      
     },
+    clickuploadImage(event){
 
+       const formData = new FormData();
+      formData.append("profile", event.target.files[0]);
+      
+      //기존 계정에 이미지 덮어쓰기
+      this.myaccount.image = formData;
+
+      console.log(formData)
+
+      this.uploadImg(this.myaccount);
+
+
+      //실패시 null..
+      let itemImage = this.$refs.uploadItemImage; //img dom 접근
+          itemImage.src = URL.createObjectURL(event.target.files[0]);
+    },
     clickUpdate() {
       if ( this.isSubmit ){
         //alert(this.userUpdateData.empNum)

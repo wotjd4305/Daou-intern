@@ -122,7 +122,48 @@ const accountStore = {
         })
       })
     },
+    //유저 프로필 바꾸기
+    patchUserUploadData({commit}, info){
+      console.log("유저 프로필 수정 부분! " + info.location)
+      console.log("유저 프로필 수정 부분 - 타입 " + info.data)
+      //const file = event.target.files[0];
 
+      const formData = new FormData();
+      formData.append("profile", info.data.image);
+      
+
+      axios
+        .patch(
+          SERVER.URL + info.location,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.data == "업로드 성공") {
+            alert("프로필 업로드 성공");
+            commit('SET_MY_ACCOUNT', info.data.image, { root: true })
+          } else {
+            alert("프로필 업로드 실패");
+          }
+        });
+    }
+    ,
+
+    
+
+    uploadImg({ dispatch }, imgUploadData) {
+      const info = {
+        data: imgUploadData,
+        location: SERVER.ROUTES.uploaduserimageA + "/" + imgUploadData.id + SERVER.ROUTES.uploaduserimageB,
+        //to: '/'
+      }
+      dispatch('patchUserUploadData', info)
+    },
     signup({ dispatch }, signupData) {
       const info = {
         data: signupData,

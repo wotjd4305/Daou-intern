@@ -7,8 +7,9 @@ export default {
       signup: '/user/join',
       login: '/user/login',
       checkreduplication: '/user',
-      updateuser: '/user/edit'
-    
+      updateuser: '/user/edit',
+      uploaduserimageA: '/user',
+      uploaduserimageB: '/image',
 
     }
 }
