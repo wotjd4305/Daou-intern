@@ -27,8 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ImageService implements IImageService {
 
 //    public static final String SAVE_FOLDER = "/home/intern2/tomcat_intern2/images/";
-	//public static final String SAVE_FOLDER = "C:/Daou_intern/backend/daoumarket/src/main/resources/static/images/";
-	public static final String SAVE_FOLDER = "C:/Users/wotjd/OneDrive/바탕 화면/GitHub/Daou/Daou-intern/backend/daoumarket/src/main/resources/static/images";
+	public static final String SAVE_FOLDER = "C:/Daou_intern/backend/daoumarket/src/main/resources/static/images/";
 	private final IImageDao imageDao;
 	
 	@Transactional
