@@ -44,23 +44,23 @@
               v-model="signupData.name"
               v-bind:class="{error: error.name, complete:!error.name&&signupData.name.length!==0}"
               class="inputs"
-              id="Name"
+              id="name"
               placeholder="이름" 
               type="text" 
               autocapitalize="none"
               autocorrect="none"
               style="text-transform:lowercase"
             />
-            <label for="Name"></label>
+            <label for="name"></label>
             <div class="error-text ml-3" v-if="error.name">{{error.name}}</div>
           </div>
 
           <div class="input-with-label">
             <input 
-              v-model="signupData.num" 
-              v-bind:class="{error : error.num, complete:!error.num&&signupData.num.length!==0}"
-              class="inputs"
-              id="num" 
+              v-model="signupData.empNum" 
+              v-bind:class="{error : error.empNum, complete:!error.empNum&&signupData.empNum.length!==0}"
+              class="inputs empnum-input"
+              id="empNum" 
               placeholder="사번" 
               type="text" 
               autocapitalize="none"
@@ -68,8 +68,9 @@
               style="text-transform:lowercase"
               required
               />
-            <label for="num"></label>
-            <div class="error-text ml-3" v-if="error.num">{{error.num}}</div>
+            <span class="ml-2"><button @click="clickEmpNumCheck " :class="{disabled: !duplicateBtn}" class="btn duplication-btn">중복확인</button></span>
+            <label for="empNum"></label>
+            <div class="error-text ml-3" v-if="error.empNum">{{error.empNum}}</div>
           </div>
 
           <div class="input-with-label">
@@ -111,7 +112,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickSignup">회원가입</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit || isDuplicated}" @click="clickSignup">회원가입</button>
       </div>
       <p class="my-3">
         <span class="items" @click="toLogin">로그인하기</span>
@@ -122,25 +123,31 @@
 
 <script>
 import { mapActions } from 'vuex'
+import SERVER from '@/api/api'
+import axios from 'axios'
+
+
 export default {
   name: 'Signup',
   data() {
     return {
       departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
       signupData: {
-        num: "",
+        empNum: "",
         password: "",
         passwordConfirm: "",
         name: "",
         department: "",
       },
       error: {
-        num: false,
+        empNum: false,
         name: false,
         password: false,
         passwordConfirm: false,
       },
       isSubmit: false,
+      duplicateBtn: false,
+      isDuplicated: true,
     };
   },
   created() {
@@ -154,25 +161,30 @@ export default {
         this.checkSabunForm();
         this.checkPasswordForm();
         this.checkPasswordConfirmationForm();
+        this.checkEmpNumDuplicate();
       }
     }
   },
   methods: {
+    ...mapActions('accountStore', ['signup']),
+
+
     checkNameForm() {
       if ( this.signupData.name.length > 0) {
-        this.error.Name = false;
+        this.error.name = false;
       }
-      else this.error.Name="이름을 입력하세요."
+      else this.error.name="이름을 입력하세요."
     },
     checkSabunForm() {
-      if ( this.signupData.num.length > 0 && !this.validSabun(this.signupData.num) ) {
-        this.error.num = "숫자만 입력하세요."   
+      this.isDuplicated = true; // 숫자가 바뀌면 계속 중복체크해야함!
+      if ( this.signupData.empNum.length > 0 && !this.validSabun(this.signupData.empNum) ) {
+        this.error.empNum = "숫자만 입력하세요."   
       }
-      else this.error.num = false;
+      else this.error.empNum = false;
     },
-    validSabun(num) {
+    validSabun(empNum) {
       var re = /^[0-9]*$/;
-      return re.test(num);
+      return re.test(empNum);
     },
     checkPasswordForm() {
       if (this.signupData.password.length > 0 && this.signupData.password.length < 8) {
@@ -193,7 +205,7 @@ export default {
       }
       
       // 버튼 활성화
-      if (this.signupData.name.length > 0 && this.signupData.num.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0){
+      if (this.signupData.name.length > 0 && this.signupData.empNum.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0){
         let isSubmit = true;
         Object.values(this.error).map(v => {
           if (v) isSubmit = false;
@@ -202,15 +214,51 @@ export default {
       }
      
     },
+    checkEmpNumDuplicate(){
+      //유효하면 버튼 활성화
+      if(this.validSabun(this.signupData.empNum)){
+        this.duplicateBtn = true;
+      }
+      else{
+        this.duplicateBtn = false;
+      }
+    },
+    
+    checkEmpNum(empNum){
+      const info = {
+        data: empNum,
+      }
+      
+      axios.get(SERVER.URL + SERVER.ROUTES.checkreduplication + "/" + info.data)
+        .then ((res) => {
+          if(res.data.status){
+            alert(true)
+            return(true)
+          }
+          alert(false)
+          return false
+        })
+        .catch (err =>{
+          console.log(err.response)
+          alert(true)
+          return true
+        })
+    },
+    clickEmpNumCheck(){
+      if( this.duplicateBtn){
+        alert(this.signupData.empNum)
+        this.isDuplicated = this.checkEmpNum(this.signupData.empNum);
+      }
+    }
+    ,
     clickSignup() {
-      if ( this.isSubmit ){
+      if ( this.isSubmit && !this.isDuplicated){
         this.signup(this.signupData)
       }
     },
     toLogin() {
       this.$router.push({name: "Login"});
     },
-    ...mapActions('accountStore', ['signup'])
   }
 }
 </script>
@@ -233,6 +281,13 @@ h3 {
   padding-left: 10px;
   padding-right: 10px;
   margin-top: 20px;
+}
+.empnum-input{
+  width: 60% !important;
+}
+.duplication-btn{
+  background-color: #88a498;
+  color: #f8f8f8;
 }
 .signup-button{
   background-color: #88A498;

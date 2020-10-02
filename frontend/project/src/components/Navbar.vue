@@ -144,6 +144,8 @@ export default {
   computed: {
      ...mapState(['myaccount','authToken']),
   },
+  created(){
+  },
   methods: {
      ...mapActions(['logout']),
        goToChatTest(){

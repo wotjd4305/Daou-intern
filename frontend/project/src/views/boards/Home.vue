@@ -12,7 +12,7 @@
           <div class="search-input">
             <b-img
               type="image"
-              @click="searchA(search_input_text, search_input_period)"
+              @click="searchA(search_input_text)"
               style="cursor:pointer"
               v-bind:src="require(`@/assets/img/icons8-search-120.png`)"
               width="25px"
@@ -20,7 +20,7 @@
             <input
               type="text"
               placeholder="물건 혹은 카테고리"
-              v-on:keyup.enter="searchA(search_input_text, search_input_period)"
+              v-on:keyup.enter="searchA(search_input_text)"
               v-model="search_input_text"
               value
               autocomplete="off"
@@ -29,7 +29,7 @@
               class="search_top_text"
             />
             
-            <button class="ml-1 btn search-button" :class="{disabled: !isSubmit}" @click="clickLogin">검색</button>
+            <button class="ml-1 btn search-button"  >검색</button>
             
           </div>
         </form>
@@ -208,7 +208,7 @@
 
 <script>
 import { Carousel3d, Slide } from "vue-carousel-3d";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 //import axios from "axios";
 
 export default {
@@ -220,17 +220,24 @@ export default {
     return {
       slidesLength: 10,
       prizeProfileImgsrc:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
-    };
+      search_input_text:"",
+   };
   },
   created() {
-      this.findMyaccount();
+    this.findMyaccount();
+  },
+  computed:{
+      ...mapState(["myaccount"]),
   },
   methods: {
        ...mapActions(['findMyAccount']),
     
       goToDetail(){
             this.$router.push({ path: "/board/detail" });
-        }
+        },
+      searchA(text){
+        console.log(text)
+      }
   }
 };
 </script>

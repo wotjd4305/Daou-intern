@@ -6,9 +6,10 @@ export default {
       myaccount: '/user/token',
       signup: '/user/join',
       login: '/user/login',
-      checkreduplication: '/',
-      updateuser: '/user/edit'
-    
+      checkreduplication: '/user',
+      updateuser: '/user/edit',
+      uploaduserimageA: '/user',
+      uploaduserimageB: '/image',
 
     }
 }

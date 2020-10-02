@@ -27,7 +27,7 @@ export default {
     ...mapActions(['findMyAccount']),
   },
   created(){
-    this.findMyAccount()
+    this.findMyAccount();
   }
 }
 
