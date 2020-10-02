@@ -61,7 +61,21 @@ const accountStore = {
           if(res.data.status){
               console.log(res.data.object)
               commit('SET_TOKEN', res.data.object, { root: true })
-              
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                onOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                  }
+               })
+               Toast.fire({
+                icon: 'success',
+                title: "로그인에 성공."
+              })
 
               router.push('/home')
          }
@@ -128,14 +142,11 @@ const accountStore = {
       console.log("유저 프로필 수정 부분 - 타입 " + info.data)
       //const file = event.target.files[0];
 
-      const formData = new FormData();
-      formData.append("profile", info.data.image);
-      
 
       axios
         .patch(
           SERVER.URL + info.location,
-          formData,
+          info.data.image,
           {
             headers: {
               "Content-Type": "multipart/form-data",

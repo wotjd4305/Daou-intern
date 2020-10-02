@@ -95,6 +95,10 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+//import SERVER from '@/api/api'
+
+//import axios from 'axios'
+
 export default {
   name: 'Signup',
   data() {
@@ -164,16 +168,18 @@ export default {
       }
      
     },
+
     clickuploadImage(event){
 
        const formData = new FormData();
-      formData.append("profile", event.target.files[0]);
+      formData.append("image", event.target.files[0]);
       
       //기존 계정에 이미지 덮어쓰기
       this.myaccount.image = formData;
 
-      console.log(formData)
+      console.log(formData.get("image"))
 
+      //Store
       this.uploadImg(this.myaccount);
 
 
