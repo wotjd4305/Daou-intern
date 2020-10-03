@@ -119,7 +119,7 @@ export default {
     };
   },
   created() {
-    this.findMyaccount();
+    this.findMyAccount();
     this.userUpdateData.empNum = this.myaccount.empNum;
     
   },
