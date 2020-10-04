@@ -47,7 +47,7 @@ public class ItemService implements IItemService {
 	@Override
 	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item, MultipartFile[] images) {
 		
-		// TODO : resultCnt를 처음부터 나눠서 하는 것이 좋아보임
+		// TODO : resultCnt를 초기화부터 나눠서 하는 것이 좋아보임
 		
 		BasicResponse response = new BasicResponse();
 		int resultCnt = 0;
