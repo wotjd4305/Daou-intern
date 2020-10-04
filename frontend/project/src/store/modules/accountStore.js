@@ -138,8 +138,8 @@ const accountStore = {
     },
     //유저 프로필 바꾸기
     patchUserUploadData({commit}, info){
-      console.log("유저 프로필 수정 부분! " + info.location)
-      console.log("유저 프로필 수정 부분 - 타입 " + info.data)
+      console.log("유저 프로필 업로드 부분! " + info.location)
+      console.log("유저 프로필 업로드 부분 - 타입 " + info.data)
       //const file = event.target.files[0];
 
 
@@ -156,17 +156,46 @@ const accountStore = {
         .then((response) => {
           console.log(response);
           if (response.data.data == "업로드 성공") {
+
+            
             alert("프로필 업로드 성공");
-            commit('SET_MY_ACCOUNT', info.data.image, { root: true })
+            commit('SET_MY_ACCOUNT', info.data, { root: true })
           } else {
             alert("프로필 업로드 실패");
           }
         });
+    },
+
+    patchDeleteProfile({commit}, info){
+      console.log("유저 프로필 삭제 부분! " + info.location)
+      console.log("유저 프로필 삭제 부분 - 타입 " + info.data)
+
+      axios
+        .delete(
+          SERVER.URL + info.location,
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.data == "삭제 성공") {
+            info.data.image = "icons8-male-user-90.png"
+            alert("프로필 이미지 삭제 성공");
+            commit('SET_MY_ACCOUNT', info.data, { root: true })
+          } else {
+            alert("프로필 이미지 삭제 실패");
+          }
+        });
     }
     ,
-
     
-
+    ///////////////////////////////
+    deleteUserImg({ dispatch }, accountData) {
+      const info = {
+        data: accountData,
+        location: SERVER.ROUTES.deleteuserimageA + "/" + accountData.id + SERVER.ROUTES.deleteuserimageB,
+        //to: '/'
+      }
+      dispatch('patchDeleteProfile', info)
+    },
     uploadImg({ dispatch }, imgUploadData) {
       const info = {
         data: imgUploadData,

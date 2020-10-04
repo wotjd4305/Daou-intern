@@ -10,6 +10,9 @@ export default {
       updateuser: '/user/edit',
       uploaduserimageA: '/user',
       uploaduserimageB: '/image',
+      deleteuserimageA:'/user',
+      deleteuserimageB:'/image',
+
 
     }
 }

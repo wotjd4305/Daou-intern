@@ -38,7 +38,7 @@ export default new Vuex.Store({
     findMyAccount({commit}) {
       console.log(this.state.authToken)
       //console.log(rootGetters.config)
-      alert("인뎃스")
+      console.log("findMyAccount")
       
       axios.post(SERVER.URL + SERVER.ROUTES.myaccount, {token :this.state.authToken})
         .then(res => {
