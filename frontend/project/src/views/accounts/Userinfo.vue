@@ -14,17 +14,22 @@
                 ref="profileImg"
                 style="display: none"
                 accept="image/jpeg, jpg, png/"
-                @change="clickuploadImage($event)"
+                @change="clickUploadImage($event)"
               />
 
               <button class="pro-button" id="profileImgBtn" @click="$refs.profileImg.click()">
-                <img
-                  class="profileImg"
-                  ref="uploadItemImage"
-                  accept="image/jpeg, jpg, png/"
-                  src="@/assets/img/icons8-male-user-90.png"
-                  style="width: 10rem; height: 10rem;"
-                />
+
+                 <div>
+                    <img
+                      class="profileImg"
+                      ref="uploadItemImage"
+                      id="uploadImagdId"
+                      :src= "require(`@/assets/static/img/${myaccount.image}`)"
+                      accept="image/jpeg, jpg, png/"
+                      style="width: 10rem; height: 10rem;"
+                    />
+                  </div>
+                
               </button>
               <br />
               <!-- 프로필 삭제 아직 덜만듦!!!!! -->
@@ -33,7 +38,7 @@
                 size="sm"
                 variant="light"
                 id="deleteImg"
-                @click="deleteP()"
+                @click="clickUpDeleteImage()"
               >프로필 삭제</b-button>
         </b-col>
 
@@ -116,12 +121,17 @@ export default {
         department: false,
       },
       isSubmit: false,
+      defaultPath: "icons8-male-user-90.png",
     };
   },
   created() {
-    this.findMyaccount();
+    this.myaccount.image = this.defaultPath;
+    this.findMyAccount();
     this.userUpdateData.empNum = this.myaccount.empNum;
-    
+  },
+  
+  mounted(){
+ 
   },
   watch: {
     userUpdateData: {
@@ -130,16 +140,23 @@ export default {
         this.checkPasswordForm();
         this.checkPasswordConfirmationForm();
       }
-    }
+    },
+   
   },
   computed:{
-    ...mapState(['myaccount'])
+    ...mapState(['myaccount']),
+    
   },
+
   methods: {
-    ...mapActions("accountStore",["updateUser","uploadImg"]),
+    ...mapActions("accountStore",["updateUser","uploadImg","deleteUserImg"]),
     ...mapActions(['findMyAccount']),
     
-     
+    checkPathNull(){
+      if(this.myaccount.image == null || this.myaccount.image == ""){
+        this.myaccount.image = this.defaultPath;
+      }
+    },
     checkPasswordForm() {
       if (this.userUpdateData.password.length > 0 && this.userUpdateData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
@@ -168,10 +185,16 @@ export default {
       }
      
     },
+    clickUpDeleteImage(){
+       //Store
+      this.deleteUserImg(this.myaccount);
+      this.myaccount.image = this.defaultPath;
+      
+  },
 
-    clickuploadImage(event){
+    clickUploadImage(event){
 
-       const formData = new FormData();
+      const formData = new FormData();
       formData.append("image", event.target.files[0]);
       
       //기존 계정에 이미지 덮어쓰기
@@ -186,6 +209,7 @@ export default {
       //실패시 null..
       let itemImage = this.$refs.uploadItemImage; //img dom 접근
           itemImage.src = URL.createObjectURL(event.target.files[0]);
+
     },
     clickUpdate() {
       if ( this.isSubmit ){

@@ -224,7 +224,7 @@ export default {
    };
   },
   created() {
-    this.findMyaccount();
+    this.findMyAccount();
   },
   computed:{
       ...mapState(["myaccount"]),

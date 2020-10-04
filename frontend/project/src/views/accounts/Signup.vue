@@ -3,41 +3,9 @@
     <div class="container p-1 mt-5 bg-light-ivory signup-form">
       <h3>회원가입</h3>
 
-      <!-- 프로필과 입력창 -->
+      <!--입력창 -->
       <div class="row">
-
-        <!-- 프로필 -->
-        <b-col align-self="stretch center">
-              <b-form-text class="mb-2" id="profile-help">프로필 클릭 시, 이미지 변경이 가능합니다.</b-form-text>
-              <input
-                type="file"
-                ref="profileImg"
-                style="display: none"
-                accept="image/jpeg, jpg, png/"
-                @change="uploadImage($event)"
-              />
-
-              <button class="pro-button" id="profileImgBtn" @click="$refs.profileImg.click()">
-                <img
-                  class="profileImg"
-                  ref="uploadItemImage"
-                  accept="image/jpeg, jpg, png/"
-                  src="@/assets/img/icons8-male-user-90.png"
-                  style="width: 10rem; height: 10rem;"
-                />
-              </button>
-              <br />
-              <!-- 프로필 삭제 아직 덜만듦!!!!! -->
-              <b-button
-                class="mt-2"
-                size="sm"
-                variant="light"
-                id="deleteImg"
-                @click="deleteP()"
-              >프로필 삭제</b-button>
-        </b-col>
-
-        <!-- 입력창 -->
+  <!-- 입력창 -->
         <div class="col">
           <div class="input-with-label">
             <input 
@@ -67,6 +35,7 @@
               autocorrect="none"
               style="text-transform:lowercase"
               required
+              @keydown="checkEmpNumEveryEvent"
               />
             <span class="ml-2"><button @click="clickEmpNumCheck " :class="{disabled: !duplicateBtn}" class="btn duplication-btn">중복확인</button></span>
             <label for="empNum"></label>
@@ -103,7 +72,7 @@
             <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
           </div>
           <div class="input-with-label mt-2">
-            <select v-model="signupData.department" class=" custom-select">
+            <select v-model="signupData.department"  class=" custom-select">
               <option  v-for="(depart, idx) in departs" :key="idx">{{ depart }}</option>
             </select>
           </div>
@@ -168,7 +137,9 @@ export default {
   methods: {
     ...mapActions('accountStore', ['signup']),
 
-
+    checkEmpNumEveryEvent(){
+        this.isDuplicated = true; // 숫자가 바뀌면 계속 중복체크해야함!  
+    },
     checkNameForm() {
       if ( this.signupData.name.length > 0) {
         this.error.name = false;
@@ -176,9 +147,8 @@ export default {
       else this.error.name="이름을 입력하세요."
     },
     checkSabunForm() {
-      this.isDuplicated = true; // 숫자가 바뀌면 계속 중복체크해야함!
       if ( this.signupData.empNum.length > 0 && !this.validSabun(this.signupData.empNum) ) {
-        this.error.empNum = "숫자만 입력하세요."   
+        this.error.empNum = "숫자만 입력하세요." 
       }
       else this.error.empNum = false;
     },
@@ -205,7 +175,7 @@ export default {
       }
       
       // 버튼 활성화
-      if (this.signupData.name.length > 0 && this.signupData.empNum.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0){
+      if (this.signupData.name.length > 0 && this.signupData.empNum.length > 0 && this.signupData.password.length > 0 && this.signupData.passwordConfirm.length > 0 && this.signupData.department.length > 0){
         let isSubmit = true;
         Object.values(this.error).map(v => {
           if (v) isSubmit = false;
