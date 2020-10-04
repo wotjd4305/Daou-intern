@@ -91,12 +91,13 @@ public class ItemController {
 		return itemService.getAllItems();
 	}
 	
-	@PostMapping("/item/category")
+	@GetMapping("/item/category")
 	@ApiOperation("선택된 카테고리의 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByCategory(@RequestBody ItemSearchRequest search) {
+	public ResponseEntity<BasicResponse> getItemsByCategory(@RequestParam String[] category) {
 		log.info("ItemController : getItemsByCategory");
 		
-		System.out.println(search.toString());
+		ItemSearchRequest search = ItemSearchRequest.builder()
+				.category(category).build();
 		
 		return itemService.getItemsByCategory(search);
 	}

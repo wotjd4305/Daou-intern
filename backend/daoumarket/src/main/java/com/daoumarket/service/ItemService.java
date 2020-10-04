@@ -47,6 +47,8 @@ public class ItemService implements IItemService {
 	@Override
 	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item, MultipartFile[] images) {
 		
+		// TODO : resultCnt를 처음부터 나눠서 하는 것이 좋아보임
+		
 		BasicResponse response = new BasicResponse();
 		int resultCnt = 0;
 		int id = itemDao.insertItem(item);
@@ -158,7 +160,7 @@ public class ItemService implements IItemService {
 		
 		List<ItemResponse> items = itemDao.getItemsByCategory(search);
 		
-		if(items != null) {
+		if(!items.isEmpty()) {
 			for (ItemResponse item : items) {
 				imageService.getItemImages(item);
 			}
