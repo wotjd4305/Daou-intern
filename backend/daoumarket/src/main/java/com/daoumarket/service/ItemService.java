@@ -25,6 +25,7 @@ public class ItemService implements IItemService {
 
 	private final IItemDao itemDao;
 	private final IImageService imageService;
+	private final IFavoriteService favoriteService;
 	
 	@Override
 	public ResponseEntity<BasicResponse> getItemInfoByItemId(ItemInfoRequest itemInfoRequest) {
@@ -35,6 +36,7 @@ public class ItemService implements IItemService {
 		
 		if(item != null) {
 			imageService.setItemImages(item);
+			favoriteService.setItemIsFavorited(item, itemInfoRequest.getUserId());
 			response.status = true;
 			response.data = "물건 정보를 가져옴";
 			response.object = item;
@@ -119,11 +121,11 @@ public class ItemService implements IItemService {
 
 	@Transactional
 	@Override
-	public ResponseEntity<BasicResponse> deleteItem(long id) {
+	public ResponseEntity<BasicResponse> deleteItem(long itemId) {
 		
 		BasicResponse response = new BasicResponse();
 		
-		if(itemDao.deleteItem(id) == 1) {
+		if(itemDao.deleteItem(itemId) == 1) {
 			response.status = true;
 			response.data = "물건 삭제 성공";
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -134,7 +136,7 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getAllItems(long userId) {
+	public ResponseEntity<BasicResponse> getAllItems(int userId) {
 		
 		BasicResponse response = new BasicResponse();
 		
@@ -143,6 +145,7 @@ public class ItemService implements IItemService {
 		if(!items.isEmpty()) {
 			for (ItemResponse item : items) {
 				imageService.setItemImages(item);
+				favoriteService.setItemIsFavorited(item, userId);
 			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";
@@ -165,6 +168,7 @@ public class ItemService implements IItemService {
 		if(!items.isEmpty()) {
 			for (ItemResponse item : items) {
 				imageService.setItemImages(item);
+				favoriteService.setItemIsFavorited(item, search.getUserId());
 			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";
@@ -186,6 +190,7 @@ public class ItemService implements IItemService {
 			if(!items.isEmpty()) {
 				for (ItemResponse item : items) {
 					imageService.setItemImages(item);
+					favoriteService.setItemIsFavorited(item, search.getUserId());
 				}
 				response.status = true;
 				response.data = "물건 가져오기 성공";
@@ -199,6 +204,7 @@ public class ItemService implements IItemService {
 			if(!items.isEmpty()) {
 				for (ItemResponse item : items) {
 					imageService.setItemImages(item);
+					favoriteService.setItemIsFavorited(item, search.getUserId());
 				}
 				response.status = true;
 				response.data = "물건 가져오기 성공";
@@ -211,7 +217,7 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getItemsByUserId(long userId) {
+	public ResponseEntity<BasicResponse> getItemsByUserId(int userId) {
 		BasicResponse response = new BasicResponse();
 		
 		List<ItemResponse> items = itemDao.getItemsByUserId(userId);
@@ -219,6 +225,7 @@ public class ItemService implements IItemService {
 		if(!items.isEmpty()) {
 			for (ItemResponse item : items) {
 				imageService.setItemImages(item);
+				favoriteService.setItemIsFavorited(item, userId);
 			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";

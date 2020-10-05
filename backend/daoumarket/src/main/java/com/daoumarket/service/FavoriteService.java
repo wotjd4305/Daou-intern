@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.daoumarket.dao.IFavoriteDao;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.Favorite;
+import com.daoumarket.dto.ItemInfoRequest;
+import com.daoumarket.dto.ItemResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -81,5 +83,20 @@ public class FavoriteService implements IFavoriteService {
 		
 		return responseEntity;
 	}
+	
+	@Override
+    public void setItemIsFavorited(ItemResponse item, int userId) {
+    	
+		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
+				.itemId(item.getItemId())
+				.userId(userId).build();
+		
+		boolean isFavorite = favoriteDao.isFavorited(itemInfoRequest);
+		
+		System.out.println(isFavorite);
+		
+		if(isFavorite)
+			item.setFavorite(true);
+    }
 
 }

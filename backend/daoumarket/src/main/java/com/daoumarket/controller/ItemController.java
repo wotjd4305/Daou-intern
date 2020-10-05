@@ -94,7 +94,7 @@ public class ItemController {
 	
 	@GetMapping("/item")
 	@ApiOperation("모든 물건 가져오기")
-	public ResponseEntity<BasicResponse> getAllItems(@RequestParam long userId) {
+	public ResponseEntity<BasicResponse> getAllItems(@RequestParam int userId) {
 		log.info("ItemController : getAllItems");
 		
 		return itemService.getAllItems(userId);
@@ -125,7 +125,7 @@ public class ItemController {
 	
 	@GetMapping("/item/{userId}/list")
 	@ApiOperation("userId의 물건 목록 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByUserId(@PathVariable long userId) {
+	public ResponseEntity<BasicResponse> getItemsByUserId(@PathVariable int userId) {
 		log.info("ItemController : getItemsByUserId => {}", userId);
 		
 		return itemService.getItemsByUserId(userId);

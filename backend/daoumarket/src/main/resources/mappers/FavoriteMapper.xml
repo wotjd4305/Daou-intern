@@ -14,4 +14,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getFavoriteList" resultType="favorite">
 		select * from favorite where user_id=#{userId} order by date desc;
 	</select>
+	
+	<select id="isFavorited" parameterType="HashMap" resultType="boolean">
+	  select if(count(*) = 1, 1, 0)
+	  from favorite
+	  where item_id = #{itemId} and user_id = #{userId}
+	</select>
 </mapper>
