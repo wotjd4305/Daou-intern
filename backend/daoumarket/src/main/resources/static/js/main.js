@@ -10,7 +10,7 @@ var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
 var sender = 1;
-var receiver = 2;
+var receiver = 2; 
 var chatroom = 1;
 
 var colors = [
