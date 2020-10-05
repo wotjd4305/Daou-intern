@@ -15,19 +15,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateUserImage" parameterType="image">
 		update user
 		set image = #{image}
-		where id = #{id}
+		where user_id = #{id}
 	</update>
 	
 	<select id="getItemImages" parameterType="long" resultType="string">
 		select picture
 		from image 
-		where item_id = #{id}
+		where item_id = #{itemId}
 	</select>
 	
-	<update id="deleteUserImage" parameterType="long">
+	<update id="deleteUserImage" parameterType="int">
 		update user
 		set image = null
-		where id = #{id}
+		where user_id = #{userId}
 	</update>
 
 </mapper>
