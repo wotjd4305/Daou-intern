@@ -45,7 +45,7 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public ResponseEntity<BasicResponse> getEmpNum(long empNum) {
+	public ResponseEntity<BasicResponse> getEmpNum(int empNum) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		

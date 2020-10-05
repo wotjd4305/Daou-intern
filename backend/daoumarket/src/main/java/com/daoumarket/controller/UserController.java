@@ -46,12 +46,12 @@ public class UserController {
 	}
 	
 	
-	@GetMapping("/user/{empnum}")
+	@GetMapping("/user/{empNum}")
 	@ApiOperation("사번 중복 체크")
-	public ResponseEntity<BasicResponse> getEmpNum(@PathVariable long empnum) {
-		log.info("UserController : getEmpNum => {}", empnum);
+	public ResponseEntity<BasicResponse> getEmpNum(@PathVariable int empNum) {
+		log.info("UserController : getEmpNum => {}", empNum);
 		
-		return userService.getEmpNum(empnum);
+		return userService.getEmpNum(empNum);
 	}
 	
 	@PostMapping("/user/login")
@@ -101,20 +101,20 @@ public class UserController {
 		return userService.updateUser(user);
 	}
 	
-	@PatchMapping("/user/{id}/image")
+	@PatchMapping("/user/{userId}/image")
 	@ApiOperation("유저 프로필 사진 변경하기")
-	public ResponseEntity<BasicResponse> updateUserImage(@RequestPart MultipartFile image, @PathVariable long id) {
+	public ResponseEntity<BasicResponse> updateUserImage(@RequestPart MultipartFile image, @PathVariable int userId) {
 		log.info("userController : updateUserImage");
 		
-		return imageService.updateUserImage(image, id);
+		return imageService.updateUserImage(image, userId);
 	}
 	
-	@DeleteMapping("/user/{id}/image")
+	@DeleteMapping("/user/{userId}/image")
 	@ApiOperation("유저 프로필 사진 삭제하기")
-	public ResponseEntity<BasicResponse> deleteUserImage(@PathVariable long id) {
+	public ResponseEntity<BasicResponse> deleteUserImage(@PathVariable int userId) {
 		log.info("userController : deleteUserImage");
 		
-		return imageService.deleteUserImage(id);
+		return imageService.deleteUserImage(userId);
 	}
 	
 }

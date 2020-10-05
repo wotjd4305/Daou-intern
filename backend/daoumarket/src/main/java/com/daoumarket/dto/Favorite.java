@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Favorite {
 	private long favoriteId;
-	private long userId;
+	private int userId;
 	private long itemId;
 	private LocalDateTime date;
 }

@@ -60,7 +60,7 @@ public class SearchService implements ISearchService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getSearchHistory(long userId) {
+	public ResponseEntity<BasicResponse> getSearchHistory(int userId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		List<Search> search = null;

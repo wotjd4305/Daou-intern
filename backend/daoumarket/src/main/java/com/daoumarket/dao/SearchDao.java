@@ -29,7 +29,7 @@ public class SearchDao implements ISearchDao {
 	}
 
 	@Override
-	public List<Search> getSearchHistory(long userId) {
+	public List<Search> getSearchHistory(int userId) {
 		return sqlSession.selectList(ns + "getSearchHistory", userId);
 	}
 	

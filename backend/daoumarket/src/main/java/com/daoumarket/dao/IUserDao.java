@@ -5,7 +5,7 @@ import com.daoumarket.dto.UserLoginRequest;
 
 public interface IUserDao {
 	public int insertUser(User user);
-	public User getEmpNum(long empNum);
+	public User getEmpNum(int empNum);
 	public User getUserLogin(UserLoginRequest userLogin);
 	public int updateUser(User user);
 }

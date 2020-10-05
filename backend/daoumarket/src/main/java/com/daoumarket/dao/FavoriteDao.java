@@ -27,7 +27,7 @@ public class FavoriteDao implements IFavoriteDao {
 	}
 
 	@Override
-	public List<Favorite> getFavoriteList(long userId) {
+	public List<Favorite> getFavoriteList(int userId) {
 		return sqlSession.selectList(ns + "getFavoriteList", userId);
 	}
 	

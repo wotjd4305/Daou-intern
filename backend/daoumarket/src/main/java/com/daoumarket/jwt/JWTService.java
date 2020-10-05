@@ -41,8 +41,8 @@ public class JWTService implements IJWTService {
 
         Map<String, Object> map= new HashMap<String, Object>();
 
-        long userId = user.getUserId();
-        long empNum = user.getEmpNum();
+        int userId = user.getUserId();
+        int empNum = user.getEmpNum();
         String name = user.getName();
         String department = user.getDepartment();
         String image = user.getImage();
@@ -71,8 +71,8 @@ public class JWTService implements IJWTService {
                     .parseClaimsJws(accessToken.getToken()).getBody(); 
 //            System.out.println("expireTime :" + claims.getExpiration());
             
-            user.setUserId(Long.valueOf(claims.get("userId") + ""));
-            user.setEmpNum(Long.valueOf(claims.get("empNum") + ""));
+            user.setUserId(Integer.parseInt(claims.get("userId") + ""));
+            user.setEmpNum(Integer.parseInt(claims.get("empNum") + ""));
             user.setName((String) claims.get("name") + "");
             user.setDepartment((String) claims.get("department") + "");
             user.setImage((String) claims.get("image") + "");
