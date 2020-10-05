@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.daoumarket.dao.IItemDao;
+import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemResponse;
 import com.daoumarket.dto.ItemSearchRequest;
@@ -22,8 +23,8 @@ import com.daoumarket.dto.ItemUpdateRequest;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class ItemTest {
-	private static long id = 1;
-	private static long userId = 1;
+	private static long itemId = 1;
+	private static int userId = 1;
 	private static String title = "테스트";
 	private static int price = 10000;
 	private static String category = "기타";
@@ -67,9 +68,13 @@ public class ItemTest {
 	@Test
 	public void testGetItemById_id로물건가져오기() {
 		
-		ItemResponse expectedItem = itemDao.getItemById(id);
+		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
+				.itemId(itemId)
+				.userId(userId).build();
 		
-		assertEquals(expectedItem.getId(), id);
+		ItemResponse expectedItem = itemDao.getItemInfoByItemId(itemInfoRequest);
+		
+		assertEquals(expectedItem.getItemId(), itemId);
 		assertEquals(expectedItem.getTitle(), item.getTitle());
 		assertEquals(expectedItem.getPrice(), item.getPrice());
 		assertEquals(expectedItem.getCategory(), item.getCategory());
@@ -85,7 +90,7 @@ public class ItemTest {
 		String content = "수정되었습니다";
 		
 		ItemUpdateRequest expectedItem = ItemUpdateRequest.builder()
-				.id(id)
+				.itemId(itemId)
 				.title(title)
 				.price(price)
 				.category(category)
@@ -93,7 +98,11 @@ public class ItemTest {
 
 		itemDao.updateItemInfo(expectedItem);
 		
-		ItemResponse actualItem = itemDao.getItemById(id);
+		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
+				.itemId(itemId)
+				.userId(userId).build();
+		
+		ItemResponse actualItem = itemDao.getItemInfoByItemId(itemInfoRequest);
 		
 		assertEquals(expectedItem.getTitle(), actualItem.getTitle());
 		assertEquals(expectedItem.getPrice(), actualItem.getPrice());
@@ -107,33 +116,42 @@ public class ItemTest {
 		char status = 'I'; // Ing : 거래중
 		
 		ItemUpdateRequest expectedItem = ItemUpdateRequest.builder()
-				.id(id)
+				.itemId(itemId)
 				.status(status).build();
 		
 		itemDao.updateItemStatus(expectedItem);
 		
-		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
+		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
+				.itemId(itemId)
+				.userId(userId).build();
+		
+		assertEquals(expectedItem.getStatus(), itemDao.getItemInfoByItemId(itemInfoRequest).getStatus());
 		
 		status = 'C'; // Completed : 판매완료
 		expectedItem.updateStatus(status);
 		itemDao.updateItemStatus(expectedItem);
 		
-		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
+		assertEquals(expectedItem.getStatus(), itemDao.getItemInfoByItemId(itemInfoRequest).getStatus());
 		
 		status = 'S'; // on Sale : 판매중
 		expectedItem.updateStatus(status);
 		itemDao.updateItemStatus(expectedItem);
 		
-		assertEquals(expectedItem.getStatus(), itemDao.getItemById(id).getStatus());
+		assertEquals(expectedItem.getStatus(), itemDao.getItemInfoByItemId(itemInfoRequest).getStatus());
 	}
 	
 	@Ignore
 	@Test
 	public void deleteItem_물건삭제하기() {
 		
-		itemDao.deleteItem(id);
+		itemDao.deleteItem(itemId);
 		
-		assertNull(itemDao.getItemById(id));
+		
+		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
+				.itemId(itemId)
+				.userId(userId).build();
+		
+		assertNull(itemDao.getItemInfoByItemId(itemInfoRequest));
 	}
 	
 	@Ignore

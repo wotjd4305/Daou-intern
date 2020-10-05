@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dto.BasicResponse;
+import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemSearchRequest;
 import com.daoumarket.dto.ItemUpdateRequest;
@@ -34,17 +35,22 @@ public class ItemController {
 	
 	private final IItemService itemService;
 	
-	@GetMapping("/item/{id}")
+	@GetMapping("/item/{itemId}")
 	@ApiOperation("물건 상세정보 조회")
-	public ResponseEntity<BasicResponse> getItemById(@PathVariable long id) {
-		log.info("ItemController : getItemById => {}", id);
+	public ResponseEntity<BasicResponse> getItemInfoByItemId(@PathVariable(required = true) long itemId, 
+															@RequestParam(required = true) int userId) {
+		log.info("ItemController : getItemInfoByItemId => {}", itemId);
 		
-		return itemService.getItemById(id);
+		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
+				.itemId(itemId)
+				.userId(userId).build();
+		
+		return itemService.getItemInfoByItemId(itemInfoRequest);
 	}
 	
 	@PostMapping(path = "/item", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ApiOperation("물건 등록")
-	public ResponseEntity<BasicResponse> insertItem(@RequestParam long userId, @RequestParam String title, @RequestParam int price,
+	public ResponseEntity<BasicResponse> insertItem(@RequestParam int userId, @RequestParam String title, @RequestParam int price,
 													@RequestParam String category, @RequestParam String content,
 													@RequestPart(required = false) MultipartFile[] images) {
 		log.info("ItemController : insertItem");
@@ -75,20 +81,20 @@ public class ItemController {
 		return itemService.updateItemStatus(item);
 	}
 	
-	@DeleteMapping("/item/{id}")
+	@DeleteMapping("/item/{itemId}")
 	@ApiOperation("물건 삭제하기")
-	public ResponseEntity<BasicResponse> deleteItem(@PathVariable long id) {
+	public ResponseEntity<BasicResponse> deleteItem(@PathVariable long itemId) {
 		log.info("ItemController : deleteItem");
 		
-		return itemService.deleteItem(id);
+		return itemService.deleteItem(itemId);
 	}
 	
 	@GetMapping("/item")
 	@ApiOperation("모든 물건 가져오기")
-	public ResponseEntity<BasicResponse> getAllItems() {
+	public ResponseEntity<BasicResponse> getAllItems(@RequestParam(required = true) long userId) {
 		log.info("ItemController : getAllItems");
 		
-		return itemService.getAllItems();
+		return itemService.getAllItems(userId);
 	}
 	
 	@GetMapping("/item/category")
@@ -102,20 +108,24 @@ public class ItemController {
 		return itemService.getItemsByCategory(search);
 	}
 	
-	@PostMapping("/item/keyword")
+	@GetMapping("/item/keyword")
 	@ApiOperation("키워드 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestBody ItemSearchRequest search) {
+	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam String[] category, @RequestParam String keyword) {
 		log.info("ItemController : getItemsByKeyword");
+		
+		ItemSearchRequest search = ItemSearchRequest.builder()
+				.category(category)
+				.keyword(keyword).build();
 		
 		return itemService.getItemsByKeyword(search);
 	}
 	
-	@GetMapping("/item/{id}/list")
+	@GetMapping("/item/{userId}/list")
 	@ApiOperation("id를 가진 유저의 게시물 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByUserId(@PathVariable long id) {
-		log.info("ItemController : getItemsByUserId => {}", id);
+	public ResponseEntity<BasicResponse> getItemsByUserId(@PathVariable long userId) {
+		log.info("ItemController : getItemsByUserId => {}", userId);
 		
-		return itemService.getItemsByUserId(id);
+		return itemService.getItemsByUserId(userId);
 	}
 
 }

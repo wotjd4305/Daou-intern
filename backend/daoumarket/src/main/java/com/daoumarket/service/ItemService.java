@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dao.IItemDao;
 import com.daoumarket.dto.BasicResponse;
+import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemResponse;
 import com.daoumarket.dto.ItemSearchRequest;
@@ -26,20 +27,21 @@ public class ItemService implements IItemService {
 	private final IImageService imageService;
 	
 	@Override
-	public ResponseEntity<BasicResponse> getItemById(long id) {
+	public ResponseEntity<BasicResponse> getItemInfoByItemId(ItemInfoRequest itemInfoRequest) {
 		
 		BasicResponse response = new BasicResponse();
 		
-		response.object = itemDao.getItemById(id);
+		ItemResponse item = itemDao.getItemInfoByItemId(itemInfoRequest);
 		
-		if(response.object != null) {
+		if(item != null) {
+			imageService.setItemImages(item);
 			response.status = true;
-			response.data = "데이터 존재";
-			imageService.getItemImages((ItemResponse)response.object);
+			response.data = "물건 정보를 가져옴";
+			response.object = item;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "데이터가 존재하지 않음";
+		response.data = "물건을 찾을 수 없음";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -47,34 +49,40 @@ public class ItemService implements IItemService {
 	@Override
 	public ResponseEntity<BasicResponse> insertItem(ItemInsertRequest item, MultipartFile[] images) {
 		
-		// TODO : resultCnt를 초기화부터 나눠서 하는 것이 좋아보임
-		
 		BasicResponse response = new BasicResponse();
-		int resultCnt = 0;
+		int resultCnt = (images.length == 0) ? 0 : 2;
 		int id = itemDao.insertItem(item);
 		
-		if(id == 0) { // 게시물 등록 실패한 경우
-			response.data = "게시물 등록 실패";
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		if(id > 0) {
+			resultCnt++; 
+			if(images.length > 0 && imageService.insertItemImage(images, id) > 0) { // 이미지 파일이 존재하면 이미지 업로드 진행
+				resultCnt++;
+			}
 		}
 		
-		resultCnt++; 
-		if(images.length > 0) { // 이미지 파일이 존재하면 이미지 업로드 진행
-			resultCnt += imageService.insertItemImage(images, id);
-		} else { // 이미지 없는 게시물 등록
+		switch (resultCnt) {
+		case 0:
+			// 게시물 등록 실패(이미지 파일 X)
+			response.data = "게시물 등록 실패(이미지 파일 X)";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		case 1:
+			// 게시물 등록 성공(이미지 파일 X)
 			response.status = true;
-			response.data = "게시물 등록 성공!(이미지 파일은 없음)";
+			response.data = "게시물 등록 성공!(이미지 파일 X)";
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		case 2:
+			// 게시물 등록 실패(이미지 파일 O)
+			response.data = "게시물 등록 실패(이미지 파일 O)";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		case 3:
+			// 게시물 등록 성공했으나, 이미지 등록 실패(이미지 파일 O)
+			response.data = "게시물 등록 성공했으나, 이미지 등록 실패(이미지 파일 O)";
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		default :
+			response.status = true;
+			response.data = "게시물과 등록 성공!(이미지 파일 O)";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
-		
-		if(resultCnt == 1) {
-			response.data = "게시물은 등록 되었으나, 이미지 파일 업로드 실패";
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
-		
-		response.status = true;
-		response.data = "게시물과 이미지 등록 성공!";
-		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@Transactional
@@ -83,9 +91,7 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		int result = itemDao.updateItemInfo(item);
-		
-		if(result == 1) {
+		if(itemDao.updateItemInfo(item) == 1) {
 			response.status = true;
 			response.data = "물건 정보 수정 성공";
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -101,9 +107,7 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		int result = itemDao.updateItemStatus(item);
-		
-		if(result == 1) {
+		if(itemDao.updateItemStatus(item) == 1) {
 			response.status = true;
 			response.data = "물건 상태 수정 성공";
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -119,9 +123,7 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		int result = itemDao.deleteItem(id);
-		
-		if(result == 1) {
+		if(itemDao.deleteItem(id) == 1) {
 			response.status = true;
 			response.data = "물건 삭제 성공";
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -132,15 +134,15 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getAllItems() {
+	public ResponseEntity<BasicResponse> getAllItems(long userId) {
 		
 		BasicResponse response = new BasicResponse();
 		
 		List<ItemResponse> items = itemDao.getAllItems();
 		
-		if(items != null) {
+		if(!items.isEmpty()) {
 			for (ItemResponse item : items) {
-				imageService.getItemImages(item);
+				imageService.setItemImages(item);
 			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";
@@ -162,7 +164,7 @@ public class ItemService implements IItemService {
 		
 		if(!items.isEmpty()) {
 			for (ItemResponse item : items) {
-				imageService.getItemImages(item);
+				imageService.setItemImages(item);
 			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";
@@ -183,7 +185,7 @@ public class ItemService implements IItemService {
 			List<ItemResponse> items = itemDao.getItemsByKeyword(search);
 			if(items != null) {
 				for (ItemResponse item : items) {
-					imageService.getItemImages(item);
+					imageService.setItemImages(item);
 				}
 				response.status = true;
 				response.data = "물건 가져오기 성공";
@@ -196,7 +198,7 @@ public class ItemService implements IItemService {
 			List<ItemResponse> items = itemDao.getItemsByCategoryAndKeyword(search);
 			if(items != null) {
 				for (ItemResponse item : items) {
-					imageService.getItemImages(item);
+					imageService.setItemImages(item);
 				}
 				response.status = true;
 				response.data = "물건 가져오기 성공";
@@ -209,14 +211,14 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getItemsByUserId(long id) {
+	public ResponseEntity<BasicResponse> getItemsByUserId(long userId) {
 		BasicResponse response = new BasicResponse();
 		
-		List<ItemResponse> items = itemDao.getItemsByUserId(id);
+		List<ItemResponse> items = itemDao.getItemsByUserId(userId);
 		
 		if(items != null) {
 			for (ItemResponse item : items) {
-				imageService.getItemImages(item);
+				imageService.setItemImages(item);
 			}
 			response.status = true;
 			response.data = "물건 가져오기 성공";
