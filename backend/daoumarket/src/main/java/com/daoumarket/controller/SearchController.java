@@ -17,8 +17,10 @@ import com.daoumarket.service.ISearchService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin("*")
+@Slf4j
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @RestController
@@ -28,18 +30,24 @@ public class SearchController {
 	@PostMapping("/search")
 	@ApiOperation("키워드 검색")
 	public ResponseEntity<BasicResponse> insertSearch(@RequestBody SearchInsertResponse searchInsertResponse){
+		log.info("SearchController : insertSearch");
+		
 		return searchService.insertSearch(searchInsertResponse);
 	}
 	
 	@DeleteMapping("/search/{id}")
 	@ApiOperation("검색 id를 이용해서 키워드 삭제")
 	public ResponseEntity<BasicResponse> deleteSearchHistory(@PathVariable long id) {
+		log.info("SearchController : deleteSearchHistory => {}", id);
+		
 		return searchService.deleteSearchHistory(id);
 	}
 	
 	@GetMapping("/search/history/{id}")
 	@ApiOperation("유저 id를 이용해서 검색 이력 확인")
 	public ResponseEntity<BasicResponse> getSearchHistory(@RequestParam long id){
+		log.info("SearchController : getSearchHistory => {}", id);
+		
 		return searchService.getSearchHistory(id);
 	}
 }

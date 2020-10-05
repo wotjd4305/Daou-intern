@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Service
 public class Point {
-	private long id;
+	private long pointId;
 	private LocalDateTime date;
 	private int score;
 	private long userId;

@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Search {
-	private long id;
+	private long searchId;
 	private String keyword;
 	private LocalDateTime date;
 	private long userId;

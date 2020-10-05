@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Rank {
-	private long id;
+	private long rankId;
 	private String image;
 	private int total;
 }

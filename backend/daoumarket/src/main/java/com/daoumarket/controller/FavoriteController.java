@@ -17,8 +17,10 @@ import com.daoumarket.service.IFavoriteService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin("*")
+@Slf4j
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @RestController
@@ -28,18 +30,24 @@ public class FavoriteController {
 	@PostMapping("/favorite")
 	@ApiOperation("item에 favorite 설정")
 	public ResponseEntity<BasicResponse> insertFavorite(@RequestBody Favorite favorite){
+		log.info("FavoriteController : insertFavorite");
+		
 		return favoriteService.insertFavorite(favorite);
 	}
 	
 	@DeleteMapping("/favorite/{id}")
 	@ApiOperation("favorite id를 이용해서 키워드 삭제")
 	public ResponseEntity<BasicResponse> deleteFavorite(@PathVariable long id) {
+		log.info("FavoriteController : deleteFavorite => {}", id);
+		
 		return favoriteService.deleteFavorite(id);
 	}
 	
-	@GetMapping("/favorite/history/{id}")
+	@GetMapping("/favorite/{id}")
 	@ApiOperation("유저 id를 이용해서 favorite 이력 확인")
-	public ResponseEntity<BasicResponse> getFavoriteList(@RequestParam long id){
+	public ResponseEntity<BasicResponse> getFavoriteList(@PathVariable long id){
+		log.info("FavoriteController : getFavoriteList => {}", id);
+		
 		return favoriteService.getFavoriteList(id);
 	}
 }

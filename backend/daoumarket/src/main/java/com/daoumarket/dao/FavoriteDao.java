@@ -6,8 +6,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.daoumarket.dto.Favorite;
-import com.daoumarket.dto.Search;
-import com.daoumarket.dto.SearchInsertResponse;
 
 import lombok.RequiredArgsConstructor;
 
