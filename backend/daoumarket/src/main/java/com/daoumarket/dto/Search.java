@@ -15,5 +15,5 @@ public class Search {
 	private long searchId;
 	private String keyword;
 	private LocalDateTime date;
-	private long userId;
+	private int userId;
 }

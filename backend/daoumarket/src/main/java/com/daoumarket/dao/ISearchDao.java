@@ -8,5 +8,5 @@ import com.daoumarket.dto.SearchInsertResponse;
 public interface ISearchDao {
 	public int insertSearch(SearchInsertResponse searchInsertResponse);
 	public int deleteSearchHistory(long searchId);
-	public List<Search> getSearchHistory(long userId);
+	public List<Search> getSearchHistory(int userId);
 }

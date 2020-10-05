@@ -35,19 +35,19 @@ public class SearchController {
 		return searchService.insertSearch(searchInsertResponse);
 	}
 	
-	@DeleteMapping("/search/{id}")
+	@DeleteMapping("/search/{searchId}")
 	@ApiOperation("검색 id를 이용해서 키워드 삭제")
-	public ResponseEntity<BasicResponse> deleteSearchHistory(@PathVariable long id) {
-		log.info("SearchController : deleteSearchHistory => {}", id);
+	public ResponseEntity<BasicResponse> deleteSearchHistory(@PathVariable long searchId) {
+		log.info("SearchController : deleteSearchHistory => {}", searchId);
 		
-		return searchService.deleteSearchHistory(id);
+		return searchService.deleteSearchHistory(searchId);
 	}
 	
-	@GetMapping("/search/history/{id}")
+	@GetMapping("/search/{userId}")
 	@ApiOperation("유저 id를 이용해서 검색 이력 확인")
-	public ResponseEntity<BasicResponse> getSearchHistory(@RequestParam long id){
-		log.info("SearchController : getSearchHistory => {}", id);
+	public ResponseEntity<BasicResponse> getSearchHistory(@RequestParam int userId){
+		log.info("SearchController : getSearchHistory => {}", userId);
 		
-		return searchService.getSearchHistory(id);
+		return searchService.getSearchHistory(userId);
 	}
 }

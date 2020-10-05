@@ -7,11 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.daoumarket.dao.IFavoriteDao;
-import com.daoumarket.dao.ISearchDao;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.Favorite;
-import com.daoumarket.dto.Search;
-import com.daoumarket.dto.SearchInsertResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -62,7 +59,7 @@ public class FavoriteService implements IFavoriteService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getFavoriteList(long userId) {
+	public ResponseEntity<BasicResponse> getFavoriteList(int userId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		List<Favorite> favorite = null;

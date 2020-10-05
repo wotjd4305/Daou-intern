@@ -7,5 +7,5 @@ import com.daoumarket.dto.Favorite;
 public interface IFavoriteDao {
 	public int insertFavorite(Favorite favorite);
 	public int deleteFavorite(long favoriteId);
-	public List<Favorite> getFavoriteList(long userId);
+	public List<Favorite> getFavoriteList(int userId);
 }
