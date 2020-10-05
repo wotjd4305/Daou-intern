@@ -18,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class FavoriteService implements IFavoriteService {
 	
-	public final IFavoriteDao favoriteDao;
+	private final IFavoriteDao favoriteDao;
+	private final IImageService imageService;
 
 	@Override
 	public ResponseEntity<BasicResponse> insertFavorite(Favorite favorite) {
@@ -64,20 +65,19 @@ public class FavoriteService implements IFavoriteService {
 	public ResponseEntity<BasicResponse> getFavoriteList(int userId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
-		List<Favorite> favorite = null;
+		List<ItemResponse> favoriteList = favoriteDao.getFavoriteList(userId);
 		
-		favorite = favoriteDao.getFavoriteList(userId);
-		
-		if (favorite != null) {
+		if (!favoriteList.isEmpty()) {
+			for (ItemResponse item : favoriteList) {
+				imageService.setItemImages(item);
+			}
 			basicResponse.status = true;
 			basicResponse.data = "Favorite Extraction Completed";
-			basicResponse.object = favorite;
-			
+			basicResponse.object = favoriteList;
 			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
 		} else {
 			basicResponse.status = false;
 			basicResponse.data = "Favorite Extraction Failure";
-			
 			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
 		}
 		
@@ -92,8 +92,6 @@ public class FavoriteService implements IFavoriteService {
 				.userId(userId).build();
 		
 		boolean isFavorite = favoriteDao.isFavorited(itemInfoRequest);
-		
-		System.out.println(isFavorite);
 		
 		if(isFavorite)
 			item.setFavorite(true);
