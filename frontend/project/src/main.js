@@ -16,6 +16,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 //JWT
 import VueJwtDecode from 'vue-jwt-decode'
 
+
 Vue.use(VueCookies)
 Vue.use(VueMoment)
 Vue.use(BootstrapVue)

@@ -34,15 +34,17 @@
     <div class="container mt-5">
         <div class="detail-card shadow01">
             <!-- 수정 삭제 아이콘 -->
-             <div class ="text-right mt-2 mr-2">
-                <b-img
-                        v-bind:src="require(`@/assets/img/icons8-pencil-120.png`)"
-                        class="detail-icon"
-                ></b-img>
-                 <b-img
-                        v-bind:src="require(`@/assets/img/icons8-trash-144.png`)"
-                        class="detail-icon"
-                ></b-img>
+             <div  class ="text-right mt-2 mr-2">
+                 <div v-if="isWriter()">
+                    <b-img
+                            v-bind:src="require(`@/assets/img/icons8-pencil-120.png`)"
+                            class="detail-icon"
+                    ></b-img>
+                    <b-img
+                            v-bind:src="require(`@/assets/img/icons8-trash-144.png`)"
+                            class="detail-icon"
+                    ></b-img>
+                 </div>
              </div>
             <!--/ 수정 삭제 아이콘-->
             <div class="row align-self-center">
@@ -57,18 +59,20 @@
                 <!-- 정보 -->
                 <div class="col-4 align-self-center">
                     <div class="row">
-                        <div class="detail-title-text">고양이 분양받아가세요~</div>
+                        <div class="detail-title-text">
+                           {{detailitem.title}}
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col detail-price-text"> 가격 : 16,000</div>
+                        <div class="col detail-price-text"> 가격 : {{this.comma(detailitem.price)}}</div>
                         <div class="col detail-user-text text-right"> 
                             <span class=""> <img
                                 class="headerProfile"
-                                src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdHQToz%2FbtqGJwdLhDV%2F99NvaPkVv90sofZ4mXG2Vk%2Fimg.jpg"
+                                :src = getImgUrl()
                                 style="width: 2.5rem; height: 2.5rem;"      
                                 /> </span> 
                             
-                            판매자 : 김사원 
+                            판매자 : {{ detailitem.user.name}}
                         </div>
                     </div>
                      <hr class="featurette-divider" />
@@ -81,11 +85,11 @@
                             />
                             </span>
                             <span class="ml-2">
-                                14 시간 전
+                                {{calculateTime(detailitem.date)}}
                             </span>
                         </div> 
                     </div>
-                    <div class="row">마크다운으로 작성가능하게 ㄱㄱ;;</div>
+                    <div class="row"> {{detailitem.content}}</div>
                     
                 </div>
             </div>
@@ -106,20 +110,86 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+import SERVER from '@/api/api'
+import moment from 'moment'
+
 
 export default {
     data: () => {
     return {
         itemId:"",
+        getDetailReq:{
+            itemId:"",
+            userId:"",
+        },
       };
     },
+   
     created(){
+        //아이템 id 확인
         this.itemId = this.$route.params.itemId;
-    
+        console.log("init : BoardDetail = " +this.itemId )
+        
+        //이미지 주소
+        this.serverPath = SERVER.IMAGE_STORE,
+
+        this.calculateTime();
+
+        //패치
+        this.findMyAccount();
+
+        //디테일 요청
+        this.getDetailReq.itemId = this.itemId;
+        this.getDetailReq.userId = this.myaccount.userId;
+        this.getDetailItem(this.getDetailReq);
     }
     ,
+    computed:{
+        ...mapState(['myaccount']),
+        ...mapState('itemStore',['detailitem'])
+    },
     methods:{
-       
+        ...mapActions('itemStore', ['getDetailItem']),
+        ...mapActions(['findMyAccount']),
+
+    //가격 필터
+    comma(val){
+        return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+     },
+    //시간 필터
+    calculateTime(){
+        var nowTime = moment();
+        var writeTime = moment(this.detailitem.date, 'YYYY-MM-DD HH:mm:ss');
+
+        var diffHour = moment.duration(nowTime.diff(writeTime)).asHours();
+        var diffDay = moment.duration(nowTime.diff(writeTime)).asDays();
+    
+        //24시간 이내
+        if(diffHour < 24){
+            return parseInt(diffHour) + "시간 전";
+        }
+        //7일 이내
+        if(diffDay < 7){
+            return parseInt(diffDay) + "일 전";
+        }
+        return writeTime
+        
+      
+    },
+    //디테일의 작성자 판단
+    isWriter(){
+        if(this.myaccount.userId == this.detailitem.user.userId){
+            return true;
+        }
+        return false;
+    },
+    getImgUrl(){
+            if(this.detailitem.user.image){
+                return this.serverPath +this.detailitem.user.image;
+            }
+            return this.serverPath + "no-image-icon-23487.png" 
+        },
     },
 }
 </script>

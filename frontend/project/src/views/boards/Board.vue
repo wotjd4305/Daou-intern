@@ -59,12 +59,12 @@
        <!-- 목록 창-->
      <div class="container ">
         <div class="row ">
-            <div class="col-3 mt-4" v-for="(item, idx) in items" :key="idx">
+            <div class="col-3 mt-4" v-for="(item, idx) in searcheditems" :key="idx">
                 <div class="forHover">
                     <div class="item-list-card shadow01">
                         <b-img
                         type="image"
-                        @click="goToDetail(item.id)"
+                        @click="goToDetail(item.itemId)"
                         style="cursor:pointer"
                         :src= getImgUrl(idx)
                         width="200rem"
@@ -154,13 +154,12 @@ export default {
 
          //패치
         this.fetchItemCategory();
-        this.getAllItem(this.myaccount.userId);
         this.findMyAccount();
+        this.getAllItem(this.myaccount.userId);
         
         //적용
         this.categorys = this.itemCategorys;
-        this.items = this.searcheditems;
-
+    
         this.serverPath = SERVER.IMAGE_STORE,
         this.dateFormat = "YYYY-MM-DD hh-mm-ss";
 
@@ -198,10 +197,11 @@ export default {
 
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
-            if(this.items[idx].picture[0]){
-                return this.serverPath + this.items[idx].picture[0];
+            if(this.searcheditems[idx].picture[0]){
+                return this.serverPath + this.searcheditems[idx].picture[0];
             }
             return this.serverPath + "no-image-icon-23487.png" 
+            
         },
         getDate(){
              var date = new Date();

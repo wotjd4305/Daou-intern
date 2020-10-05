@@ -49,7 +49,7 @@ export default new Vuex.Store({
       axios.post(SERVER.URL + SERVER.ROUTES.myaccount, {token :this.state.authToken})
         .then(res => {
             console.log("after : findMyAcount data = " + res.data.data)
-            console.log("after : findMyAcount object.id = " + res.data.object.userId)
+            console.log("after : findMyAcount object.userId = " + res.data.object.userId)
             
             //만약 이미지가 없으면 기본 이미지
             if(res.data.object.image == "null"){
