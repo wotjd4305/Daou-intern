@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="image">
+
+	<insert id="insertItemImage" parameterType="image">
+		insert into image(item_id, picture)
+		values
+		<foreach collection="picture" item="pic" separator=", ">
+		 	(#{id}, #{pic})
+		</foreach>
+	</insert>
+	
+	<update id="updateUserImage" parameterType="image">
+		update user
+		set image = #{image}
+		where user_id = #{id}
+	</update>
+	
+	<select id="getItemImages" parameterType="long" resultType="string">
+		select picture
+		from image 
+		where item_id = #{itemId}
+	</select>
+	
+	<update id="deleteUserImage" parameterType="int">
+		update user
+		set image = null
+		where user_id = #{userId}
+	</update>
+
+</mapper>

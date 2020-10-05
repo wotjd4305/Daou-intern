@@ -15,10 +15,11 @@ import Swal from 'sweetalert2'
 export default new Vuex.Store({
   state: {
     authToken: cookies.get('auth-token'),
+    myaccount: null,
     users: null,
   },
   getters:{
-    cnofig:state=>({headers:{ jwt: state.authToken}})
+    config:state=>({headers:{ jwt: state.authToken}})
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -28,14 +29,25 @@ export default new Vuex.Store({
     SET_USERS(state, users) {
       state.users = users
     },
+    SET_MY_ACCOUNT(state, user) {
+      state.myaccount = user
+    },
   },
   actions: {
-    findMyAccount({ rootGetters, commit}) {
-      axios.post(SERVER.URL + SERVER.ROUTES.myaccount, null, rootGetters.config)
+    
+    findMyAccount({commit}) {
+      console.log(this.state.authToken)
+      //console.log(rootGetters.config)
+      console.log("findMyAccount")
+      
+      axios.post(SERVER.URL + SERVER.ROUTES.myaccount, {token :this.state.authToken})
         .then(res => {
-            commit('SET_MY_ACCOUNT', res.data)
+            console.log("여기에요!1" + res.data.data)
+            console.log("여기에요!2" + res.data.object.id)
+            commit('SET_MY_ACCOUNT', res.data.object)
         })
-        .catch(err => console.log(err.response.data))
+        .catch(err => 
+          console.log(err.response.object))
     },
     logout({ commit }) {
       commit('SET_TOKEN', null)

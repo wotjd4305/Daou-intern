@@ -40,11 +40,11 @@ public class SearchService implements ISearchService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> deleteSearch(long searchId) {
+	public ResponseEntity<BasicResponse> deleteSearchHistory(long searchId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		int res = searchDao.deleteSearch(searchId);
+		int res = searchDao.deleteSearchHistory(searchId);
 		
 		if (res > 0) {
 			basicResponse.status = true;
@@ -60,12 +60,12 @@ public class SearchService implements ISearchService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getSearch(long userId) {
+	public ResponseEntity<BasicResponse> getSearchHistory(int userId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		List<Search> search = null;
 		
-		search = searchDao.getSearch(userId);
+		search = searchDao.getSearchHistory(userId);
 		
 		if (search != null) {
 			basicResponse.status = true;

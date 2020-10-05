@@ -23,19 +23,18 @@
 
           <div class="input-with-label">
             <input
-              v-model="loginData.sabun"
-              v-bind:class="{error : error.sabun, complete:!error.sabun&&loginData.sabun.length!==0}"
+              v-model="loginData.empNum"
+              v-bind:class="{error : error.empNum, complete:!error.empNum&&loginData.empNum.length!==0}"
               class="inputs"
-              id="sabun"
+              id="empNum"
               placeholder="사원번호"
               type="text"
               autocapitalize="none"
               autocorrect="none"
-              style="text-transform:lowercase"
               required
             />
-            <label for="sabun"></label>
-            <div class="error-text ml-3" v-if="error.sabun">{{error.sabun}}</div>
+            <label for="empNum"></label>
+            <div class="error-text ml-3" v-if="error.empNum">{{error.empNum}}</div>
           </div>
           <div class="input-with-label">
             <input
@@ -43,7 +42,7 @@
               v-bind:class="{error : error.password, complete:!error.password&&loginData.password.length!==0}"
               class="inputs"
               id="password"
-              type="text"
+              type="password"
               placeholder="비밀번호를 입력하세요."
               required
               @keyup.enter="clickLogin"
@@ -70,19 +69,17 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-import Swal from "sweetalert2";
-import axios from "axios";
-import SERVER from "@/api/api";
+
 export default {
   name: "Login",
   data() {
     return {
       loginData: {
-        sabun: "",
+        empNum: "",
         password: "",
       },
       error: {
-        sabun: false,
+        empNum: false,
         password: false,
       },
       isSubmit: false,
@@ -103,52 +100,10 @@ export default {
   methods: {
     ...mapMutations(["SET_TOKEN"]),
     ...mapActions("accountStore", ["login"]),
-    async handleClickSignIn() {
-      const userInfo = {
-      };
-      axios
-        .post(SERVER.URL + SERVER.ROUTES.social, userInfo)
-        .then((res) => {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            onOpen: (toast) => {
-              toast.addEventListener("mouseenter", Swal.stopTimer);
-              toast.addEventListener("mouseleave", Swal.resumeTimer);
-            },
-          });
-          this.SET_TOKEN(res.data);
-          Toast.fire({
-            icon: "success",
-            title: "로그인에 성공하였습니다.",
-          });
-          this.$router.push("/");
-        })
-        .catch((err) => {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            onOpen: (toast) => {
-              toast.addEventListener("mouseenter", Swal.stopTimer);
-              toast.addEventListener("mouseleave", Swal.resumeTimer);
-            },
-          });
-          Toast.fire({
-            icon: "error",
-            title: err.response.data.message,
-          });
-          this.$router.push("/");
-        });
-    },
+    
+     
     clickLogin() {
       if (this.isSubmit) {
-        console.log("hi")
         this.login(this.loginData);
         
       }
@@ -156,15 +111,15 @@ export default {
 
     checkSabunForm() {
       if (
-        this.loginData.sabun.length > 0 &&
-        !this.validSabun(this.loginData.sabun)
+        this.loginData.empNum.length > 0 &&
+        !this.validSabun(this.loginData.empNum)
       ) {
-        this.error.sabun = "숫자만 입력해 주세요.";
-      } else this.error.sabun = false;
+        this.error.empNum = "숫자만 입력해 주세요.";
+      } else this.error.empNum = false;
     },
-    validSabun(sabun) {
+    validSabun(empNum) {
       var re = /^[0-9]*$/;
-      return re.test(sabun);
+      return re.test(empNum);
     },
     checkPasswordForm() {
       if (
@@ -181,7 +136,7 @@ export default {
       // 버튼 활성화
       if (
         this.loginData.password.length > 0 &&
-        this.loginData.sabun.length > 0
+        this.loginData.empNum.length > 0
       ) {
         let isSubmit = true;
         Object.values(this.error).map((v) => {

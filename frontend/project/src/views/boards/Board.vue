@@ -124,7 +124,7 @@
 
         <div class="row text-right mt-1">
             <div class="col ">
-                    <button class="write-btn btn">글작성</button>
+                    <button @click="goToWrite()" class="write-btn btn">글작성</button>
             </div>
         </div>
     </div>
@@ -180,6 +180,9 @@ export default {
         },
         goToDetail(){
             this.$router.push({ path: "/board/detail" });
+        },
+        goToWrite(){
+            this.$router.push({ path: "/board/write" });    
         }
     },
 }

@@ -8,14 +8,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert> -->
 	
 	<update id="insertSearch" statementType="CALLABLE" parameterType="searchInsertResponse">
-		{call insertsearch(#{userId, mode=IN, jdbcType=BIGINT, javaType=long}, #{keyword, mode=IN, jdbcType=CHAR, javaType=String}, #{result, mode=OUT, jdbcType=INTEGER, javaType=int})
+		{call insert_search(#{userId, mode=IN, jdbcType=INTEGER, javaType=int}, #{keyword, mode=IN, jdbcType=CHAR, javaType=String}, #{result, mode=OUT, jdbcType=INTEGER, javaType=int})
 	</update>
 	
-	<delete id="deleteSearch">
-		delete from search where id=#{searchId}
+	<delete id="deleteSearchHistory">
+		delete from search where search_id=#{searchId}
 	</delete>
 	
-	<select id="getSearch" resultType="search">
+	<select id="getSearchHistory" resultType="search">
 		select * from search where user_id=#{userId} order by date desc;
 	</select>
 </mapper>

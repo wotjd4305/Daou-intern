@@ -10,6 +10,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.stereotype.Service;
 
+import com.daoumarket.dto.TokenRequest;
 import com.daoumarket.dto.User;
 
 import io.jsonwebtoken.Claims;
@@ -40,14 +41,14 @@ public class JWTService implements IJWTService {
 
         Map<String, Object> map= new HashMap<String, Object>();
 
-        long id = user.getId();
-        long num = user.getNum();
+        int userId = user.getUserId();
+        int empNum = user.getEmpNum();
         String name = user.getName();
         String department = user.getDepartment();
         String image = user.getImage();
 
-        map.put("id", id);
-        map.put("num", num);
+        map.put("userId", userId);
+        map.put("empNum", empNum);
         map.put("name", name);
         map.put("department", department);
         map.put("image", image);
@@ -61,17 +62,17 @@ public class JWTService implements IJWTService {
     }
 
     @Override
-    public User checkJwt(String accessToken) throws Exception {
+    public User checkJwt(TokenRequest accessToken) throws Exception {
     	// checkJwt멧드에서는 try문에서 받아온 Jwt를 이용하여 파싱
     	User user = new User();
         try {
         	// 정상수생된다면 해당 토큰은 정상 토큰으로 간주하고 파싱되지 않는다면 catch문에서 잡히도록 수행
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                    .parseClaimsJws(accessToken).getBody(); 
+                    .parseClaimsJws(accessToken.getToken()).getBody(); 
 //            System.out.println("expireTime :" + claims.getExpiration());
             
-            user.setId(Long.valueOf(claims.get("id") + ""));
-            user.setNum(Long.valueOf(claims.get("num") + ""));
+            user.setUserId(Integer.parseInt(claims.get("userId") + ""));
+            user.setEmpNum(Integer.parseInt(claims.get("empNum") + ""));
             user.setName((String) claims.get("name") + "");
             user.setDepartment((String) claims.get("department") + "");
             user.setImage((String) claims.get("image") + "");

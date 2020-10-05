@@ -28,7 +28,6 @@ public class ImageService implements IImageService {
 
 //    public static final String SAVE_FOLDER = "/home/intern2/tomcat_intern2/images/";
 	public static final String SAVE_FOLDER = "C:/Daou_intern/backend/daoumarket/src/main/resources/static/images/";
-	
 	private final IImageDao imageDao;
 	
 	@Transactional
@@ -68,7 +67,7 @@ public class ImageService implements IImageService {
     
 	@Transactional
     @Override
-	public ResponseEntity<BasicResponse> updateUserImage(MultipartFile image, long userId) { // 유저 이미지 업로드
+	public ResponseEntity<BasicResponse> updateUserImage(MultipartFile image, int userId) { // 유저 이미지 업로드
     	
 		BasicResponse response = new BasicResponse();
 		
@@ -97,21 +96,19 @@ public class ImageService implements IImageService {
 	}
     
 	@Override
-    public void getItemImages(ItemResponse item) {
+    public void setItemImages(ItemResponse item) {
     	
-		List<String> images = imageDao.getItemImages(item.getId());
+		List<String> images = imageDao.getItemImages(item.getItemId());
 		
-		for (String filename : images) {
-			item.getPicture().add(filename);
-		}
+		item.setPicture(images);
     }
 
 	@Override
-	public ResponseEntity<BasicResponse> deleteUserImage(long id) {
+	public ResponseEntity<BasicResponse> deleteUserImage(int userId) {
 		
 		BasicResponse response = new BasicResponse();
 		
-		int result = imageDao.deleteUserImage(id);
+		int result = imageDao.deleteUserImage(userId);
 		
 		if(result == 0) {
 			response.data = "삭제 실패";

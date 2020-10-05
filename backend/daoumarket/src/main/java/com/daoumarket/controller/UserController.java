@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dto.BasicResponse;
+import com.daoumarket.dto.TokenRequest;
 import com.daoumarket.dto.User;
 import com.daoumarket.dto.UserLoginRequest;
 import com.daoumarket.jwt.IJWTService;
@@ -36,28 +37,36 @@ public class UserController {
 	private final IJWTService jwtService;
 	private final IImageService imageService;
 	
-	@PostMapping("/user")
+	@PostMapping("/user/join")
 	@ApiOperation("회원가입")
 	public ResponseEntity<BasicResponse> insertUser(@RequestBody User user) {
+		log.info("UserController : insertUser");
+		
 		return userService.insertUser(user);
 	}
 	
 	
-	@GetMapping("/{num}")
+	@GetMapping("/user/{empNum}")
 	@ApiOperation("사번 중복 체크")
-	public ResponseEntity<BasicResponse> getNum(@PathVariable long num) {
-		return userService.getNum(num);
+	public ResponseEntity<BasicResponse> getEmpNum(@PathVariable int empNum) {
+		log.info("UserController : getEmpNum => {}", empNum);
+		
+		return userService.getEmpNum(empNum);
 	}
 	
-	@PostMapping("/login")
+	@PostMapping("/user/login")
 	@ApiOperation("로그인")
 	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody UserLoginRequest userLogin){
+		log.info("UserController : getUserLogin");
+		
 		return userService.getUserLogin(userLogin);
 	}
 	
-	@PostMapping("/token")
+	@PostMapping("/user/token")
 	@ApiOperation("토큰 검증")
-	public ResponseEntity<BasicResponse> token(@RequestBody String accessToken){
+	public ResponseEntity<BasicResponse> token(@RequestBody TokenRequest accessToken){
+		log.info("UserController : token");
+		
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		User userJwt = null;
@@ -84,26 +93,28 @@ public class UserController {
 		return responseEntity;
 	}
 	
-	@PostMapping("/edit")
-	@ApiOperation("정보수정")
+	@PatchMapping("/user/edit")
+	@ApiOperation("회원 정보(비밀번호, 부서) 수정하기")
 	public ResponseEntity<BasicResponse> updateUser(@RequestBody User user){
+		log.info("UserController : updateUser");
+		
 		return userService.updateUser(user);
 	}
 	
-	@PatchMapping("/user/{id}/image")
+	@PatchMapping("/user/{userId}/image")
 	@ApiOperation("유저 프로필 사진 변경하기")
-	public ResponseEntity<BasicResponse> updateUserImage(@RequestPart MultipartFile image, @PathVariable long id) {
+	public ResponseEntity<BasicResponse> updateUserImage(@RequestPart MultipartFile image, @PathVariable int userId) {
 		log.info("userController : updateUserImage");
 		
-		return imageService.updateUserImage(image, id);
+		return imageService.updateUserImage(image, userId);
 	}
 	
-	@DeleteMapping("/user/{id}/image")
+	@DeleteMapping("/user/{userId}/image")
 	@ApiOperation("유저 프로필 사진 삭제하기")
-	public ResponseEntity<BasicResponse> deleteUserImage(@PathVariable long id) {
+	public ResponseEntity<BasicResponse> deleteUserImage(@PathVariable int userId) {
 		log.info("userController : deleteUserImage");
 		
-		return imageService.deleteUserImage(id);
+		return imageService.deleteUserImage(userId);
 	}
 	
 }

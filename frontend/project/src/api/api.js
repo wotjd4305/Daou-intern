@@ -1,13 +1,18 @@
 export default {
-    URL: 'https://localhost:3306/api',
+    URL: 'http://localhost:8080/api',
     ROUTES: {
     
       // accounts
-      myaccount: '/users',
-      signup: '/users/signup',
-      login: '/users/signin',
-      password: '/users/password',
-      changepassword: '/users/resetPassword',
-  
+      myaccount: '/user/token',
+      signup: '/user/join',
+      login: '/user/login',
+      checkreduplication: '/user',
+      updateuser: '/user/edit',
+      uploaduserimageA: '/user',
+      uploaduserimageB: '/image',
+      deleteuserimageA:'/user',
+      deleteuserimageB:'/image',
+
+
     }
 }

@@ -22,7 +22,7 @@ public class CategoryController {
 	
 	private final ICategoryService categoryService;
 	
-	@GetMapping("/item/category")
+	@GetMapping("/category/item")
 	@ApiOperation("물건 카테고리 가져오기")
 	public ResponseEntity<BasicResponse> getItemCategory() {
 		log.info("CategoryController : getItemCategory");
@@ -30,7 +30,7 @@ public class CategoryController {
 		return categoryService.getItemCategory();
 	}
 	
-	@GetMapping("/department/category")
+	@GetMapping("/category/department")
 	@ApiOperation("부서 카테고리 가져오기")
 	public ResponseEntity<BasicResponse> getDepartmentCategory() {
 		log.info("CategoryController : getDepartmentCategory");

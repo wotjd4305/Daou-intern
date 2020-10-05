@@ -1,172 +1,128 @@
--- MySQL Workbench Forward Engineering
-
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-
+-- Daou market DDL
 -- -----------------------------------------------------
--- Schema mydb
+-- Table `user`
 -- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema intern2
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema intern2
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `intern2` DEFAULT CHARACTER SET utf8mb4 ;
-USE `intern2` ;
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `emp_num` int DEFAULT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `password` char(30) DEFAULT NULL,
+  `department` char(20) DEFAULT NULL,
+  `image` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
--- Table `intern2`.`user`
+-- Table `item`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `intern2`.`user` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `num` BIGINT NULL,
-  `name` CHAR(10) NULL,
-  `password` CHAR(20) NULL,
-  `department` CHAR(20) NULL,
-  `image` CHAR(100) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
-
--- -----------------------------------------------------
--- Table `intern2`.`item`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `intern2`.`item` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `user_id` BIGINT NOT NULL,
-  `title` CHAR(100) NULL,
-  `price` INT NULL,
-  `content` TEXT NULL,
-  `category` CHAR(20) NULL,
-  `status` CHAR(10) NULL,
-  `delflag` TINYINT NULL,
-  `date` DATETIME NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_item_user`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `intern2`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
-
+CREATE TABLE IF NOT EXISTS `item` (
+  `item_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `title` char(100) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  `content` text DEFAULT NULL,
+  `category` varchar(20) DEFAULT NULL,
+  `status` char(1) DEFAULT 'S',
+  `delflag` tinyint(1) DEFAULT 0,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `fk_item_user` (`user_id`),
+  CONSTRAINT `fk_item_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
--- Table `intern2`.`search`
+-- Table `search`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `intern2`.`search` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `user_id` BIGINT NOT NULL,
-  `keyword` CHAR(40) NULL,
-  `date` DATETIME NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_search_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `intern2`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `search` (
+  `search_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `keyword` varchar(30) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`search_id`),
+  KEY `fk_search_user1` (`user_id`),
+  CONSTRAINT `fk_search_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
--- Table `intern2`.`point`
+-- Table `point`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `intern2`.`point` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `user_id` BIGINT NOT NULL,
-  `date` DATE NULL,
-  `score` INT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_point_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `intern2`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `point` (
+  `point_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `date` date DEFAULT NULL,
+  `score` int(11) DEFAULT NULL,
+  PRIMARY KEY (`point_id`),
+  KEY `fk_point_user1` (`user_id`),
+  CONSTRAINT `fk_point_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
--- Table `intern2`.`image`
+-- Table `image`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `intern2`.`image` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `item_id` BIGINT NOT NULL,
-  `picture` CHAR(100) NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_image_item1`
-    FOREIGN KEY (`item_id`)
-    REFERENCES `intern2`.`item` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `image` (
+  `image_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20) NOT NULL,
+  `picture` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`image_id`),
+  KEY `fk_image_item1` (`item_id`),
+  CONSTRAINT `fk_image_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
--- Table `intern2`.`chatroom`
+-- Table `chatroom`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `intern2`.`chatroom` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `item_id` BIGINT NOT NULL,
-  `seller_id` BIGINT NOT NULL,
-  `buyer_id` BIGINT NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_chatroom_user2`
-    FOREIGN KEY (`buyer_id`)
-    REFERENCES `intern2`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_chatroom_item1`
-    FOREIGN KEY (`item_id`)
-    REFERENCES `intern2`.`item` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_chatroom_user1`
-    FOREIGN KEY (`seller_id`)
-    REFERENCES `intern2`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `chatroom` (
+  `chatroom_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20) NOT NULL,
+  `seller_id` int NOT NULL,
+  `buyer_id` int NOT NULL,
+  PRIMARY KEY (`chatroom_id`),
+  KEY `fk_chatroom_user2` (`buyer_id`),
+  KEY `fk_chatroom_item1` (`item_id`),
+  KEY `fk_chatroom_user1` (`seller_id`),
+  CONSTRAINT `fk_chatroom_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_chatroom_user1` FOREIGN KEY (`seller_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_chatroom_user2` FOREIGN KEY (`buyer_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
--- Table `intern2`.`message`
+-- Table `message`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `intern2`.`message` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `chatroom_id` BIGINT NOT NULL,
-  `seller_id` BIGINT NOT NULL,
-  `buyer_id` BIGINT NOT NULL,
-  `content` TEXT NULL,
-  `send_time` DATETIME NULL,
-  `receive_time` DATETIME NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_message_chatroom1`
-    FOREIGN KEY (`chatroom_id`)
-    REFERENCES `intern2`.`chatroom` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_message_user1`
-    FOREIGN KEY (`seller_id`)
-    REFERENCES `intern2`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_message_user2`
-    FOREIGN KEY (`buyer_id`)
-    REFERENCES `intern2`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `message` (
+  `message_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `chatroom_id` bigint(20) NOT NULL,
+  `seller_id` int NOT NULL,
+  `buyer_id` int NOT NULL,
+  `content` text DEFAULT NULL,
+  `send_time` datetime DEFAULT NULL,
+  `receive_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`message_id`),
+  KEY `fk_message_chatroom1` (`chatroom_id`),
+  KEY `fk_message_user1` (`seller_id`),
+  KEY `fk_message_user2` (`buyer_id`),
+  CONSTRAINT `fk_message_chatroom1` FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`chatroom_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_message_user1` FOREIGN KEY (`seller_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_message_user2` FOREIGN KEY (`buyer_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- -----------------------------------------------------
+-- Table `favorite`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `favorite` (
+  `favorite_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`favorite_id`),
+  KEY `fk_favorite_user1` (`user_id`),
+  KEY `fk_favorite_item1` (`item_id`),
+  CONSTRAINT `fk_favorite_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_favorite_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
