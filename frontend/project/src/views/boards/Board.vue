@@ -59,21 +59,21 @@
        <!-- 목록 창-->
      <div class="container ">
         <div class="row ">
-            <div class="col-3 mt-4" v-for="(item, idx) in itemsDummy" :key="idx">
+            <div class="col-3 mt-4" v-for="(item, idx) in items" :key="idx">
                 <div class="forHover">
                     <div class="item-list-card shadow01">
                         <b-img
                         type="image"
-                        @click="goToDetail()"
+                        @click="goToDetail(item.id)"
                         style="cursor:pointer"
-                        :src=item.picture
+                        :src= getImgUrl(idx)
                         width="200rem"
                         height="150rem"
                         class="mt-3 mb-2"
                         ></b-img>
 
-                        <div class="row">
-                            <div class="ml-5 text-left">
+                        <div class="row" style="display:block;">
+                            <div class="ml-4 pl-2 text-left">
                                 <span class="item-list-title-text">
                                     제품명 : 
                                 </span>
@@ -81,7 +81,7 @@
                                     {{item.title}} 
                                 </span>
                             </div>
-                            <div class="ml-5 text-left">
+                            <div class="ml-4 pl-2 text-left">
                                 <span class="item-list-title-text">
                                     카테고리 : 
                                 </span>
@@ -89,7 +89,7 @@
                                     {{item.category}} 
                                 </span>
                             </div>
-                            <div class="ml-5 text-left">
+                            <div class="ml-4 pl-2 text-left">
                                 <span class="item-list-title-text">
                                     등록일 : 
                                 </span>
@@ -97,7 +97,7 @@
                                     {{item.date}} 
                                 </span>
                             </div>
-                            <div class="ml-5 text-left">
+                            <div class="ml-4 pl-2 text-left">
                                 <span class="item-list-title-text">
                                     가격 : 
                                 </span>
@@ -135,36 +135,73 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+import SERVER from '@/api/api'
 
 export default {
+    
     data: () => {
     return {
       categorys: [],
       checkedNames:[],
        dateFormat:"",
-       itemsDummy:[]
+       items:[],
+
+       serverPath:"",
       };
     },
     created(){
-       this.categorys = ["디지털/가전","가구/인테리어","생활/가공식품","유아동/유아도서", "무료나눔", "여성잡화", "여성의류"],
-       this.dateFormat = "YYYY-MM-DD hh-mm-ss",
-       this.itemsDummy = [ 
-       {id:"1",title:"홍삼1",date:this.getDate(),category:"생활/가공식품", price:"17,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"2",title:"홍삼2",date:this.getDate(),category:"생활/가공식품", price:"17,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"3",title:"홍3미",date:this.getDate(),category:"생활/가공식품",price:"27,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"4",title:"홍삼5",date:this.getDate(),category:"생활/가공식품", price:"37,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"5",title:"홍삼6",date:this.getDate(),category:"생활/가공식품", price:"47,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"6",title:"홍삼7",date:this.getDate(),category:"생활/가공식품", price:"57,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"7",title:"홍삼8",date:this.getDate(),category:"생활/가공식품", price:"77,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"8",title:"홍삼9",date:this.getDate(),category:"생활/가공식품", price:"87,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"9",title:"홍삼10",date:this.getDate(),category:"생활/가공식품", price:"97,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"10",title:"홍삼11",date:this.getDate(),category:"생활/가공식품", price:"117,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"11",title:"홍삼12",date:this.getDate(),category:"생활/가공식품",price:"127,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-      ,{id:"12",title:"홍삼13",date:this.getDate(),category:"생활/가공식품", price:"137,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"} ]
+
+         //패치
+        this.fetchItemCategory();
+        this.getAllItem();
+        this.findMyAccount();
+        
+        //적용
+        this.categorys = this.itemCategorys;
+        this.items = this.searcheditems;
+
+        this.serverPath = SERVER.IMAGE_STORE,
+        this.dateFormat = "YYYY-MM-DD hh-mm-ss";
+
+
+
+        //더미데이타
+
+       //this.categorys = ["디지털/가전","가구/인테리어","생활/가공식품","유아동/유아도서", "무료나눔", "여성잡화", "여성의류"],
+       
+    //    this.items = [ 
+    //    {id:"1",title:"홍삼1",date:this.getDate(),category:"생활/가공식품", price:"17,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"2",title:"홍삼2",date:this.getDate(),category:"생활/가공식품", price:"17,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"3",title:"홍3미",date:this.getDate(),category:"생활/가공식품",price:"27,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"4",title:"홍삼5",date:this.getDate(),category:"생활/가공식품", price:"37,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"5",title:"홍삼6",date:this.getDate(),category:"생활/가공식품", price:"47,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"6",title:"홍삼7",date:this.getDate(),category:"생활/가공식품", price:"57,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"7",title:"홍삼8",date:this.getDate(),category:"생활/가공식품", price:"77,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"8",title:"홍삼9",date:this.getDate(),category:"생활/가공식품", price:"87,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"9",title:"홍삼10",date:this.getDate(),category:"생활/가공식품", price:"97,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"10",title:"홍삼11",date:this.getDate(),category:"생활/가공식품", price:"117,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"11",title:"홍삼12",date:this.getDate(),category:"생활/가공식품",price:"127,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
+    //   ,{id:"12",title:"홍삼13",date:this.getDate(),category:"생활/가공식품", price:"137,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"} ]
     
     }
     ,
+    computed:{
+        ...mapState('categoryStore',['itemCategorys']),
+        ...mapState('itemStore', ['searcheditems'])
+    },
     methods:{
+          ...mapActions('categoryStore', ['fetchItemCategory']),
+          ...mapActions('itemStore', ['getAllItem']),
+          ...mapActions(['findMyAccount']),
+
+        getImgUrl(idx){
+            //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
+            if(this.items[idx].picture[0]){
+                return this.serverPath + this.items[idx].picture[0];
+            }
+            return this.serverPath + "no-image-icon-23487.png" 
+        },
         getDate(){
              var date = new Date();
             var year = date.getFullYear();
@@ -178,8 +215,8 @@ export default {
 
             return startdate;
         },
-        goToDetail(){
-            this.$router.push({ path: "/board/detail" });
+        goToDetail(itemId){
+            this.$router.push({ path: "/board/detail", params:{ id : itemId} });
         },
         goToWrite(){
             this.$router.push({ path: "/board/write" });    

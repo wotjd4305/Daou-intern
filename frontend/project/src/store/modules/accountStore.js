@@ -3,10 +3,16 @@ import axios from 'axios'
 import router from '@/router'
 import Swal from 'sweetalert2'
 
+import createPersistedState from 'vuex-persistedstate';
+
 // import cookies from 'vue-cookies'
 
 const accountStore = {
+  plugins: [
+    createPersistedState(),
+  ],
   namespaced: true,
+  
   state: {
   },
   getters: {

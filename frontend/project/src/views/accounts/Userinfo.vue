@@ -24,7 +24,7 @@
                       class="profileImg"
                       ref="uploadItemImage"
                       id="uploadImagdId"
-                      :src= "require(`@/assets/static/img/${myaccount.image}`)"
+                      :src= getImgUrl(serverPath)
                       accept="image/jpeg, jpg, png/"
                       style="width: 10rem; height: 10rem;"
                     />
@@ -100,15 +100,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-//import SERVER from '@/api/api'
-
+import SERVER from '@/api/api'
 //import axios from 'axios'
-
 export default {
   name: 'Signup',
   data() {
     return {
-      departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
+      //departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
+      departs: [],
       userUpdateData: {
         empNum : "",
         password: "",
@@ -122,16 +121,22 @@ export default {
       },
       isSubmit: false,
       defaultPath: "icons8-male-user-90.png",
+      serverPath: SERVER.IMAGE_STORE,
     };
   },
   created() {
-    this.myaccount.image = this.defaultPath;
+    //default 이미지
+    //this.myaccount.image = this.defaultPath;
+    
+    //패치
     this.findMyAccount();
+    this.fetchDepartmentCategory();
+    
+    //this.checkPathNull();
+   
+   //입력란에 없기 때문에
     this.userUpdateData.empNum = this.myaccount.empNum;
-  },
-  
-  mounted(){
- 
+    this.departs = this.departmentCategorys;
   },
   watch: {
     userUpdateData: {
@@ -145,18 +150,32 @@ export default {
   },
   computed:{
     ...mapState(['myaccount']),
-    
+    ...mapState('categoryStore',['departmentCategorys'])
+ 
   },
-
   methods: {
     ...mapActions("accountStore",["updateUser","uploadImg","deleteUserImg"]),
+    ...mapActions('categoryStore', ['fetchDepartmentCategory']),
     ...mapActions(['findMyAccount']),
-    
-    checkPathNull(){
-      if(this.myaccount.image == null || this.myaccount.image == ""){
-        this.myaccount.image = this.defaultPath;
-      }
+
+    getImgUrl(serverPath){
+      //alert(this.myaccount.image)
+       return serverPath + this.myaccount.image;
+      
     },
+    
+    //  checkPathNull(){
+    //    if(this.myaccount.image == null || this.myaccount.image == ""){
+        
+    //     const formData = new FormData();
+    //     formData.append("image", this.serverPath + this.defaultPath);
+        
+    //     this.myaccount.image = formData;
+    //     console.log(formData.get("image"))
+    //     //Store
+    //     this.uploadImg(this.myaccount);
+    //    }
+    //  },
     checkPasswordForm() {
       if (this.userUpdateData.password.length > 0 && this.userUpdateData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
@@ -186,30 +205,23 @@ export default {
      
     },
     clickUpDeleteImage(){
-       //Store
       this.deleteUserImg(this.myaccount);
-      this.myaccount.image = this.defaultPath;
-      
+
+      //myaccoount 갱신
+      this.findMyAccount();
   },
-
     clickUploadImage(event){
-
       const formData = new FormData();
       formData.append("image", event.target.files[0]);
       
       //기존 계정에 이미지 덮어쓰기
       this.myaccount.image = formData;
-
       console.log(formData.get("image"))
-
       //Store
       this.uploadImg(this.myaccount);
-
-
       //실패시 null..
       let itemImage = this.$refs.uploadItemImage; //img dom 접근
           itemImage.src = URL.createObjectURL(event.target.files[0]);
-
     },
     clickUpdate() {
       if ( this.isSubmit ){
@@ -304,5 +316,4 @@ input[type="password"] {
 .custom-select{
   width:80%
 }
-
 </style>

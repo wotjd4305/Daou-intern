@@ -25,9 +25,12 @@ export default {
   },
   methods:{
     ...mapActions(['findMyAccount']),
+    ...mapActions("categoryStore",["fetchDepartmentCategory","fetchItemCategory"])
   },
   created(){
     this.findMyAccount();
+    this.fetchDepartmentCategory();
+    this.fetchItemCategory();
   }
 }
 
