@@ -183,7 +183,7 @@ public class ItemService implements IItemService {
 		
 		if(search.getCategory() == null) { // 카테고리가 선택되어 있지 않은 경우
 			List<ItemResponse> items = itemDao.getItemsByKeyword(search);
-			if(items != null) {
+			if(!items.isEmpty()) {
 				for (ItemResponse item : items) {
 					imageService.setItemImages(item);
 				}
@@ -196,7 +196,7 @@ public class ItemService implements IItemService {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		} else { // 카테고리가 선택되어 있는 경우
 			List<ItemResponse> items = itemDao.getItemsByCategoryAndKeyword(search);
-			if(items != null) {
+			if(!items.isEmpty()) {
 				for (ItemResponse item : items) {
 					imageService.setItemImages(item);
 				}
@@ -216,7 +216,7 @@ public class ItemService implements IItemService {
 		
 		List<ItemResponse> items = itemDao.getItemsByUserId(userId);
 		
-		if(items != null) {
+		if(!items.isEmpty()) {
 			for (ItemResponse item : items) {
 				imageService.setItemImages(item);
 			}

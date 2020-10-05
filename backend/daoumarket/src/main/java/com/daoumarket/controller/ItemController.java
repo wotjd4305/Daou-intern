@@ -37,8 +37,7 @@ public class ItemController {
 	
 	@GetMapping("/item/{itemId}")
 	@ApiOperation("물건 상세정보 조회")
-	public ResponseEntity<BasicResponse> getItemInfoByItemId(@PathVariable(required = true) long itemId, 
-															@RequestParam(required = true) int userId) {
+	public ResponseEntity<BasicResponse> getItemInfoByItemId(@PathVariable long itemId, @RequestParam int userId) {
 		log.info("ItemController : getItemInfoByItemId => {}", itemId);
 		
 		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
@@ -73,10 +72,14 @@ public class ItemController {
 		return itemService.updateItemInfo(item);
 	}
 	
-	@PatchMapping("/item/status")
-	@ApiOperation("물건 상태 수정하기(판매중, 거래중, 거래완료)")
-	public ResponseEntity<BasicResponse> updateItemStatus(@RequestBody ItemUpdateRequest item) {
+	@PatchMapping("/item/{itemId}/status")
+	@ApiOperation("물건 상태 수정하기(판매중 = S, 거래중 = I, 거래완료 = C)")
+	public ResponseEntity<BasicResponse> updateItemStatus(@PathVariable long itemId, @RequestParam char status) {
 		log.info("ItemController : updateItemStatus");
+		
+		ItemUpdateRequest item = ItemUpdateRequest.builder()
+				.itemId(itemId)
+				.status(status).build();
 		
 		return itemService.updateItemStatus(item);
 	}
@@ -91,7 +94,7 @@ public class ItemController {
 	
 	@GetMapping("/item")
 	@ApiOperation("모든 물건 가져오기")
-	public ResponseEntity<BasicResponse> getAllItems(@RequestParam(required = true) long userId) {
+	public ResponseEntity<BasicResponse> getAllItems(@RequestParam long userId) {
 		log.info("ItemController : getAllItems");
 		
 		return itemService.getAllItems(userId);
@@ -110,7 +113,7 @@ public class ItemController {
 	
 	@GetMapping("/item/keyword")
 	@ApiOperation("키워드 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam String[] category, @RequestParam String keyword) {
+	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam String keyword) {
 		log.info("ItemController : getItemsByKeyword");
 		
 		ItemSearchRequest search = ItemSearchRequest.builder()
@@ -121,7 +124,7 @@ public class ItemController {
 	}
 	
 	@GetMapping("/item/{userId}/list")
-	@ApiOperation("id를 가진 유저의 게시물 가져오기")
+	@ApiOperation("userId의 물건 목록 가져오기")
 	public ResponseEntity<BasicResponse> getItemsByUserId(@PathVariable long userId) {
 		log.info("ItemController : getItemsByUserId => {}", userId);
 		
