@@ -81,7 +81,7 @@
                     </div>
                     <div class="row">
                         <div class="write-width">
-                            <input type="text" class="form-control" placeholder="제목을 입력해주세요.">
+                            <input v-model="boardWriteData.title" type="text" class="form-control" placeholder="제목을 입력해주세요.">
                         </div>
                     </div>
 
@@ -90,7 +90,7 @@
                     </div>
                     <div class="row">
                         <div class="write-width">
-                            <input type="text" class="form-control" placeholder="제목을 입력해주세요.">
+                            <input v-model="boardWriteData.price" type="text" class="form-control" placeholder="제목을 입력해주세요.">
                         </div>
                     </div>
                    
@@ -98,8 +98,10 @@
                         카테고리
                     </div>
                     <div class="row">
-                        <select class="custom-select">
-                            <option  v-for="(category, idx) in categorys" :key="idx">{{ category }}</option>
+                        <select v-model="boardWriteData.category" class="custom-select">
+                            <option v-for="(category, idx) in categorys" :key="idx">
+                                {{ category }}
+                            </option>
                         </select>
                     </div>
 
@@ -108,7 +110,7 @@
                     </div>
                     <div class="row">
                         <div class="write-width">
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+                            <textarea v-model="boardWriteData.content" class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
                         </div>
                     </div>
                    
@@ -118,7 +120,7 @@
             </div>
             <!-- 작성 버튼 -->
             <div class ="mt-5 mb-5 msg-button-div align-self-center">
-                <button class="align-self-center btn ml-1 write-register-button" >작성하기</button>
+                <button @click="clickBoardWrite" class="align-self-center btn ml-1 write-register-button" >작성하기</button>
             </div>
             <!--/ 작성 버튼 -->
         </div>
@@ -134,18 +136,65 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 
 export default {
     data: () => {
     return {
-        categorys : ["디지털/가전","가구/인테리어","생활/가공식품","유아동/유아도서", "무료나눔", "여성잡화", "여성의류"],
+        //categorys : ["디지털/가전","가구/인테리어","생활/가공식품","유아동/유아도서", "무료나눔", "여성잡화", "여성의류"],
+        categorys: [],
+        boardWriteData: {
+            category : "",
+            content : "",
+            images :[],
+            price : "",
+            title : "",
+            userId : "",
+      },
       };
     },
     created(){
-    
+        //패치
+        this.fetchItemCategory();
+        this.findMyAccount();
+        
+        //적용
+        this.categorys = this.itemCategorys;
+    },
+    computed:{
+        ...mapState('categoryStore',['itemCategorys']),
+        ...mapState(['myaccount'])
+        
     }
     ,
     methods:{
+        ...mapActions('categoryStore', ['fetchItemCategory']),
+        ...mapActions('itemStore', ['fetchItemCategory','boardWrite']),
+        ...mapActions(['findMyAccount']),
+
+       //click
+       clickBoardWrite() {
+
+            const formData = new FormData();
+            
+            formData.append("category", this.boardWriteData.category);
+            formData.append("content", this.boardWriteData.content);
+            formData.append("price", this.boardWriteData.price);
+            formData.append("title", this.boardWriteData.title);
+            formData.append("userId", this.myaccount.id);
+
+            this.boardWriteData = formData;
+
+            console.log("click write " +formData)
+            console.log(formData.get("category"))
+            console.log(this.myaccount.id)
+            
+            
+
+            this.boardWrite(this.boardWriteData)
+        },
+
+       //push
        goToBoard(){
             this.$router.push({ path: "/board" });
         },

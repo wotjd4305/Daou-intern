@@ -4,7 +4,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import accountStore from '@/store/modules/accountStore'
-
+import categoryStore from '@/store/modules/categoryStore'
+import itemStore from '@/store/modules/itemStore'
 
 import router from '@/router'
 import axios from 'axios'
@@ -12,7 +13,12 @@ import cookies from 'vue-cookies'
 import SERVER from '@/api/api'
 import Swal from 'sweetalert2'
 
+import createPersistedState from 'vuex-persistedstate';
+
 export default new Vuex.Store({
+  plugins: [
+    createPersistedState(),
+  ],
   state: {
     authToken: cookies.get('auth-token'),
     myaccount: null,
@@ -42,8 +48,15 @@ export default new Vuex.Store({
       
       axios.post(SERVER.URL + SERVER.ROUTES.myaccount, {token :this.state.authToken})
         .then(res => {
-            console.log("여기에요!1" + res.data.data)
-            console.log("여기에요!2" + res.data.object.id)
+            console.log("after : findMyAcount data = " + res.data.data)
+            console.log("after : findMyAcount object.id = " + res.data.object.id)
+            
+            //만약 이미지가 없으면 기본 이미지
+            if(res.data.object.image == "null"){
+              console.log("after : findMyAcount 이미지가 없어요")
+              res.data.object.image = "icons8-male-user-90.png"
+            }
+
             commit('SET_MY_ACCOUNT', res.data.object)
         })
         .catch(err => 
@@ -77,8 +90,11 @@ export default new Vuex.Store({
         })
         .catch(err => console.log(err.response.data))
     },
+    fetch
   },
   modules: {
     accountStore: accountStore,
+    categoryStore: categoryStore,
+    itemStore: itemStore,
   }
 })

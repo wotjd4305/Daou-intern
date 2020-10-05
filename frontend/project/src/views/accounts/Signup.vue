@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 import axios from 'axios'
 
@@ -100,7 +100,8 @@ export default {
   name: 'Signup',
   data() {
     return {
-      departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
+      //departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
+      departs: [],
       signupData: {
         empNum: "",
         password: "",
@@ -121,6 +122,15 @@ export default {
   },
   created() {
     this.component = this;
+
+    //패치
+    this.fetchDepartmentCategory();
+
+    //적용
+    this.departs = this.departmentCategorys;
+  },
+  computed:{
+    ...mapState('categoryStore',['departmentCategorys'])
   },
   watch: {
     signupData: {
@@ -136,6 +146,8 @@ export default {
   },
   methods: {
     ...mapActions('accountStore', ['signup']),
+    ...mapActions('categoryStore', ['fetchDepartmentCategory']),
+  
 
     checkEmpNumEveryEvent(){
         this.isDuplicated = true; // 숫자가 바뀌면 계속 중복체크해야함!  
