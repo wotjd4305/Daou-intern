@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<resultMap type="chatroomResponse" id="chatroomResponse">
-		<result column="id" property="id"/>
+		<result column="chatroom_id" property="chatroomId"/>
 		<result column="item_id" property="itemId"/>
 		<result column="seller_id" property="sellerId"/>
 		<result column="buyer_id" property="buyerId"/>
@@ -23,11 +23,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from chatroom
 	</select>
 	
-	<insert id="insertChatroom" parameterType="chatroom">
+	<insert id="insertChatroom" parameterType="chatroomRequest">
 		insert into chatroom(item_id, seller_id, buyer_id)
 		values(#{itemId}, #{sellerId}, #{buyer_id})
 	</insert>
 	
-	<select id=""></select>
-
 </mapper>
