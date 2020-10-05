@@ -97,7 +97,6 @@
         </div>
     </div>
 
-
     <!--/상세 창 -->
 
 
@@ -111,9 +110,11 @@
 export default {
     data: () => {
     return {
+        itemId:"",
       };
     },
     created(){
+        this.itemId = this.$route.params.itemId;
     
     }
     ,

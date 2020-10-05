@@ -87,7 +87,7 @@ const accountStore = {
     patchAllItem({commit}, info){
         console.log("before : getAllItem - " + info.location)
           
-        axios.get(SERVER.URL + info.location, info)
+        axios.get(SERVER.URL + info.location, info.data)
           .then(res => {
           console.log("after : getAllItem - " + res.data.status)
           
@@ -132,9 +132,9 @@ const accountStore = {
       }
       dispatch('patchBoardWrite', info)
     },
-    getAllItem({ dispatch }) {
+    getAllItem({ dispatch }, userId) {
         const info = {
-          //data: boardWriteData,
+          data: userId,
           location: SERVER.ROUTES.getallitem,
           //to: '/board'
         }

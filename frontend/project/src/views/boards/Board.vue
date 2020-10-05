@@ -154,7 +154,7 @@ export default {
 
          //패치
         this.fetchItemCategory();
-        this.getAllItem();
+        this.getAllItem(this.myaccount.userId);
         this.findMyAccount();
         
         //적용
@@ -188,7 +188,8 @@ export default {
     ,
     computed:{
         ...mapState('categoryStore',['itemCategorys']),
-        ...mapState('itemStore', ['searcheditems'])
+        ...mapState('itemStore', ['searcheditems']),
+        ...mapState(['myaccount']),
     },
     methods:{
           ...mapActions('categoryStore', ['fetchItemCategory']),
@@ -216,7 +217,7 @@ export default {
             return startdate;
         },
         goToDetail(itemId){
-            this.$router.push({ path: "/board/detail", params:{ id : itemId} });
+             this.$router.push({path: `/board/detail/${itemId}`})
         },
         goToWrite(){
             this.$router.push({ path: "/board/write" });    
