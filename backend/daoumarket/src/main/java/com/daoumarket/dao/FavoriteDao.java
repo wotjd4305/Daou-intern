@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.daoumarket.dto.Favorite;
+import com.daoumarket.dto.ItemInfoRequest;
+import com.daoumarket.dto.ItemResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,8 +29,13 @@ public class FavoriteDao implements IFavoriteDao {
 	}
 
 	@Override
-	public List<Favorite> getFavoriteList(int userId) {
+	public List<ItemResponse> getFavoriteList(int userId) {
 		return sqlSession.selectList(ns + "getFavoriteList", userId);
+	}
+
+	@Override
+	public boolean isFavorited(ItemInfoRequest itemInfoRequest) {
+		return sqlSession.selectOne(ns + "isFavorited", itemInfoRequest);
 	}
 	
 	
