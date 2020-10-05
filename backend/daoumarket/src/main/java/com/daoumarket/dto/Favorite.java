@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class Favorite {
-	private long id;
+	private long favoriteId;
 	private long userId;
 	private long itemId;
 	private LocalDateTime date;
