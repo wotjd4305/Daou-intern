@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ItemUpdateRequest {
 	
-	private long id;
+	private long itemId;
 	private String title;
 	private int price;
 	private String category;
@@ -16,8 +16,8 @@ public class ItemUpdateRequest {
 	private char status;
 	
 	@Builder
-	public ItemUpdateRequest(long id, String title, int price, String category, String content, char status) {
-		this.id = id;
+	public ItemUpdateRequest(long itemId, String title, int price, String category, String content, char status) {
+		this.itemId = itemId;
 		this.title = title;
 		this.price = price;
 		this.category = category;

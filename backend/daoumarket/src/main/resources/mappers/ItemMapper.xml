@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<resultMap type="itemResponse" id="itemResponse">
-		<result column="id" property="id"/>
+		<result column="item_id" property="itemId"/>
 		<result column="user_id" property="userId"/>
 		<result column="title" property="title"/>
 		<result column="price" property="price"/>
@@ -25,13 +25,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from item
 	</select>
 
-	<select id="getItemById" parameterType="long" resultMap="itemResponse">
-		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+	<select id="getItemInfoByItemId" parameterType="itemInfoRequest" resultMap="itemResponse">
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
 		from item i, user u
-		where i.id = u.id and i.id = #{id} and delflag = 0
+		where i.item_id = u.user_id and i.item_id = #{itemId} and delflag = 0
 	</select>
 	
-	<insert id="insertItem" parameterType="itemInsertRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="item.id">
+	<insert id="insertItem" parameterType="itemInsertRequest" useGeneratedKeys="true" keyProperty="itemId" keyColumn="item_id">
 		insert into item(user_id, title, price, category, content, date)
 		values(#{userId}, #{title}, #{price}, #{category}, #{content}, now())
 	</insert>
@@ -39,63 +39,62 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateItem" parameterType="itemUpdateRequest">
 		update item
 		set title=#{title}, price=#{price}, category=#{category}, content=#{content}, date=now()
-		where id=#{id}
+		where item_id = #{itemId}
 	</update>
 	
 	<update id="updateStatusItem" parameterType="itemUpdateRequest">
 		update item
 		set status=#{status}
-		where id=#{id}
+		where item_id=#{itemId}
 	</update>
 	
 	<update id="deleteItem" parameterType="long">
 		update item
 		set delflag=1
-		where id=#{id}
+		where item_id=#{itemId}
 	</update>
 	
 	<select id="getAllItems" resultMap="itemResponse">
-		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
 		from item i, user u
-		where i.user_id = u.id and i.delflag = 0
-		order by date desc
+		where i.user_id = u.user_id and i.delflag = 0
+		order by i.date desc
 	</select>
 	
-	
 	<select id="getItemsByCategory" parameterType="itemSearchRequest" resultMap="itemResponse">
-		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
 		from item i, user u
-		where (i.user_id = u.id and i.delflag = 0) and (category like 
-		<foreach collection="category" item="cate" separator=" or i.category like ">
+		where (i.user_id = u.user_id and i.delflag = 0) and (category in 
+		<foreach collection="category" item="cate" open="(" separator=", " close=")">
 		 	#{cate}
 		</foreach>)
-		order by date desc
+		order by i.date desc
 	</select>
 	
 	
 	<select id="getItemsByKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
-		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
 		from item i, user u
-		where (i.user_id = u.id and i.delflag = 0) and title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')
-		order by date desc
+		where (i.user_id = u.user_id and i.delflag = 0) and title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')
+		order by i.date desc
 	</select>
 	
 	<select id="getItemsByCategoryAndKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
-		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
 		from item i, user u
-		where (i.user_id = u.id and i.delflag = 0) and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
-		and category like 
-		<foreach collection="category" item="cate" separator=" or i.category like ">
+		where (i.user_id = u.user_id and i.delflag = 0) and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
+		and (category in
+		<foreach collection="category" item="cate" open="(" separator=", " close=")">
 		 	#{cate}
-		</foreach>
-		order by date desc
+		</foreach>)
+		order by i.date desc
 	</select>
 	
 	<select id="getItemsByUserId" parameterType="long" resultMap="itemResponse">
-		select i.id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
 		from item i, user u
-		where i.user_id = u.id and i.delflag = 0 and i.user_id=#{userId}
-		order by date desc
+		where i.user_id = u.user_id and i.delflag = 0 and i.user_id=#{userId}
+		order by i.date desc
 	</select>
 	
 </mapper>

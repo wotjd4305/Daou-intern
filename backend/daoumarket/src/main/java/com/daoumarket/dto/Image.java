@@ -18,5 +18,4 @@ public class Image {
 		this.image = image;
 		this.picture = picture;
 	}
-	
 }

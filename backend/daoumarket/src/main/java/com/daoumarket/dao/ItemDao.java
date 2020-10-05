@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemResponse;
 import com.daoumarket.dto.ItemSearchRequest;
@@ -25,8 +26,8 @@ public class ItemDao implements IItemDao {
 	}
 	
 	@Override
-	public ItemResponse getItemById(long id) {
-		return sqlSession.selectOne(ns + "getItemById", id);
+	public ItemResponse getItemInfoByItemId(ItemInfoRequest itemInfoRequest) {
+		return sqlSession.selectOne(ns + "getItemInfoByItemId", itemInfoRequest);
 	}
 	
 	@Override
@@ -45,8 +46,8 @@ public class ItemDao implements IItemDao {
 	}
 
 	@Override
-	public int deleteItem(long id) {
-		return sqlSession.delete(ns + "deleteItem", id);
+	public int deleteItem(long itemId) {
+		return sqlSession.delete(ns + "deleteItem", itemId);
 	}
 	
 	@Override
