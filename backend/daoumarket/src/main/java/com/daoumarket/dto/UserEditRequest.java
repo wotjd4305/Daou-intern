@@ -3,21 +3,18 @@ package com.daoumarket.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
-@Setter
-@ToString
-public class UserLoginRequest {
+public class UserEditRequest {
 	private int empNum;
 	private String password;
+	private String department;
 
 	@Builder
-	public UserLoginRequest(int empNum, String password) {
+	public UserEditRequest(int empNum, String password, String department) {
 		this.empNum = empNum;
 		this.password = password;
+		this.department = department;
 	}
-	
 }

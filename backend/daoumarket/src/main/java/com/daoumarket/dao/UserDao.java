@@ -4,7 +4,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.daoumarket.dto.User;
-import com.daoumarket.dto.UserLoginRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,8 +25,8 @@ public class UserDao implements IUserDao{
 	}
 
 	@Override
-	public User getUserLogin(UserLoginRequest userLogin) {
-		return sqlSession.selectOne(ns + "getUserLogin", userLogin);
+	public User getUserLogin(User user) {
+		return sqlSession.selectOne(ns + "getUserLogin", user);
 	}
 	
 	@Override

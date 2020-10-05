@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.TokenRequest;
 import com.daoumarket.dto.User;
+import com.daoumarket.dto.UserEditRequest;
 import com.daoumarket.dto.UserLoginRequest;
 import com.daoumarket.jwt.IJWTService;
 import com.daoumarket.service.IImageService;
@@ -37,7 +38,7 @@ public class UserController {
 	private final IJWTService jwtService;
 	private final IImageService imageService;
 	
-	@PostMapping("/user/join")
+	@PostMapping("/user")
 	@ApiOperation("회원가입")
 	public ResponseEntity<BasicResponse> insertUser(@RequestBody User user) {
 		log.info("UserController : insertUser");
@@ -56,10 +57,10 @@ public class UserController {
 	
 	@PostMapping("/user/login")
 	@ApiOperation("로그인")
-	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody UserLoginRequest userLogin){
+	public ResponseEntity<BasicResponse> getUserLogin(@RequestBody UserLoginRequest userLoginRequest){
 		log.info("UserController : getUserLogin");
 		
-		return userService.getUserLogin(userLogin);
+		return userService.getUserLogin(userLoginRequest);
 	}
 	
 	@PostMapping("/user/token")
@@ -93,13 +94,15 @@ public class UserController {
 		return responseEntity;
 	}
 	
-	@PatchMapping("/user/edit")
-	@ApiOperation("회원 정보(비밀번호, 부서) 수정하기")
-	public ResponseEntity<BasicResponse> updateUser(@RequestBody User user){
+	@PatchMapping("/user")
+	@ApiOperation("empNum으로 회원 정보(비밀번호, 부서) 수정하기")
+	public ResponseEntity<BasicResponse> updateUser(@RequestBody UserEditRequest userEditRequest){
 		log.info("UserController : updateUser");
 		
-		return userService.updateUser(user);
+		return userService.updateUser(userEditRequest);
 	}
+	
+	
 	
 	@PatchMapping("/user/{userId}/image")
 	@ApiOperation("유저 프로필 사진 변경하기")

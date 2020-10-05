@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from user where emp_num=#{empNum}
 	</select>
 	
-	<select id="getUserLogin" parameterType="userLoginRequest" resultType="user">
+	<select id="getUserLogin" parameterType="user" resultType="user">
 		select * from user where emp_num=#{empNum} and password=#{password}
 	</select>
 	
