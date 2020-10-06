@@ -17,6 +17,8 @@ export default {
       // categorys
       itemcategory:'/category/item',
       departmentcategory:'/category/department',
+
+      //item
       postitem:'/item',
       getallitem:'/item',
       getdetailitem:'/item',

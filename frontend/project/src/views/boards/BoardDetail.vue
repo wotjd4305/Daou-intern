@@ -57,7 +57,7 @@
                 <div class="col text-right align-self-center write-title" style="display:block">
                     <div class="mt-3 mr-5">
                         <span> 
-                            {{itemStatus(detailitem.status)}}
+                            {{detailitem.status | itemStatus}}
                         </span>
                     </div>
                     <div>
@@ -118,7 +118,7 @@
                     <!-- 기본 -->
                     <div v-if="!isUpdateChecked"  class="row mt-4">
                         <div class="col detail-price-text  text-right">
-                            가격 : {{this.comma(detailitem.price)}}
+                            가격 : {{detailitem.price | comma}}
                         </div>
                     </div>
                     <!-- 수정 중 -->
@@ -152,7 +152,7 @@
                             />
                             </span>
                             <span class="ml-2">
-                                {{calculateTime(detailitem.date)}}
+                                {{detailitem.date | calculateTime}}
                             </span>
                         </div> 
                     </div>
@@ -209,7 +209,6 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
-import moment from 'moment'
 
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -265,44 +264,6 @@ export default {
         ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem']),
         ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions(['findMyAccount']),
-
-    //가격 필터
-    comma(val){
-        if(val == 0) return "무료나눔♥"
-        return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-     },
-    //시간 필터
-    calculateTime(){
-        var nowTime = moment();
-        var writeTime = moment(this.detailitem.date, 'YYYY-MM-DD HH:mm:ss');
-
-        var diffHour = moment.duration(nowTime.diff(writeTime)).asHours();
-        var diffDay = moment.duration(nowTime.diff(writeTime)).asDays();
-        var diffMin = moment.duration(nowTime.diff(writeTime)).asMinutes();
-        
-        //60분 이내
-        if(diffMin < 60){
-            return parseInt(diffMin) + "분 전"
-        }
-        //24시간 이내
-        if(diffHour < 24){
-            return parseInt(diffHour) + "시간 전";
-        }
-        //7일 이내
-        if(diffDay < 7){
-            return parseInt(diffDay) + "일 전";
-        }
-        return this.detailitem.date;
-    },
-    //물건 상태 필터
-    itemStatus(status){
-        if(status == 'S')
-            return "판매중"
-        if(status == 'I')
-            return "거래중"
-        if(status == "C")
-            return "거래완료"
-    },
 
     //디테일의 작성자 판단
     isWriter(){
