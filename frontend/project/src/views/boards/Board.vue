@@ -91,7 +91,7 @@
                                     등록일 : 
                                 </span>
                                 <span class="item-list-title-contents">
-                                    {{calculateTime(item.date)}} 
+                                    {{item.date | calculateTime}} 
                                 </span>
                             </div>
                             <div class="ml-4 pl-2 text-left">
@@ -99,7 +99,7 @@
                                     가격 : 
                                 </span>
                                 <span class="item-list-title-contents">
-                                    {{comma(item.price)}} 
+                                    {{item.price | comma}} 
                                 </span>
                             </div>
                             
@@ -134,7 +134,6 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
-import moment from 'moment'
 
 export default {
     
@@ -193,34 +192,6 @@ export default {
           ...mapActions('itemStore', ['getAllItem']),
           ...mapActions(['findMyAccount']),
 
-    //가격 필터
-    comma(val){
-        if(val == 0) return "무료나눔♥"
-        return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-     },
-    //시간 필터
-    calculateTime(date){
-        var nowTime = moment();
-        var writeTime = moment(date, 'YYYY-MM-DD HH:mm:ss');
-
-        var diffHour = moment.duration(nowTime.diff(writeTime)).asHours();
-        var diffDay = moment.duration(nowTime.diff(writeTime)).asDays();
-        var diffMin = moment.duration(nowTime.diff(writeTime)).asMinutes();
-        
-        //60분 이내
-        if(diffMin < 60){
-            return parseInt(diffMin) + "분 전"
-        }
-        //24시간 이내
-        if(diffHour < 24){
-            return parseInt(diffHour) + "시간 전";
-        }
-        //7일 이내
-        if(diffDay < 7){
-            return parseInt(diffDay) + "일 전";
-        }
-        return date
-    },
 
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
@@ -230,19 +201,19 @@ export default {
             return this.serverPath + "no-image-icon-23487.png" 
             
         },
-        getDate(){
-             var date = new Date();
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var day = date.getDate();
+        // getDate(){
+        //      var date = new Date();
+        //     var year = date.getFullYear();
+        //     var month = date.getMonth() + 1;
+        //     var day = date.getDate();
 
-            if (day < 10) day = "0" + day;
-            if (month < 10) month = "0" + month;
+        //     if (day < 10) day = "0" + day;
+        //     if (month < 10) month = "0" + month;
 
-            var startdate = year + "-" + month + "-" + day;
+        //     var startdate = year + "-" + month + "-" + day;
 
-            return startdate;
-        },
+        //     return startdate;
+        // },
         goToDetail(itemId){
              this.$router.push({path: `/board/detail/${itemId}`})
         },
