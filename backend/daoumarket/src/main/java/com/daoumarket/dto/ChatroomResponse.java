@@ -1,5 +1,7 @@
 package com.daoumarket.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,25 +10,25 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ChatroomResponse {
 	
-	private long id;
+	private long chatroomId;
 	private long itemId;
-	private long sellerId;
-	private long buyerId;
+	private int sellerId;
+	private int buyerId;
+	private User otherInfo;
 	private String lastMessage;
 	private int unreadMessageCnt;
-	private User user;
+	private LocalDateTime lastMessageDate;
 	
 	@Builder
-	public ChatroomResponse(long id, long itemId, long sellerId, long buyerId, String lastMessage, int unreadMessageCnt,
-			User user) {
-		super();
-		this.id = id;
+	public ChatroomResponse(long chatroomId, long itemId, int sellerId, int buyerId, User otherInfo, String lastMessage,
+			int unreadMessageCnt, LocalDateTime lastMessageDate) {
+		this.chatroomId = chatroomId;
 		this.itemId = itemId;
 		this.sellerId = sellerId;
 		this.buyerId = buyerId;
+		this.otherInfo = otherInfo;
 		this.lastMessage = lastMessage;
 		this.unreadMessageCnt = unreadMessageCnt;
-		this.user = user;
+		this.lastMessageDate = lastMessageDate;
 	}
-	
 }

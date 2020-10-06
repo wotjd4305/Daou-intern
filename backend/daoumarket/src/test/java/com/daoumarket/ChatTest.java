@@ -1,10 +1,10 @@
 package com.daoumarket;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import com.daoumarket.dto.ChatroomResponse;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class ChatTest {
-	private static long id = 1;
 	private static long itemId = 1;
-	private static long sellerId = 1;
-	private static long buyerId = 2;
+	private static int userId = 1;
+	private static int sellerId = 1;
+	private static int buyerId = 2;
 	
 	private static ChatroomRequest chatroom;
 	
@@ -31,35 +31,19 @@ public class ChatTest {
 	@Before
 	public void setUp() {
 		chatroom = ChatroomRequest.builder()
-				.id(id)
-				.item_id(itemId)
-				.seller_id(sellerId)
-				.buyer_id(buyerId).build();
-	}
-	
-	@Test
-	@Ignore
-	public void testGetCount_유저id로채팅방개수확인하기() {
-		assertEquals(chatroomDao.getCount(id), 0);
-	}
-	
-	@Test
-	public void testGetChatRoom_채팅방정보가져오기() {
-		ChatroomResponse chatroom = ChatroomResponse.builder()
-				.id(id)
+				.itemId(itemId)
 				.sellerId(sellerId)
-				.buyerId(buyerId)
-				.lastMessage("반갑습니다")
-				.unreadMessageCnt(1).build();
-		
+				.buyerId(buyerId).build();
 	}
 	
 	@Test
-	public void insertChatroom_채팅방생성하기() {
+	public void getChatroomByUserId_userId로채팅방가져오기() {
 		
-		chatroomDao.insertChatroom(chatroom);
+		List<ChatroomResponse> chatList = chatroomDao.getJoinedRoomListByUserId(userId);
 		
-		assertEquals(chatroomDao.getCount(id), 1);
-		
+		assertEquals(0, chatList.size());
 	}
+	
+	
+	
 }

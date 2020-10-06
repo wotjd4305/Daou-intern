@@ -1,9 +1,12 @@
 package com.daoumarket.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.daoumarket.dto.ChatroomRequest;
+import com.daoumarket.dto.ChatroomResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,16 +17,10 @@ public class ChatroomDao implements IChatroomDao {
 	private String ns = "chatroom.";
 	
 	private final SqlSession sqlSession;
+
+	@Override
+	public List<ChatroomResponse> getJoinedRoomListByUserId(int userId) {
+		return sqlSession.selectList(ns + "getJoinedRoomListByUserId", userId);
+	}
 	
-
-	@Override
-	public int getCount(long id) {
-		return sqlSession.selectOne(ns + "getCount", id);
-	}
-
-	@Override
-	public int insertChatroom(ChatroomRequest chatroom) {
-		return sqlSession.insert(ns + "insertChatroom", chatroom);
-	}
-
 }

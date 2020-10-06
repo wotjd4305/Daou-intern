@@ -1,8 +1,10 @@
 package com.daoumarket.dao;
 
-import com.daoumarket.dto.ChatroomRequest;
+import java.util.List;
+
+import com.daoumarket.dto.ChatroomResponse;
 
 public interface IChatroomDao {
-	public int getCount(long id);
-	public int insertChatroom(ChatroomRequest chatroom);
+
+	List<ChatroomResponse> getJoinedRoomListByUserId(int userId);
 }

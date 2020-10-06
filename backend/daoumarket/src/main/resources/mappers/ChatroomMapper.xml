@@ -4,28 +4,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chatroom">
 
-	<resultMap type="user" id="user">
-		<result column="name" property="name"/>
-		<result column="image" property="image"/>
-	</resultMap>
-	
-	<resultMap type="chatroomResponse" id="chatroomResponse">
-		<result column="chatroom_id" property="chatroomId"/>
-		<result column="item_id" property="itemId"/>
-		<result column="seller_id" property="sellerId"/>
-		<result column="buyer_id" property="buyerId"/>
-		<result column="last_message" property="lastMessage"/>
-		<result column="unread_message_cnt" property="unreadMessageCnt"/>
-		<collection property="user" resultMap="user"/>
-	</resultMap>
-
-	<select id="getCount" parameterType="long" resultType="int">
-		select count(*) from chatroom
+	<select id="getJoinedRoomListByUserId" parameterType="int" resultType="chatroomResponse">
+		select chatroom_id, item_id, seller_id, buyer_id
+		from chatroom
+		where seller_id = #{userId} or buyer_id = #{userId}
 	</select>
-	
-	<insert id="insertChatroom" parameterType="chatroomRequest">
-		insert into chatroom(item_id, seller_id, buyer_id)
-		values(#{itemId}, #{sellerId}, #{buyer_id})
-	</insert>
 	
 </mapper>
