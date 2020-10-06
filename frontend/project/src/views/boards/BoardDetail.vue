@@ -51,6 +51,9 @@
                     </div>
                 </div>
                 <!--/ 뒤로가기 -->
+
+                <!-- 상태 -->
+                
                 <div class="col text-right align-self-center write-title" style="display:block">
                     <div class="mt-3 mr-5">
                         <span> 
@@ -60,18 +63,22 @@
                     <div>
                     </div>
                 </div>
+                <!--/ 상태 -->
+
             </div>
             <!-- 수정 삭제 아이콘 -->
              <div  class ="text-right mt-2 mr-2">
                  <div v-if="isWriter()">
+                     <!-- 기본 -->
                     <b-img v-if="!isUpdateChecked"
                             v-bind:src="require(`@/assets/img/icons8-pencil-120.png`)"
                             @click="clickUpdate()"
                             class="detail-icon"
                     ></b-img>
+                    <!-- 수정 중 -->
                     <b-img v-if="isUpdateChecked"
                             v-bind:src="require(`@/assets/img/icons8-save-48.png`)"
-                            @click="clickUpdate()"
+                            @click="clickSave()"
                             class="detail-icon"
                     ></b-img>
                     <b-img
@@ -92,19 +99,35 @@
                             />
                 </div>
                 <!-- 정보 -->
-                <div class="col-4 align-self-center">
-                    <div class="row">
-                        <div v-if="!isUpdateChecked" class="detail-title-text">
-                           {{this.detailitem.title}}
-                        </div>
-                    </div>
-                    <div v-if="isUpdateChecked"  class="row">
+                <div class="col-4 align-self-center" style="margin-bottom:auto">
+                    <div v-if="!isUpdateChecked"  class="row">
                         <div class="detail-title-text">
                            {{this.detailitem.title}}
                         </div>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col detail-price-text text-right">가격 : {{this.comma(detailitem.price)}}</div>
+                    <div v-if="isUpdateChecked"  class="row">
+                        <div>
+                           <b-form-input
+                            class="detail-title-text ml-2"
+                            style="width:100%"
+                            v-model="detailitem.title"
+                          ></b-form-input>
+                          
+                        </div>
+                    </div>
+                    <!-- 기본 -->
+                    <div v-if="!isUpdateChecked"  class="row mt-4">
+                        <div class="col detail-price-text  text-right">
+                            가격 : {{this.comma(detailitem.price)}}
+                        </div>
+                    </div>
+                    <!-- 수정 중 -->
+                     <div v-if="isUpdateChecked"  class="row mt-4">
+                           <span class="detail-price-text text-right"> 가격 : </span> 
+                           <b-form-input
+                            class="col detail-price-text detail-price-text-update text-right"
+                            v-model="detailitem.price"
+                          ></b-form-input>
                     </div>
                     <div class="row">
                         <div class="col detail-user-text text-right"> 
@@ -117,11 +140,13 @@
                             판매자 : {{ this.detailitem.user.name}}
                         </div>
                     </div>
+                    
                      <hr class="featurette-divider" />
-                    <div class="row detail-date-text text-right">
-                        <div class="col">
+                    <div style="height:20px" class="row detail-date-text text-right">
+                        <div class="col" style="height:10%">
                             <span> 
                                 <b-img
+                                    style="height:1000%"
                                     class="detail-clock-img"
                                     v-bind:src="require(`@/assets/img/icons8-clock-96.png`)"
                             />
@@ -131,8 +156,38 @@
                             </span>
                         </div> 
                     </div>
-                    <div class="row"> {{detailitem.content}}</div>
-                    
+
+                    <div class="row">
+                        <!-- 수정중 -->
+                        <div v-if="isUpdateChecked" class="col ml-3 mt-3 text-right">
+                            <select v-model="detailitem.category" class="detail-category-text-update custom-select">
+                                <option v-for="(category, idx) in categorys" :key="idx">
+                                    {{ category }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- 기본-->
+                        <div v-if="!isUpdateChecked" class="detail-date-text col mt-3 text-right">
+                            카테고리 : {{detailitem.category}}
+                        </div>
+                    </div>
+
+                    <!-- 기본 -->
+                    <div v-if="!isUpdateChecked" class="row"> 
+                        {{detailitem.content}}
+                    </div>
+                    <!-- 수정 중 -->
+                     <div v-if="isUpdateChecked"  class="row">
+                        <div class="detail-title-text-update">
+                           <b-form-textarea
+                            style="z-index:10;"
+                            value="Contents"
+                            placeholder="내용을 입력하세요."
+                            rows="3"
+                            v-model="detailitem.content"
+                            ></b-form-textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- 메시지 버튼 -->
@@ -169,9 +224,15 @@ export default {
         },
         deleteReq: "",
         isUpdateChecked: false,
+        itemDetail:[],
+        categorys:[],
       };
-    },
-   
+  },
+  watch: {
+    itemUpdateReq: {
+      deep: true
+    }
+  },
     created(){
         //아이템 id 확인
         this.itemId = this.$route.params.itemId;
@@ -182,6 +243,7 @@ export default {
 
         //패치
         this.findMyAccount();
+        this.fetchItemCategory();
 
         //디테일 요청
         this.getDetailReq.itemId = this.itemId;
@@ -190,15 +252,18 @@ export default {
 
         //적용
         this.deleteReq = this.itemId;
+        this.categorys = this.itemCategorys;
 
     }
     ,
     computed:{
         ...mapState(['myaccount']),
-        ...mapState('itemStore',['detailitem'])
+        ...mapState('itemStore',['detailitem']),
+        ...mapState('categoryStore',['itemCategorys']),
     },
     methods:{
-        ...mapActions('itemStore', ['getDetailItem']),
+        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem']),
+        ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions(['findMyAccount']),
 
     //가격 필터
@@ -309,6 +374,12 @@ export default {
     clickUpdate(){
         this.isUpdateChecked = !this.isUpdateChecked;
         return this.isUpdateChecked;
+    },
+    clickSave(){
+
+        this.updateDetailItem(this.detailitem)
+        this.isUpdateChecked = !this.isUpdateChecked;
+        return this.isUpdateChecked;
     }
     }
 }
@@ -374,6 +445,11 @@ export default {
     font-weight: bold;
     font-size:2rem;
 }
+.detail-title-text-update{
+    font-weight: bold;
+    width: 100%;
+    font-size:2rem;
+}
 .detail-price-text{
     font-weight: bold;
     color: #2682ba;
@@ -392,6 +468,11 @@ export default {
     height: 20%;
     opacity: 50%;
 }
-
+.detail-price-text-update{
+    width: 60%;
+}
+.detail-category-text-update{
+    width: 50%;
+}
 </style>
 
