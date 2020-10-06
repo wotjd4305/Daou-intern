@@ -8,7 +8,7 @@ import createPersistedState from 'vuex-persistedstate';
 
 // import cookies from 'vue-cookies'
 
-const accountStore = {
+const categoryStore = {
   plugins: [
     createPersistedState(),
   ],
@@ -62,4 +62,4 @@ const accountStore = {
   },
 }
 
-export default accountStore
+export default categoryStore
