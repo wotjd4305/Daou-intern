@@ -12,6 +12,7 @@
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.5",
+    "moment": "^2.29.0",
     "node-pre-gyp": "^0.15.0",
     "sockjs-client": "^1.5.0",
     "sweetalert2": "^10.3.2",
