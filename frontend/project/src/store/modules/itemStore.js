@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import router from '@/router'
 
 import createPersistedState from 'vuex-persistedstate';
+import { mapState } from 'vuex'
 
 
 // import cookies from 'vue-cookies'
@@ -14,7 +15,11 @@ const accountStore = {
   ],
   namespaced: true,
   state: {
-    searcheditems: null,
+    searcheditems : null,
+    detailitem : null,
+  },
+  computed:{
+    ...mapState(['myaccount'])
   },
   getters: {
     config: state =>
@@ -25,6 +30,9 @@ const accountStore = {
      SET_ITEMS(state, searcheditems){
        state.searcheditems = searcheditems
      },
+     SET_DETAIL_ITEMS(state, detailitem){
+      state.detailitem = detailitem
+    },
   },
   actions: {
     
@@ -55,7 +63,8 @@ const accountStore = {
                 icon: 'success',
                 title: "작성 성공"
               })
-
+              
+              //this.getAllItem(this.myaccount.userId)
               console.log(res.data.object)
               console.log(commit)
               router.push(info.to)
@@ -85,11 +94,12 @@ const accountStore = {
 
     //모든 아이템 검색
     patchAllItem({commit}, info){
-        console.log("before : getAllItem - " + info.location)
-          
-        axios.get(SERVER.URL + info.location, info)
+        console.log("before : patchAllItem - " + info.location)
+        axios.get(SERVER.URL + info.location , 
+            {params:{userId:info.data}},
+          )
           .then(res => {
-          console.log("after : getAllItem - " + res.data.status)
+          console.log("after : patchAllItem - " + res.data.status)
           
             if(res.data.status){
               
@@ -121,6 +131,45 @@ const accountStore = {
             })
           })
       },
+      patchDetailItem({commit}, info){
+        console.log("before : patchDetailItem - " + info.location)
+        axios.get(SERVER.URL + info.location + "/" + info.data.itemId , 
+            {params:{userId:info.data.userId}},
+          )
+          .then(res => {
+          console.log("after : patchDetailItem - " + res.data.status)
+          
+            if(res.data.status){
+              
+                commit("SET_DETAIL_ITEMS", res.data.object)
+                
+                console.log(res.data.object)
+                console.log(commit)
+                //router.push(info.to)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'error',
+              title: err.response.data
+            })
+          })
+      },
+
 
 
     //////
@@ -132,14 +181,22 @@ const accountStore = {
       }
       dispatch('patchBoardWrite', info)
     },
-    getAllItem({ dispatch }) {
+    getAllItem({ dispatch }, userId) {
         const info = {
-          //data: boardWriteData,
+          data: userId,
           location: SERVER.ROUTES.getallitem,
           //to: '/board'
         }
         dispatch('patchAllItem',info)
       },
+    getDetailItem({dispatch}, getDetailReq){
+      const info = {
+        data: getDetailReq,
+        location: SERVER.ROUTES.getdetailitem,
+        //to: '/board'
+      }
+      dispatch('patchDetailItem',info)
+    },
     }
 }
 
