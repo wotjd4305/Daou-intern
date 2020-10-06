@@ -7,11 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.daoumarket.dao.IFavoriteDao;
-import com.daoumarket.dao.ISearchDao;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.Favorite;
-import com.daoumarket.dto.Search;
-import com.daoumarket.dto.SearchInsertResponse;
+import com.daoumarket.dto.ItemInfoRequest;
+import com.daoumarket.dto.ItemResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class FavoriteService implements IFavoriteService {
 	
-	public final IFavoriteDao favoriteDao;
+	private final IFavoriteDao favoriteDao;
+	private final IImageService imageService;
 
 	@Override
 	public ResponseEntity<BasicResponse> insertFavorite(Favorite favorite) {
@@ -62,27 +62,39 @@ public class FavoriteService implements IFavoriteService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getFavoriteList(long userId) {
+	public ResponseEntity<BasicResponse> getFavoriteList(int userId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
-		List<Favorite> favorite = null;
+		List<ItemResponse> favoriteList = favoriteDao.getFavoriteList(userId);
 		
-		favorite = favoriteDao.getFavoriteList(userId);
-		
-		if (favorite != null) {
+		if (!favoriteList.isEmpty()) {
+			for (ItemResponse item : favoriteList) {
+				imageService.setItemImages(item);
+			}
 			basicResponse.status = true;
 			basicResponse.data = "Favorite Extraction Completed";
-			basicResponse.object = favorite;
-			
+			basicResponse.object = favoriteList;
 			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
 		} else {
 			basicResponse.status = false;
 			basicResponse.data = "Favorite Extraction Failure";
-			
 			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
 		}
 		
 		return responseEntity;
 	}
+	
+	@Override
+    public void setItemIsFavorited(ItemResponse item, int userId) {
+    	
+		ItemInfoRequest itemInfoRequest = ItemInfoRequest.builder()
+				.itemId(item.getItemId())
+				.userId(userId).build();
+		
+		boolean isFavorite = favoriteDao.isFavorited(itemInfoRequest);
+		
+		if(isFavorite)
+			item.setFavorite(true);
+    }
 
 }

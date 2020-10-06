@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="container p-1 mt-5 bg-light-ivory signup-form">
-      <h3>회원 수정.. 아직 안건듬</h3>
+      <h3>회원 수정</h3>
 
       <!-- 프로필과 입력창 -->
       <div class="row">
@@ -14,17 +14,22 @@
                 ref="profileImg"
                 style="display: none"
                 accept="image/jpeg, jpg, png/"
-                @change="clickuploadImage($event)"
+                @change="clickUploadImage($event)"
               />
 
               <button class="pro-button" id="profileImgBtn" @click="$refs.profileImg.click()">
-                <img
-                  class="profileImg"
-                  ref="uploadItemImage"
-                  accept="image/jpeg, jpg, png/"
-                  src="@/assets/img/icons8-male-user-90.png"
-                  style="width: 10rem; height: 10rem;"
-                />
+
+                 <div>
+                    <img
+                      class="profileImg headerProfile"
+                      ref="uploadItemImage"
+                      id="uploadImagdId"
+                      :src= getImgUrl(serverPath)
+                      accept="image/jpeg, jpg, png/"
+                      style="width: 10rem; height: 10rem;"
+                    />
+                  </div>
+                
               </button>
               <br />
               <!-- 프로필 삭제 아직 덜만듦!!!!! -->
@@ -33,7 +38,7 @@
                 size="sm"
                 variant="light"
                 id="deleteImg"
-                @click="deleteP()"
+                @click="clickUpDeleteImage()"
               >프로필 삭제</b-button>
         </b-col>
 
@@ -78,7 +83,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickUpdate">회원가입</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickUpdate">수정하기</button>
       </div>
       
     </div>
@@ -95,15 +100,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-//import SERVER from '@/api/api'
-
+import SERVER from '@/api/api'
 //import axios from 'axios'
-
 export default {
   name: 'Signup',
   data() {
     return {
-      departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
+      //departs: ["서비스 개발부", "웹서비스 개발부", "인프라 팀"],
+      departs: [],
       userUpdateData: {
         empNum : "",
         password: "",
@@ -116,12 +120,23 @@ export default {
         department: false,
       },
       isSubmit: false,
+      defaultPath: "icons8-male-user-90.png",
+      serverPath: SERVER.IMAGE_STORE,
     };
   },
   created() {
-    this.findMyaccount();
-    this.userUpdateData.empNum = this.myaccount.empNum;
+    //default 이미지
+    //this.myaccount.image = this.defaultPath;
     
+    //패치
+    this.findMyAccount();
+    this.fetchDepartmentCategory();
+    
+    //this.checkPathNull();
+   
+   //입력란에 없기 때문에
+    this.userUpdateData.empNum = this.myaccount.empNum;
+    this.departs = this.departmentCategorys;
   },
   watch: {
     userUpdateData: {
@@ -130,16 +145,37 @@ export default {
         this.checkPasswordForm();
         this.checkPasswordConfirmationForm();
       }
-    }
+    },
+   
   },
   computed:{
-    ...mapState(['myaccount'])
+    ...mapState(['myaccount']),
+    ...mapState('categoryStore',['departmentCategorys'])
+ 
   },
   methods: {
-    ...mapActions("accountStore",["updateUser","uploadImg"]),
+    ...mapActions("accountStore",["updateUser","uploadImg","deleteUserImg"]),
+    ...mapActions('categoryStore', ['fetchDepartmentCategory']),
     ...mapActions(['findMyAccount']),
+
+    getImgUrl(serverPath){
+      //alert(this.myaccount.image)
+       return serverPath + this.myaccount.image;
+      
+    },
     
-     
+    //  checkPathNull(){
+    //    if(this.myaccount.image == null || this.myaccount.image == ""){
+        
+    //     const formData = new FormData();
+    //     formData.append("image", this.serverPath + this.defaultPath);
+        
+    //     this.myaccount.image = formData;
+    //     console.log(formData.get("image"))
+    //     //Store
+    //     this.uploadImg(this.myaccount);
+    //    }
+    //  },
     checkPasswordForm() {
       if (this.userUpdateData.password.length > 0 && this.userUpdateData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
@@ -148,7 +184,7 @@ export default {
         } else this.error.password = false;
     },
     validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
+      var va = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
       return va.test(password);
     },
     checkPasswordConfirmationForm() {
@@ -168,21 +204,21 @@ export default {
       }
      
     },
+    clickUpDeleteImage(){
+      this.deleteUserImg(this.myaccount);
 
-    clickuploadImage(event){
-
-       const formData = new FormData();
+      //myaccoount 갱신
+      this.findMyAccount();
+  },
+    clickUploadImage(event){
+      const formData = new FormData();
       formData.append("image", event.target.files[0]);
       
       //기존 계정에 이미지 덮어쓰기
       this.myaccount.image = formData;
-
       console.log(formData.get("image"))
-
       //Store
       this.uploadImg(this.myaccount);
-
-
       //실패시 null..
       let itemImage = this.$refs.uploadItemImage; //img dom 접근
           itemImage.src = URL.createObjectURL(event.target.files[0]);
@@ -280,5 +316,4 @@ input[type="password"] {
 .custom-select{
   width:80%
 }
-
 </style>

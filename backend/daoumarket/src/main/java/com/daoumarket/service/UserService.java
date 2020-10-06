@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.daoumarket.dao.IUserDao;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.User;
+import com.daoumarket.dto.UserEditRequest;
 import com.daoumarket.dto.UserLoginRequest;
 import com.daoumarket.jwt.IJWTService;
 import com.daoumarket.util.EncodePassword;
@@ -45,7 +46,7 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public ResponseEntity<BasicResponse> getEmpNum(long empNum) {
+	public ResponseEntity<BasicResponse> getEmpNum(int empNum) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
@@ -66,11 +67,15 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public ResponseEntity<BasicResponse> getUserLogin(UserLoginRequest userLogin) {
+	public ResponseEntity<BasicResponse> getUserLogin(UserLoginRequest userLoginRequest) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
-		UserLoginRequest encodePassword = EncodePassword.EncodeLogin(userLogin);
+		User user = User.builder()
+				.empNum(userLoginRequest.getEmpNum())
+				.password(userLoginRequest.getPassword()).build();
+		
+		User encodePassword = EncodePassword.Encode(user);
 		User userRes = userDao.getUserLogin(encodePassword);
 		
 		if (userRes == null) {
@@ -97,17 +102,25 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public ResponseEntity<BasicResponse> updateUser(User user) {
+	public ResponseEntity<BasicResponse> updateUser(UserEditRequest userEditRequest) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse basicResponse = new BasicResponse();
 		
+		User user = User.builder()
+				.empNum(userEditRequest.getEmpNum())
+				.password(userEditRequest.getPassword())
+				.department(userEditRequest.getDepartment()).build();
+		
 		User encodePassword = EncodePassword.Encode(user);
+		
 		int res = userDao.updateUser(encodePassword);
 		
 		if (res > 0) {
 			
 			try {
-				String token = jwtService.makeJwt(encodePassword);
+				User userRes = userDao.getUserLogin(encodePassword);
+				
+				String token = jwtService.makeJwt(userRes);
 				
 				basicResponse.object = token;
 				

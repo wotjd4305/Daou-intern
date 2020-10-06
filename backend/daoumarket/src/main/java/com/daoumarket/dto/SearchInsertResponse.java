@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SearchInsertResponse {
-	private long userId;
+	private int userId;
 	private String keyword;
 	private int result;
 }

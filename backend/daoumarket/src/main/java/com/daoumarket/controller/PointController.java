@@ -11,8 +11,10 @@ import com.daoumarket.service.IPointService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/api")
+@Slf4j
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +25,8 @@ public class PointController {
 	@GetMapping("/point/rank")
 	@ApiOperation("순위 호출")
 	public ResponseEntity<BasicResponse> getRank(){
+		log.info("PointController : getRank");
+		
 		return pointService.getRank();
 	}
 	

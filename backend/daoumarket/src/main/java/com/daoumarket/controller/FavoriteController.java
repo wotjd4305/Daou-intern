@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
@@ -17,8 +16,10 @@ import com.daoumarket.service.IFavoriteService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin("*")
+@Slf4j
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @RestController
@@ -28,18 +29,24 @@ public class FavoriteController {
 	@PostMapping("/favorite")
 	@ApiOperation("item에 favorite 설정")
 	public ResponseEntity<BasicResponse> insertFavorite(@RequestBody Favorite favorite){
+		log.info("FavoriteController : insertFavorite");
+		
 		return favoriteService.insertFavorite(favorite);
 	}
 	
-	@DeleteMapping("/favorite/{id}")
+	@DeleteMapping("/favorite/{favoriteId}")
 	@ApiOperation("favorite id를 이용해서 키워드 삭제")
-	public ResponseEntity<BasicResponse> deleteFavorite(@PathVariable long id) {
-		return favoriteService.deleteFavorite(id);
+	public ResponseEntity<BasicResponse> deleteFavorite(@PathVariable long favoriteId) {
+		log.info("FavoriteController : deleteFavorite => {}", favoriteId);
+		
+		return favoriteService.deleteFavorite(favoriteId);
 	}
 	
-	@GetMapping("/favorite/history/{id}")
+	@GetMapping("/favorite/{userId}")
 	@ApiOperation("유저 id를 이용해서 favorite 이력 확인")
-	public ResponseEntity<BasicResponse> getFavoriteList(@RequestParam long id){
-		return favoriteService.getFavoriteList(id);
+	public ResponseEntity<BasicResponse> getFavoriteList(@PathVariable int userId){
+		log.info("FavoriteController : getFavoriteList => {}", userId);
+		
+		return favoriteService.getFavoriteList(userId);
 	}
 }

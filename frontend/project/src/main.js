@@ -4,6 +4,9 @@ import router from './router'
 import store from './store'
 
 
+//filter
+import "./filters"
+
 //Time, Cookie
 import VueMoment from 'vue-moment'
 import VueCookies from 'vue-cookies'
@@ -15,6 +18,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 //JWT
 import VueJwtDecode from 'vue-jwt-decode'
+
 
 Vue.use(VueCookies)
 Vue.use(VueMoment)

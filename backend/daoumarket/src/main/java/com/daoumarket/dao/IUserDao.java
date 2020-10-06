@@ -1,11 +1,11 @@
 package com.daoumarket.dao;
 
 import com.daoumarket.dto.User;
-import com.daoumarket.dto.UserLoginRequest;
 
 public interface IUserDao {
 	public int insertUser(User user);
-	public User getEmpNum(long empNum);
-	public User getUserLogin(UserLoginRequest userLogin);
+	public User getEmpNum(int empNum);
+	public User getUserLogin(User user);
 	public int updateUser(User user);
+	public User getUserByUserId(int userId);
 }

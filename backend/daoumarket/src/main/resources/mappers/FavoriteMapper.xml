@@ -8,10 +8,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<delete id="deleteFavorite">
-		delete from favorite where id=#{favoriteId}
+		delete from favorite where favorite_id=#{favoriteId}
 	</delete>
 	
-	<select id="getFavoriteList" resultType="favorite">
-		select * from favorite where user_id=#{userId} order by date desc;
+	<select id="getFavoriteList" parameterType="int" resultType="itemResponse">
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date
+		from item i, favorite f
+		where f.user_id = #{userId} and i.item_id = f.favorite_id and delflag = 0
+		order by date desc
+	</select>
+	
+	<select id="isFavorited" parameterType="HashMap" resultType="boolean">
+	  select if(count(*) = 1, 1, 0)
+	  from favorite
+	  where item_id = #{itemId} and user_id = #{userId}
 	</select>
 </mapper>
