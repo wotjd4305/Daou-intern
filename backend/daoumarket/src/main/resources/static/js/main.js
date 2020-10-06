@@ -10,7 +10,7 @@ var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
 var sender = 1;
-var receiver = 2; 
+var receiver = 2;
 var chatroom = 1;
 
 var colors = [
@@ -36,7 +36,7 @@ function connect(event) {
 }
 
 function onConnected() {
-    stompClient.subscribe('/sub/chatroomId', onMessageReceived);
+    stompClient.subscribe('/sub/' + sender, onMessageReceived);
 
     connectingElement.classList.add('hidden');
 }
@@ -64,12 +64,11 @@ function sendMessage(event) {
 }
 
 function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
 
+    var message = JSON.parse(payload.body);
     var messageElement = document.createElement('li');
 
-    if(message.chatroomId == chatroom) {
-
+	if(message.chatroomId == chatroom){
         var avatarElement = document.createElement('i');
         var avatarText = document.createTextNode(message.senderId);
         avatarElement.appendChild(avatarText);
@@ -94,7 +93,7 @@ function onMessageReceived(payload) {
 }
 
 function getAvatarColor(messageSender) {
-    var index = Math.abs(31 * messageSender % colors.length);
+    var index = Math.abs((31 * messageSender) % colors.length);
     return colors[index];
 }
 

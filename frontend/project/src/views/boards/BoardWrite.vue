@@ -170,6 +170,7 @@ export default {
     methods:{
         ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions('itemStore', ['fetchItemCategory','boardWrite']),
+        ...mapActions('itemStore', ['getAllItem']),
         ...mapActions(['findMyAccount']),
 
        //click
@@ -181,13 +182,13 @@ export default {
             formData.append("content", this.boardWriteData.content);
             formData.append("price", this.boardWriteData.price);
             formData.append("title", this.boardWriteData.title);
-            formData.append("userId", this.myaccount.id);
+            formData.append("userId", this.myaccount.userId);
 
             this.boardWriteData = formData;
 
             console.log("click write " +formData)
             console.log(formData.get("category"))
-            console.log(this.myaccount.id)
+            console.log(this.myaccount.userId)
             
             
 

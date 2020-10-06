@@ -82,7 +82,7 @@ public class ItemService implements IItemService {
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		default :
 			response.status = true;
-			response.data = "게시물과 등록 성공!(이미지 파일 O)";
+			response.data = "게시물과 이미지 등록 성공!(이미지 파일 O)";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
