@@ -21,6 +21,7 @@ export default {
       getallitem:'/item',
       getdetailitem:'/item',
       deletedetailitem:'/item',
-      updateitemstatus:'/item/:itemId/status'
+      updateitemstatus:'/item/:itemId/status',
+      updateitem:'/item/info',
     }
 }
