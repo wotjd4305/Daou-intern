@@ -9,7 +9,7 @@ import { mapState } from 'vuex'
 
 // import cookies from 'vue-cookies'
 
-const accountStore = {
+const itemStore = {
   plugins: [
     createPersistedState(),
   ],
@@ -169,7 +169,8 @@ const accountStore = {
             })
           })
       },
-
+      
+     
 
 
     //////
@@ -200,4 +201,4 @@ const accountStore = {
     }
 }
 
-export default accountStore
+export default itemStore

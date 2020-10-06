@@ -3,7 +3,6 @@
     <!-- 검색 창 -->
     <div class="container">
         <div class="row align-self-center" style="display:block">
-          
             <div class="col align-self-center">
                 <b-img
                 type="image"
@@ -32,51 +31,16 @@
 
     <!-- 상세 창 -->
     <div class="container mt-5">
-         
         <div class="detail-card shadow01">
-            <div class="row">
-                <!-- 뒤로가기 -->
-                <div class="col text-left align-self-center write-title" style="display:block">
-                    <div class="mt-3" style="margin-left:10% ">
-                        <span> 
-                            <b-img
-                                v-bind:src="require('@/assets/img/icons8-chevron-left-48.png')"
-                                class="write-left-btn"
-                                @click="goToBoard()"
-                                style="cursor:pointer"
-                            />
-                        </span> 상세보기
-                    </div>
-                    <div>
-                    </div>
-                </div>
-                <!--/ 뒤로가기 -->
-                <div class="col text-right align-self-center write-title" style="display:block">
-                    <div class="mt-3 mr-5">
-                        <span> 
-                            {{itemStatus(detailitem.status)}}
-                        </span>
-                    </div>
-                    <div>
-                    </div>
-                </div>
-            </div>
             <!-- 수정 삭제 아이콘 -->
              <div  class ="text-right mt-2 mr-2">
                  <div v-if="isWriter()">
-                    <b-img v-if="!isUpdateChecked"
+                    <b-img
                             v-bind:src="require(`@/assets/img/icons8-pencil-120.png`)"
-                            @click="clickUpdate()"
-                            class="detail-icon"
-                    ></b-img>
-                    <b-img v-if="isUpdateChecked"
-                            v-bind:src="require(`@/assets/img/icons8-save-48.png`)"
-                            @click="clickUpdate()"
                             class="detail-icon"
                     ></b-img>
                     <b-img
                             v-bind:src="require(`@/assets/img/icons8-trash-144.png`)"
-                            @click="clickDetailDelete(detailitem.itemId)"
                             class="detail-icon"
                     ></b-img>
                  </div>
@@ -88,17 +52,12 @@
                 <div class="col-6 mr-4 ml-4 mb-4 mt-1 align-self-center">
                            <img
                                 class="detailImg"
-                                :src = getImgUrl()
+                                 src="https://t1.daumcdn.net/cfile/blog/216CB83A54295C1C0E"
                             />
                 </div>
                 <!-- 정보 -->
                 <div class="col-4 align-self-center">
                     <div class="row">
-                        <div v-if="!isUpdateChecked" class="detail-title-text">
-                           {{this.detailitem.title}}
-                        </div>
-                    </div>
-                    <div v-if="isUpdateChecked"  class="row">
                         <div class="detail-title-text">
                            {{this.detailitem.title}}
                         </div>
@@ -110,7 +69,7 @@
                         <div class="col detail-user-text text-right"> 
                             <span class=""> <img
                                 class="headerProfile"
-                                :src = getUserImgUrl()
+                                :src = getImgUrl()
                                 style="width: 2.5rem; height: 2.5rem;"      
                                 /> </span> 
                             
@@ -127,11 +86,11 @@
                             />
                             </span>
                             <span class="ml-2">
-                                {{calculateTime(detailitem.date)}}
+                                {{calculateTime(this.detailitem.date)}}
                             </span>
                         </div> 
                     </div>
-                    <div class="row"> {{detailitem.content}}</div>
+                    <div class="row"> {{this.detailitem.content}}</div>
                     
                 </div>
             </div>
@@ -156,8 +115,6 @@ import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 import moment from 'moment'
 
-import axios from 'axios'
-import Swal from 'sweetalert2'
 
 export default {
     data: () => {
@@ -167,8 +124,6 @@ export default {
             itemId:"",
             userId:"",
         },
-        deleteReq: "",
-        isUpdateChecked: false,
       };
     },
    
@@ -187,10 +142,6 @@ export default {
         this.getDetailReq.itemId = this.itemId;
         this.getDetailReq.userId = this.myaccount.userId;
         this.getDetailItem(this.getDetailReq);
-
-        //적용
-        this.deleteReq = this.itemId;
-
     }
     ,
     computed:{
@@ -227,105 +178,31 @@ export default {
         if(diffDay < 7){
             return parseInt(diffDay) + "일 전";
         }
-        return this.detailitem.date;
+        return writeTime
+        
+      
     },
-    //물건 상태 필터
-    itemStatus(status){
-        if(status == 'S')
-            return "판매중"
-        if(status == 'I')
-            return "거래중"
-        if(status == "C")
-            return "거래완료"
-    },
-
     //디테일의 작성자 판단
     isWriter(){
-        if(this.myaccount.userId == this.detailitem.userId){
+        if(this.myaccount.userId == this.detailitem.user.userId){
             return true;
         }
         return false;
     },
-    getUserImgUrl(){
+    getImgUrl(){
             if(this.detailitem.user.image){
                 return this.serverPath +this.detailitem.user.image;
             }
-            return this.serverPath + "icons8-male-user-90.png" 
-        },
-    getImgUrl(){
-            if(this.detailitem.picture[0]){
-                return this.serverPath +this.detailitem.picture[0];
-            }
             return this.serverPath + "no-image-icon-23487.png" 
         },
+    },
     searchA(text){
         alert(text);
     },
-
-     deleteDetailItem(itemId){
-
-        console.log("before : deleteDetailItem - " + itemId)
-        axios.delete(SERVER.URL + SERVER.ROUTES.deletedetailitem + "/" + itemId)
-          .then(res => {
-          console.log("after : deleteDetailItem - " + res.data.status)
-            if(res.data.status){
-                console.log(res.data.object)
-           }
-           else{
-             alert("에러")
-           }
-          })
-          .catch(err => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: false,
-              onOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-             })
-             Toast.fire({
-              icon: 'error',
-              title: err.response.data
-            })
-          })
-    },
-
-
-
-     //push
-    goToBoard(){
-        this.$router.push({ path: "/board" });
-    },
-
-    //click
-    clickDetailDelete(){
-        this.deleteDetailItem(this.deleteReq)
-        this.goToBoard();
-    },
-    clickUpdate(){
-        this.isUpdateChecked = !this.isUpdateChecked;
-        return this.isUpdateChecked;
-    }
-    }
 }
 </script>
 
 <style scoped>
-/* 제목 */
-.write-title{
-    font-weight: bold !important;
-    color:  #2682ba !important;
-     font-size: 2rem;
-}
-.write-left-btn{
-    width: 3%;
-    opacity: 50%;
-}
-
 /* 검색 */
 .search-button {
   background-color: #2682ba !important;
@@ -365,7 +242,7 @@ export default {
 }
 .detailImg{
     width: 100%;
-    height: 20rem;
+    height: 100%;
 }
 .detail-icon{
     width: 4%;
