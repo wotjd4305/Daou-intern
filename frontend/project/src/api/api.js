@@ -5,7 +5,7 @@ export default {
     
       // accounts
       myaccount: '/user/token',
-      signup: '/user/join',
+      signup: '/user',
       login: '/user/login',
       checkreduplication: '/user',
       updateuser: '/user/edit',
@@ -19,7 +19,8 @@ export default {
       departmentcategory:'/category/department',
       postitem:'/item',
       getallitem:'/item',
-      getdetailitem:'/item'
-
+      getdetailitem:'/item',
+      deletedetailitem:'/item',
+      updateitemstatus:'/item/:itemId/status'
     }
 }

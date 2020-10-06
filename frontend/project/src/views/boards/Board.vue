@@ -21,7 +21,7 @@
       </div>
       <!-- 테스트 출력 -->
         <div class="row">
-              {{checkedNames}}
+              <!-- {{checkedNames}} -->
         </div>
     </div>
 
@@ -62,16 +62,13 @@
             <div class="col-3 mt-4" v-for="(item, idx) in searcheditems" :key="idx">
                 <div class="forHover">
                     <div class="item-list-card shadow01">
-                        <b-img
-                        type="image"
-                        @click="goToDetail(item.itemId)"
-                        style="cursor:pointer"
-                        :src= getImgUrl(idx)
-                        width="200rem"
-                        height="150rem"
-                        class="mt-3 mb-2"
-                        ></b-img>
-
+                           <b-img
+                            type="image"
+                            @click="goToDetail(item.itemId)"
+                            style="cursor:pointer"
+                            :src= getImgUrl(idx)
+                            class="mt-3 mb-2 pr-1 pl-1 item-list-image"
+                            ></b-img>
                         <div class="row" style="display:block;">
                             <div class="ml-4 pl-2 text-left">
                                 <span class="item-list-title-text">
@@ -94,7 +91,7 @@
                                     등록일 : 
                                 </span>
                                 <span class="item-list-title-contents">
-                                    {{item.date}} 
+                                    {{calculateTime(item.date)}} 
                                 </span>
                             </div>
                             <div class="ml-4 pl-2 text-left">
@@ -102,7 +99,7 @@
                                     가격 : 
                                 </span>
                                 <span class="item-list-title-contents">
-                                    {{item.price}} 
+                                    {{comma(item.price)}} 
                                 </span>
                             </div>
                             
@@ -137,6 +134,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
+import moment from 'moment'
 
 export default {
     
@@ -194,6 +192,35 @@ export default {
           ...mapActions('categoryStore', ['fetchItemCategory']),
           ...mapActions('itemStore', ['getAllItem']),
           ...mapActions(['findMyAccount']),
+
+    //가격 필터
+    comma(val){
+        if(val == 0) return "무료나눔♥"
+        return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+     },
+    //시간 필터
+    calculateTime(date){
+        var nowTime = moment();
+        var writeTime = moment(date, 'YYYY-MM-DD HH:mm:ss');
+
+        var diffHour = moment.duration(nowTime.diff(writeTime)).asHours();
+        var diffDay = moment.duration(nowTime.diff(writeTime)).asDays();
+        var diffMin = moment.duration(nowTime.diff(writeTime)).asMinutes();
+        
+        //60분 이내
+        if(diffMin < 60){
+            return parseInt(diffMin) + "분 전"
+        }
+        //24시간 이내
+        if(diffHour < 24){
+            return parseInt(diffHour) + "시간 전";
+        }
+        //7일 이내
+        if(diffDay < 7){
+            return parseInt(diffDay) + "일 전";
+        }
+        return date
+    },
 
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
@@ -282,6 +309,10 @@ export default {
   
    transform: translate(0%, -10%);
 
+}
+.item-list-image{
+    width: 11rem;
+    height: 11rem;
 }
 
 

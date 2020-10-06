@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="container p-1 mt-5 bg-light-ivory signup-form">
-      <h3>회원 수정.. 아직 안건듬</h3>
+      <h3>회원 수정</h3>
 
       <!-- 프로필과 입력창 -->
       <div class="row">
@@ -21,7 +21,7 @@
 
                  <div>
                     <img
-                      class="profileImg"
+                      class="profileImg headerProfile"
                       ref="uploadItemImage"
                       id="uploadImagdId"
                       :src= getImgUrl(serverPath)
@@ -83,7 +83,7 @@
       </div>
 
       <div class="buttons mt-3">
-        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickUpdate">회원가입</button>
+        <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickUpdate">수정하기</button>
       </div>
       
     </div>
@@ -184,7 +184,7 @@ export default {
         } else this.error.password = false;
     },
     validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
+      var va = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
       return va.test(password);
     },
     checkPasswordConfirmationForm() {
