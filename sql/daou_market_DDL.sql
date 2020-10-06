@@ -97,18 +97,18 @@ CREATE TABLE IF NOT EXISTS `chatroom` (
 CREATE TABLE IF NOT EXISTS `message` (
   `message_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `chatroom_id` bigint(20) NOT NULL,
-  `seller_id` int NOT NULL,
-  `buyer_id` int NOT NULL,
+  `sender_id` int NOT NULL,
+  `receiver_id` int NOT NULL,
   `content` text DEFAULT NULL,
   `send_time` datetime DEFAULT NULL,
   `receive_time` datetime DEFAULT NULL,
   PRIMARY KEY (`message_id`),
   KEY `fk_message_chatroom1` (`chatroom_id`),
-  KEY `fk_message_user1` (`seller_id`),
-  KEY `fk_message_user2` (`buyer_id`),
+  KEY `fk_message_user1` (`sender_id`),
+  KEY `fk_message_user2` (`receiver_id`),
   CONSTRAINT `fk_message_chatroom1` FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`chatroom_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_message_user1` FOREIGN KEY (`seller_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_message_user2` FOREIGN KEY (`buyer_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_message_user1` FOREIGN KEY (`sender_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_message_user2` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
