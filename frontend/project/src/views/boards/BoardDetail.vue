@@ -6,7 +6,7 @@
             <div class="col align-self-center">
                 <b-img
                 type="image"
-                @click="searchA(search_input_text, search_input_period)"
+                @click="searchA()"
                 style="cursor:pointer"
                 v-bind:src="require(`@/assets/img/icons8-search-120.png`)"
                 width="25px"
@@ -14,8 +14,7 @@
                 <input
                 type="text"
                 placeholder="검색하실 단어를 입력해주세요."
-                v-on:keyup.enter="searchA(search_input_text, search_input_period)"
-                v-model="search_input_text"
+                v-on:keyup.enter="searchA()"
                 value
                 autocomplete="off"
                 autofocus
@@ -190,6 +189,9 @@ export default {
             }
             return this.serverPath + "no-image-icon-23487.png" 
         },
+    },
+    searchA(text){
+        alert(text);
     },
 }
 </script>
