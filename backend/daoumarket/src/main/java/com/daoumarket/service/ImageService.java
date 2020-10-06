@@ -14,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dao.IImageDao;
+import com.daoumarket.dao.IUserDao;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.Image;
 import com.daoumarket.dto.ItemResponse;
+import com.daoumarket.dto.User;
+import com.daoumarket.jwt.IJWTService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,8 @@ public class ImageService implements IImageService {
 //    public static final String SAVE_FOLDER = "/home/intern2/tomcat_intern2/images/";
 	public static final String SAVE_FOLDER = "C:/Daou_intern/backend/daoumarket/src/main/resources/static/images/";
 	private final IImageDao imageDao;
+	private final IUserDao userDao;
+	private final IJWTService jwtService;
 	
 	@Transactional
 	@Override
@@ -85,7 +90,11 @@ public class ImageService implements IImageService {
 		try {
 			image.transferTo(destinationImage);
 			imageDao.updateUserImage(Image.builder().id(userId).image(destinationImageName).build());
-		} catch (RuntimeException | IOException e) {
+			User user = userDao.getUserByUserId(userId);
+			String token = jwtService.makeJwt(user);
+			response.object = token;
+			
+		} catch (Exception e) {
 			log.error("파일 업로드에 실패했습니다.");
 			response.data = "업로드 실패";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -115,6 +124,14 @@ public class ImageService implements IImageService {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
+		User user = userDao.getUserByUserId(userId);
+		String token;
+		try {
+			token = jwtService.makeJwt(user);
+			response.object = token;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		response.data = "삭제 성공";
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

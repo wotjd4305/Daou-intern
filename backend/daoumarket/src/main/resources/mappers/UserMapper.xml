@@ -12,12 +12,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from user where emp_num=#{empNum}
 	</select>
 	
-	<select id="getUserLogin" parameterType="userLoginRequest" resultType="user">
+	<select id="getUserLogin" parameterType="user" resultType="user">
 		select * from user where emp_num=#{empNum} and password=#{password}
 	</select>
 	
 	<update id="updateUser" parameterType="user">
 		update user set password=#{password}, department=#{department} where emp_num=#{empNum}
 	</update>
+	
+	<select id="getUserByUserId" parameterType="int" resultType="user">
+		select * from user where user_id=#{userId}
+	</select>
 
 </mapper>

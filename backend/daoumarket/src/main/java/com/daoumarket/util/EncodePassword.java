@@ -10,7 +10,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import com.daoumarket.dto.User;
-import com.daoumarket.dto.UserLoginRequest;
 
 public class EncodePassword {
 
@@ -29,18 +28,4 @@ public class EncodePassword {
 		return user;
 	}
 
-	public static UserLoginRequest EncodeLogin(UserLoginRequest userLogin) {
-		AES256Util aes256 = AES256Util.getInstance();
-		
-		try {
-			String encodePassword = aes256.AES_Encode(userLogin.getPassword());
-			userLogin.setPassword(encodePassword);
-			
-		} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException
-				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-			e.printStackTrace();
-		}
-		
-		return userLogin;
-	}
 }
