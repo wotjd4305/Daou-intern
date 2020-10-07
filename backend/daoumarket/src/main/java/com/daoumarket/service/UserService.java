@@ -1,5 +1,7 @@
 package com.daoumarket.service;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,7 +13,7 @@ import com.daoumarket.dto.User;
 import com.daoumarket.dto.UserEditRequest;
 import com.daoumarket.dto.UserLoginRequest;
 import com.daoumarket.jwt.IJWTService;
-import com.daoumarket.util.EncodePassword;
+import com.daoumarket.util.SHA256Util;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,10 +29,14 @@ public class UserService implements IUserService {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse response = new BasicResponse();
 		
-		User encodePassword = EncodePassword.Encode(user);
-		
+		User encodePassword = null;
+		try {
+			encodePassword = SHA256Util.sha256(user);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		int res = userDao.insertUser(encodePassword);
-
+		
 		if (res > 0) {
 			response.isSuccess = true;
 			response.data = "Success in signup";
@@ -75,7 +81,14 @@ public class UserService implements IUserService {
 				.empNum(userLoginRequest.getEmpNum())
 				.password(userLoginRequest.getPassword()).build();
 		
-		User encodePassword = EncodePassword.Encode(user);
+		
+		User encodePassword = null;
+		try {
+			encodePassword = SHA256Util.sha256(user);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		
 		User userRes = userDao.getUserLogin(encodePassword);
 		
 		if (userRes == null) {
@@ -111,7 +124,12 @@ public class UserService implements IUserService {
 				.password(userEditRequest.getPassword())
 				.department(userEditRequest.getDepartment()).build();
 		
-		User encodePassword = EncodePassword.Encode(user);
+		User encodePassword = null;
+		try {
+			encodePassword = SHA256Util.sha256(user);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		
 		int res = userDao.updateUser(encodePassword);
 		
