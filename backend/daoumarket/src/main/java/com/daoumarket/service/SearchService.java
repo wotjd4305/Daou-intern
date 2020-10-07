@@ -22,18 +22,18 @@ public class SearchService implements ISearchService {
 	@Override
 	public ResponseEntity<BasicResponse> insertSearch(SearchInsertResponse searchInsertResponse) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		int res = searchDao.insertSearch(searchInsertResponse);
 		
 		if (res > 0) {
-			basicResponse.status = true;
-			basicResponse.data = "Success in Insert";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.message = "Success in Insert";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Faliure in Insert";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.message = "Faliure in Insert";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
@@ -42,18 +42,18 @@ public class SearchService implements ISearchService {
 	@Override
 	public ResponseEntity<BasicResponse> deleteSearchHistory(long searchId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		int res = searchDao.deleteSearchHistory(searchId);
 		
 		if (res > 0) {
-			basicResponse.status = true;
-			basicResponse.data = "Delete Completed";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.message = "Delete Completed";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Delete Failed";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.message = "Delete Failed";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
@@ -62,22 +62,22 @@ public class SearchService implements ISearchService {
 	@Override
 	public ResponseEntity<BasicResponse> getSearchHistory(int userId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		List<Search> search = null;
 		
 		search = searchDao.getSearchHistory(userId);
 		
 		if (search != null) {
-			basicResponse.status = true;
-			basicResponse.data = "Search Extraction Completed";
-			basicResponse.object = search;
+			response.isSuccess = true;
+			response.message = "Search Extraction Completed";
+			response.data = search;
 			
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Search Extraction Failure";
+			response.isSuccess = false;
+			response.message = "Search Extraction Failure";
 			
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;

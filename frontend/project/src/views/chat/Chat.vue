@@ -1,12 +1,6 @@
 <template>
   <div>
   
-     유저이름: 
-        <input
-          v-model="userName"
-          type="text"
-        >
-
     <div
       v-for="(item, idx) in recvList"
       :key="idx"

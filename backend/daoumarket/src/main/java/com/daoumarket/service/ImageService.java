@@ -92,15 +92,15 @@ public class ImageService implements IImageService {
 			imageDao.updateUserImage(Image.builder().id(userId).image(destinationImageName).build());
 			User user = userDao.getUserByUserId(userId);
 			String token = jwtService.makeJwt(user);
-			response.object = token;
+			response.data = token;
 			
 		} catch (Exception e) {
 			log.error("파일 업로드에 실패했습니다.");
-			response.data = "업로드 실패";
+			response.message = "업로드 실패";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		response.data = "업로드 성공";
+		response.message = "업로드 성공";
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
     
@@ -120,7 +120,7 @@ public class ImageService implements IImageService {
 		int result = imageDao.deleteUserImage(userId);
 		
 		if(result == 0) {
-			response.data = "삭제 실패";
+			response.message = "삭제 실패";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
@@ -128,11 +128,11 @@ public class ImageService implements IImageService {
 		String token;
 		try {
 			token = jwtService.makeJwt(user);
-			response.object = token;
+			response.data = token;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		response.data = "삭제 성공";
+		response.message = "삭제 성공";
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

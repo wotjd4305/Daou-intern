@@ -69,22 +69,22 @@ public class UserController {
 		log.info("UserController : token");
 		
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		User userJwt = null;
 
 		try {
 			userJwt = jwtService.checkJwt(accessToken);
 			
 			if (userJwt.getUserId() == 0) {
-				basicResponse.status = false;
-				basicResponse.data = "Token Mismatch";
-				responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+				response.isSuccess = false;
+				response.message = "Token Mismatch";
+				responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			
 			} else {
-				basicResponse.status = true;
-				basicResponse.data = "Token Match";
-				basicResponse.object = userJwt;
-				responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+				response.isSuccess= true;
+				response.message = "Token Match";
+				response.data = userJwt;
+				responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			
 		} catch (Exception e) {

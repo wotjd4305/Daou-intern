@@ -27,7 +27,7 @@ public class UserService implements IUserService {
 	@Override
 	public ResponseEntity<BasicResponse> insertUser(User user) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		User encodePassword = null;
 		try {
@@ -38,14 +38,14 @@ public class UserService implements IUserService {
 		int res = userDao.insertUser(encodePassword);
 		
 		if (res > 0) {
-			basicResponse.status = true;
-			basicResponse.data = "Success in signup";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.data = "Success in signup";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Fail in signup";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.data = "Fail in signup";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
@@ -54,19 +54,19 @@ public class UserService implements IUserService {
 	@Override
 	public ResponseEntity<BasicResponse> getEmpNum(int empNum) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		User userRes = userDao.getEmpNum(empNum);
 		
 		if (userRes == null) {
-			basicResponse.status = false;
-			basicResponse.data = "No Duplication of Employee Number";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.data = "No Duplication of Employee Number";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			
 		} else {
-			basicResponse.status = true;
-			basicResponse.data = "Duplication of Employee Number";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.data = "Duplication of Employee Number";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
@@ -75,7 +75,7 @@ public class UserService implements IUserService {
 	@Override
 	public ResponseEntity<BasicResponse> getUserLogin(UserLoginRequest userLoginRequest) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		User user = User.builder()
 				.empNum(userLoginRequest.getEmpNum())
@@ -92,23 +92,23 @@ public class UserService implements IUserService {
 		User userRes = userDao.getUserLogin(encodePassword);
 		
 		if (userRes == null) {
-			basicResponse.status = false;
-			basicResponse.data = "Discorrect";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.data = "Discorrect";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = true;
-			basicResponse.data = "Correct";
+			response.isSuccess = true;
+			response.data = "Correct";
 			
 			try {
 				String token = jwtService.makeJwt(userRes);
 				
-				basicResponse.object = token;
+				response.data = token;
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);		
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);		
 		}
 		
 		return responseEntity;
@@ -117,7 +117,7 @@ public class UserService implements IUserService {
 	@Override
 	public ResponseEntity<BasicResponse> updateUser(UserEditRequest userEditRequest) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		User user = User.builder()
 				.empNum(userEditRequest.getEmpNum())
@@ -140,20 +140,20 @@ public class UserService implements IUserService {
 				
 				String token = jwtService.makeJwt(userRes);
 				
-				basicResponse.object = token;
+				response.data = token;
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-			basicResponse.status = true;
-			basicResponse.data = "Modify";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.data = "Modify";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Unable to Modify";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.data = "Unable to Modify";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
