@@ -29,7 +29,7 @@ public class JWTService implements IJWTService {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         Date expireTime = new Date();
         // 토큰 만료시간 : 20분
-        expireTime.setTime(expireTime.getTime() + 1000 * 60 * 20);
+        expireTime.setTime(expireTime.getTime() + 100 * 60 * 1);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
