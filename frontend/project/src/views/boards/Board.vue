@@ -21,7 +21,7 @@
       </div>
       <!-- 테스트 출력 -->
         <div class="row">
-              {{checkedNames}}
+              <!-- {{checkedNames}} -->
         </div>
     </div>
 
@@ -62,16 +62,13 @@
             <div class="col-3 mt-4" v-for="(item, idx) in searcheditems" :key="idx">
                 <div class="forHover">
                     <div class="item-list-card shadow01">
-                        <b-img
-                        type="image"
-                        @click="goToDetail(item.itemId)"
-                        style="cursor:pointer"
-                        :src= getImgUrl(idx)
-                        width="200rem"
-                        height="150rem"
-                        class="mt-3 mb-2"
-                        ></b-img>
-
+                           <b-img
+                            type="image"
+                            @click="goToDetail(item.itemId)"
+                            style="cursor:pointer"
+                            :src= getImgUrl(idx)
+                            class="mt-3 mb-2 pr-1 pl-1 item-list-image"
+                            ></b-img>
                         <div class="row" style="display:block;">
                             <div class="ml-4 pl-2 text-left">
                                 <span class="item-list-title-text">
@@ -94,7 +91,7 @@
                                     등록일 : 
                                 </span>
                                 <span class="item-list-title-contents">
-                                    {{item.date}} 
+                                    {{item.date | calculateTime}} 
                                 </span>
                             </div>
                             <div class="ml-4 pl-2 text-left">
@@ -102,7 +99,7 @@
                                     가격 : 
                                 </span>
                                 <span class="item-list-title-contents">
-                                    {{item.price}} 
+                                    {{item.price | comma}} 
                                 </span>
                             </div>
                             
@@ -195,6 +192,7 @@ export default {
           ...mapActions('itemStore', ['getAllItem']),
           ...mapActions(['findMyAccount']),
 
+
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
             if(this.searcheditems[idx].picture[0]){
@@ -203,19 +201,19 @@ export default {
             return this.serverPath + "no-image-icon-23487.png" 
             
         },
-        getDate(){
-             var date = new Date();
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var day = date.getDate();
+        // getDate(){
+        //      var date = new Date();
+        //     var year = date.getFullYear();
+        //     var month = date.getMonth() + 1;
+        //     var day = date.getDate();
 
-            if (day < 10) day = "0" + day;
-            if (month < 10) month = "0" + month;
+        //     if (day < 10) day = "0" + day;
+        //     if (month < 10) month = "0" + month;
 
-            var startdate = year + "-" + month + "-" + day;
+        //     var startdate = year + "-" + month + "-" + day;
 
-            return startdate;
-        },
+        //     return startdate;
+        // },
         goToDetail(itemId){
              this.$router.push({path: `/board/detail/${itemId}`})
         },
@@ -282,6 +280,10 @@ export default {
   
    transform: translate(0%, -10%);
 
+}
+.item-list-image{
+    width: 11rem;
+    height: 11rem;
 }
 
 

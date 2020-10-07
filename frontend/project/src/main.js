@@ -4,6 +4,9 @@ import router from './router'
 import store from './store'
 
 
+//filter
+import "./filters"
+
 //Time, Cookie
 import VueMoment from 'vue-moment'
 import VueCookies from 'vue-cookies'

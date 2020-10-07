@@ -29,7 +29,7 @@ public class JWTService implements IJWTService {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         Date expireTime = new Date();
         // 토큰 만료시간 : 20분
-        expireTime.setTime(expireTime.getTime() + 1000 * 60 * 20);
+        expireTime.setTime(expireTime.getTime() + 100 * 60 * 1);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
@@ -65,10 +65,10 @@ public class JWTService implements IJWTService {
 
     @Override
     public User checkJwt(TokenRequest accessToken) throws Exception {
-    	// checkJwt멧드에서는 try문에서 받아온 Jwt를 이용하여 파싱
+    	// checkJwt메소드에서는 try문에서 받아온 Jwt를 이용하여 파싱
     	User user = new User();
         try {
-        	// 정상수생된다면 해당 토큰은 정상 토큰으로 간주하고 파싱되지 않는다면 catch문에서 잡히도록 수행
+        	// 정상수행된다면 해당 토큰은 정상 토큰으로 간주하고 파싱되지 않는다면 catch문에서 잡히도록 수행
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                     .parseClaimsJws(accessToken.getToken()).getBody(); 
 //            System.out.println("expireTime :" + claims.getExpiration());

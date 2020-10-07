@@ -33,7 +33,7 @@ public class AES256Util {
 		IV = secretKey.substring(0, 16);
 	}
 
-	// ��ȣȭ
+	// 암호화
 	public static String AES_Encode(String str)
 			throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
@@ -50,7 +50,7 @@ public class AES256Util {
 		return enStr;
 	}
 
-	// ��ȣȭ
+	// 복호화
 	public static String AES_Decode(String str)
 			throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {

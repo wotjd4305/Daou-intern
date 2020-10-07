@@ -9,7 +9,7 @@ import { mapState } from 'vuex'
 
 // import cookies from 'vue-cookies'
 
-const accountStore = {
+const itemStore = {
   plugins: [
     createPersistedState(),
   ],
@@ -169,7 +169,44 @@ const accountStore = {
             })
           })
       },
+      patchUpdateDetailItem({commit}, info){
+        console.log("before : patchUpdateDetailItem - " + info.location)
+        console.log("before : patchUpdateDetailItem - " + info.data.title)
 
+        axios.patch(SERVER.URL + info.location , info.data )
+          .then(res => {
+          console.log("after : patchUpdateDetailItem - " + res.data.data)
+          
+            if(res.data.status){
+                commit("SET_DETAIL_ITEMS", info.data)
+                
+                console.log(commit)
+                //router.push(info.to)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'error',
+              title: err.response.data
+            })
+          })
+      },
+      
+     
 
 
     //////
@@ -197,7 +234,16 @@ const accountStore = {
       }
       dispatch('patchDetailItem',info)
     },
+    updateDetailItem({dispatch}, udpateDataReq)
+      {
+        const info = {
+          data: udpateDataReq,
+          location: SERVER.ROUTES.updateitem,
+          //to: '/board'
+        }
+        dispatch('patchUpdateDetailItem',info)
+      },
     }
 }
 
-export default accountStore
+export default itemStore

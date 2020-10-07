@@ -5,7 +5,7 @@ export default {
     
       // accounts
       myaccount: '/user/token',
-      signup: '/user/join',
+      signup: '/user',
       login: '/user/login',
       checkreduplication: '/user',
       updateuser: '/user/edit',
@@ -17,9 +17,13 @@ export default {
       // categorys
       itemcategory:'/category/item',
       departmentcategory:'/category/department',
+
+      //item
       postitem:'/item',
       getallitem:'/item',
-      getdetailitem:'/item'
-
+      getdetailitem:'/item',
+      deletedetailitem:'/item',
+      updateitemstatus:'/item/:itemId/status',
+      updateitem:'/item/info',
     }
 }

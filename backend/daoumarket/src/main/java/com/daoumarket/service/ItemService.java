@@ -37,13 +37,13 @@ public class ItemService implements IItemService {
 		if(item != null) {
 			imageService.setItemImages(item);
 			favoriteService.setItemIsFavorited(item, itemInfoRequest.getUserId());
-			response.status = true;
-			response.data = "물건 정보를 가져옴";
-			response.object = item;
+			response.isSuccess = true;
+			response.message = "물건 정보를 가져옴";
+			response.data = item;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "물건을 찾을 수 없음";
+		response.message = "물건을 찾을 수 없음";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -65,24 +65,24 @@ public class ItemService implements IItemService {
 		switch (resultCnt) {
 		case 0:
 			// 게시물 등록 실패(이미지 파일 X)
-			response.data = "게시물 등록 실패(이미지 파일 X)";
+			response.message = "게시물 등록 실패(이미지 파일 X)";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		case 1:
 			// 게시물 등록 성공(이미지 파일 X)
-			response.status = true;
-			response.data = "게시물 등록 성공!(이미지 파일 X)";
+			response.isSuccess = true;
+			response.message = "게시물 등록 성공!(이미지 파일 X)";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		case 2:
 			// 게시물 등록 실패(이미지 파일 O)
-			response.data = "게시물 등록 실패(이미지 파일 O)";
+			response.message = "게시물 등록 실패(이미지 파일 O)";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		case 3:
 			// 게시물 등록 성공했으나, 이미지 등록 실패(이미지 파일 O)
-			response.data = "게시물 등록 성공했으나, 이미지 등록 실패(이미지 파일 O)";
+			response.message = "게시물 등록 성공했으나, 이미지 등록 실패(이미지 파일 O)";
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		default :
-			response.status = true;
-			response.data = "게시물과 등록 성공!(이미지 파일 O)";
+			response.isSuccess = true;
+			response.message = "게시물과 등록 성공!(이미지 파일 O)";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
@@ -94,12 +94,12 @@ public class ItemService implements IItemService {
 		BasicResponse response = new BasicResponse();
 		
 		if(itemDao.updateItemInfo(item) == 1) {
-			response.status = true;
-			response.data = "물건 정보 수정 성공";
+			response.isSuccess = true;
+			response.message = "물건 정보 수정 성공";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "물건 정보 수정 실패";
+		response.message = "물건 정보 수정 실패";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 	
@@ -110,12 +110,12 @@ public class ItemService implements IItemService {
 		BasicResponse response = new BasicResponse();
 		
 		if(itemDao.updateItemStatus(item) == 1) {
-			response.status = true;
-			response.data = "물건 상태 수정 성공";
+			response.isSuccess = true;
+			response.message = "물건 상태 수정 성공";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "물건 상태 수정 실패";
+		response.message = "물건 상태 수정 실패";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -126,12 +126,12 @@ public class ItemService implements IItemService {
 		BasicResponse response = new BasicResponse();
 		
 		if(itemDao.deleteItem(itemId) == 1) {
-			response.status = true;
-			response.data = "물건 삭제 성공";
+			response.isSuccess = true;
+			response.message = "물건 삭제 성공";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "물건 삭제 실패";
+		response.message = "물건 삭제 실패";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -147,13 +147,13 @@ public class ItemService implements IItemService {
 				imageService.setItemImages(item);
 				favoriteService.setItemIsFavorited(item, userId);
 			}
-			response.status = true;
-			response.data = "물건 가져오기 성공";
-			response.object = items;
+			response.isSuccess = true;
+			response.message = "물건 가져오기 성공";
+			response.data = items;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "물건이 존재하지 않음";
+		response.message = "물건이 존재하지 않음";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -170,13 +170,13 @@ public class ItemService implements IItemService {
 				imageService.setItemImages(item);
 				favoriteService.setItemIsFavorited(item, search.getUserId());
 			}
-			response.status = true;
-			response.data = "물건 가져오기 성공";
-			response.object = items;
+			response.isSuccess = true;
+			response.message = "물건 가져오기 성공";
+			response.data = items;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "물건이 존재하지 않음";
+		response.message = "물건이 존재하지 않음";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -192,12 +192,12 @@ public class ItemService implements IItemService {
 					imageService.setItemImages(item);
 					favoriteService.setItemIsFavorited(item, search.getUserId());
 				}
-				response.status = true;
-				response.data = "물건 가져오기 성공";
-				response.object = items;
+				response.isSuccess = true;
+				response.message = "물건 가져오기 성공";
+				response.data = items;
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
-			response.data = "물건이 존재하지 않음";
+			response.message = "물건이 존재하지 않음";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		} else { // 카테고리가 선택되어 있는 경우
 			List<ItemResponse> items = itemDao.getItemsByCategoryAndKeyword(search);
@@ -206,12 +206,12 @@ public class ItemService implements IItemService {
 					imageService.setItemImages(item);
 					favoriteService.setItemIsFavorited(item, search.getUserId());
 				}
-				response.status = true;
-				response.data = "물건 가져오기 성공";
-				response.object = items;
+				response.isSuccess = true;
+				response.message = "물건 가져오기 성공";
+				response.data = items;
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
-			response.data = "물건이 존재하지 않음";
+			response.message = "물건이 존재하지 않음";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -227,13 +227,13 @@ public class ItemService implements IItemService {
 				imageService.setItemImages(item);
 				favoriteService.setItemIsFavorited(item, userId);
 			}
-			response.status = true;
-			response.data = "물건 가져오기 성공";
-			response.object = items;
+			response.isSuccess = true;
+			response.message = "물건 가져오기 성공";
+			response.data = items;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		response.data = "물건이 존재하지 않음";
+		response.message = "물건이 존재하지 않음";
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }
