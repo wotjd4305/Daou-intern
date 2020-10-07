@@ -31,7 +31,7 @@
 
 
     <!-- 검색 창 -->
-    <div class="container">
+     <div class="container">
         <div class="row search-input" style="display:block">
             <div class="col align-self-center">
                 <b-img
@@ -47,6 +47,8 @@
                 autocomplete="off"
                 autofocus
                 title="검색"
+                v-model="inputText"
+                @click="clickSearchByKeyword(inputText)"
                 class="search_top_text "
                 />
                 
@@ -145,6 +147,11 @@ export default {
        items:[],
 
        serverPath:"",
+       inputText:"",
+       searchKeyReq:{
+           category : [],
+           keyword:"",
+       }
       };
     },
     created(){
@@ -160,26 +167,6 @@ export default {
         this.serverPath = SERVER.IMAGE_STORE,
         this.dateFormat = "YYYY-MM-DD hh-mm-ss";
 
-
-
-        //더미데이타
-
-       //this.categorys = ["디지털/가전","가구/인테리어","생활/가공식품","유아동/유아도서", "무료나눔", "여성잡화", "여성의류"],
-       
-    //    this.items = [ 
-    //    {id:"1",title:"홍삼1",date:this.getDate(),category:"생활/가공식품", price:"17,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"2",title:"홍삼2",date:this.getDate(),category:"생활/가공식품", price:"17,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"3",title:"홍3미",date:this.getDate(),category:"생활/가공식품",price:"27,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"4",title:"홍삼5",date:this.getDate(),category:"생활/가공식품", price:"37,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"5",title:"홍삼6",date:this.getDate(),category:"생활/가공식품", price:"47,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"6",title:"홍삼7",date:this.getDate(),category:"생활/가공식품", price:"57,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"7",title:"홍삼8",date:this.getDate(),category:"생활/가공식품", price:"77,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"8",title:"홍삼9",date:this.getDate(),category:"생활/가공식품", price:"87,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"9",title:"홍삼10",date:this.getDate(),category:"생활/가공식품", price:"97,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"10",title:"홍삼11",date:this.getDate(),category:"생활/가공식품", price:"117,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"11",title:"홍삼12",date:this.getDate(),category:"생활/가공식품",price:"127,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"}
-    //   ,{id:"12",title:"홍삼13",date:this.getDate(),category:"생활/가공식품", price:"137,000", picture:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg"} ]
-    
     }
     ,
     computed:{
@@ -189,9 +176,8 @@ export default {
     },
     methods:{
           ...mapActions('categoryStore', ['fetchItemCategory']),
-          ...mapActions('itemStore', ['getAllItem']),
+          ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword']),
           ...mapActions(['findMyAccount']),
-
 
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
@@ -201,25 +187,21 @@ export default {
             return this.serverPath + "no-image-icon-23487.png" 
             
         },
-        // getDate(){
-        //      var date = new Date();
-        //     var year = date.getFullYear();
-        //     var month = date.getMonth() + 1;
-        //     var day = date.getDate();
-
-        //     if (day < 10) day = "0" + day;
-        //     if (month < 10) month = "0" + month;
-
-        //     var startdate = year + "-" + month + "-" + day;
-
-        //     return startdate;
-        // },
         goToDetail(itemId){
              this.$router.push({path: `/board/detail/${itemId}`})
         },
         goToWrite(){
             this.$router.push({ path: "/board/write" });    
-        }
+        },
+        
+        //클릭
+        clickSearchByKeyword(searchText){
+
+            this.searchKeyReq.keyword = searchText;
+            this.searchKeyReq.category = this.categorys
+            
+            this.getItemByKeyword(this.searchKeyReq);
+        },
     },
 }
 </script>
