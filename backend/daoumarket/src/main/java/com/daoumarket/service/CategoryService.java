@@ -18,9 +18,9 @@ public class CategoryService implements ICategoryService {
 				"스포츠/레저", "여성잡화", "여성의류", "남성패션/잡화", 
 				"게임/취미", "뷰티/미용", "반려동물용품", "도서/티켓/음반", "기타", "무료나눔"};
 		
-		response.status = true;
-		response.data = "물건 카테고리 호출 성공";
-		response.object = category;
+		response.isSuccess = true;
+		response.message = "물건 카테고리 호출 성공";
+		response.data = category;
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -33,9 +33,9 @@ public class CategoryService implements ICategoryService {
 		String[] category = {"서비스개발본부", "비즈메시징사업본부", "비즈마케팅사업본부", "커머스사업본부", 
 				"고객지원실", "기타"};
 		
-		response.status = true;
-		response.data = "부서 카테고리 호출 성공";
-		response.object = category;
+		response.isSuccess = true;
+		response.message = "부서 카테고리 호출 성공";
+		response.data = category;
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
