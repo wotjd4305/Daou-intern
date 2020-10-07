@@ -21,22 +21,22 @@ public class PointService implements IPointService {
 	@Override
 	public ResponseEntity<BasicResponse> getRank() {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		List<Rank> rank = null;
 		
 		rank = pointDao.getRank();
 		
 		if (rank != null) {
-			basicResponse.status = true;
-			basicResponse.data = "Rank Extraction Completed";
-			basicResponse.object = rank;
+			response.isSuccess = true;
+			response.message = "Rank Extraction Completed";
+			response.data = rank;
 			
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Rank Extraction Failure";
+			response.isSuccess = false;
+			response.message = "Rank Extraction Failure";
 			
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
