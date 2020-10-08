@@ -35,6 +35,8 @@ public class ImageService implements IImageService {
 	private final IUserDao userDao;
 	private final IJWTService jwtService;
 	
+//	private final Hash
+	
 	@Transactional
 	@Override
     public int insertItemImage(MultipartFile[] images, long itemId) { // 물건 이미지 업로드
@@ -136,4 +138,10 @@ public class ImageService implements IImageService {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	
+//	public boolean checkExtention(MultipartFile image) {
+//		
+//		
+//		
+//	}
 }

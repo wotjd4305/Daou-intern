@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,19 +50,14 @@ public class ItemController {
 	
 	@PostMapping(path = "/item", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ApiOperation("물건 등록")
-	public ResponseEntity<BasicResponse> insertItem(@RequestParam int userId, @RequestParam String title, @RequestParam int price,
-													@RequestParam String category, @RequestParam String content,
+	public ResponseEntity<BasicResponse> insertItem(@ModelAttribute ItemInsertRequest item,
 													@RequestPart(required = false) MultipartFile[] images) {
 		log.info("ItemController : insertItem");
 		
-		ItemInsertRequest item = ItemInsertRequest.builder()
-				.userId(userId)
-				.title(title)
-				.price(price)
-				.category(category)
-				.content(content).build();
+		log.info(item.toString());
 		
-		return itemService.insertItem(item, images);
+		return null;
+//		return itemService.insertItem(item, images);
 	}
 	
 	@PatchMapping("/item/info")
