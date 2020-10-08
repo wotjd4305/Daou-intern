@@ -11,11 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.daoumarket.dao.IItemDao;
 import com.daoumarket.dto.BasicResponse;
+import com.daoumarket.dto.Criteria;
 import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemResponse;
 import com.daoumarket.dto.ItemSearchRequest;
 import com.daoumarket.dto.ItemUpdateRequest;
+import com.daoumarket.dto.PageMaker;
 
 import lombok.RequiredArgsConstructor;
 
@@ -136,13 +138,18 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> getAllItems(int userId) {
+	public ResponseEntity<BasicResponse> getAllItems(int userId, int page) {
 		
 		BasicResponse response = new BasicResponse();
 		
-		List<ItemResponse> items = itemDao.getAllItems();
+		Criteria cri = new Criteria(page);
+		
+		List<ItemResponse> items = itemDao.getAllItems(cri);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
 		
 		if(!items.isEmpty()) {
+			pageMaker.setTotalCount(itemDao.getAllItemsCount());
 			for (ItemResponse item : items) {
 				imageService.setItemImages(item);
 				favoriteService.setItemIsFavorited(item, userId);
@@ -150,6 +157,7 @@ public class ItemService implements IItemService {
 			response.isSuccess = true;
 			response.message = "물건 가져오기 성공";
 			response.data = items;
+			response.pageMaker = pageMaker;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -162,10 +170,15 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
+		Criteria cri = new Criteria(search.getPage());
+		search.setCri(cri);
 		
 		List<ItemResponse> items = itemDao.getItemsByCategory(search);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
 		
 		if(!items.isEmpty()) {
+			pageMaker.setTotalCount(itemDao.getItemsByCategoryCount(search));
 			for (ItemResponse item : items) {
 				imageService.setItemImages(item);
 				favoriteService.setItemIsFavorited(item, search.getUserId());
@@ -173,6 +186,7 @@ public class ItemService implements IItemService {
 			response.isSuccess = true;
 			response.message = "물건 가져오기 성공";
 			response.data = items;
+			response.pageMaker = pageMaker;
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -185,9 +199,16 @@ public class ItemService implements IItemService {
 		
 		BasicResponse response = new BasicResponse();
 		
+		Criteria cri = new Criteria(search.getPage());
+		search.setCri(cri);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		
 		if(search.getCategory() == null) { // 카테고리가 선택되어 있지 않은 경우
 			List<ItemResponse> items = itemDao.getItemsByKeyword(search);
 			if(!items.isEmpty()) {
+				pageMaker.setTotalCount(itemDao.getItemsByKeywordCount(search));
 				for (ItemResponse item : items) {
 					imageService.setItemImages(item);
 					favoriteService.setItemIsFavorited(item, search.getUserId());
@@ -195,6 +216,7 @@ public class ItemService implements IItemService {
 				response.isSuccess = true;
 				response.message = "물건 가져오기 성공";
 				response.data = items;
+				response.pageMaker = pageMaker;
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			response.message = "물건이 존재하지 않음";
@@ -202,6 +224,7 @@ public class ItemService implements IItemService {
 		} else { // 카테고리가 선택되어 있는 경우
 			List<ItemResponse> items = itemDao.getItemsByCategoryAndKeyword(search);
 			if(!items.isEmpty()) {
+				pageMaker.setTotalCount(itemDao.getItemsByCategoryAndKeywordCount(search));
 				for (ItemResponse item : items) {
 					imageService.setItemImages(item);
 					favoriteService.setItemIsFavorited(item, search.getUserId());
@@ -209,6 +232,7 @@ public class ItemService implements IItemService {
 				response.isSuccess = true;
 				response.message = "물건 가져오기 성공";
 				response.data = items;
+				response.pageMaker = pageMaker;
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			response.message = "물건이 존재하지 않음";

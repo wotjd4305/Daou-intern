@@ -154,14 +154,14 @@ public class ItemTest {
 		assertNull(itemDao.getItemInfoByItemId(itemInfoRequest));
 	}
 	
-	@Ignore
-	@Test
-	public void getAllItems_모든물건가져오기() {
-		
-		List<ItemResponse> items = itemDao.getAllItems();
-		
-		assertEquals(2, items.size());
-	}
+//	@Ignore
+//	@Test
+//	public void getAllItems_모든물건가져오기() {
+//		
+//		List<ItemResponse> items = itemDao.getAllItems();
+//		
+//		assertEquals(2, items.size());
+//	}
 	
 	@Ignore
 	@Test
