@@ -94,31 +94,34 @@ public class ItemController {
 	
 	@GetMapping("/item")
 	@ApiOperation("모든 물건 가져오기")
-	public ResponseEntity<BasicResponse> getAllItems(@RequestParam int userId) {
+	public ResponseEntity<BasicResponse> getAllItems(@RequestParam int userId, @RequestParam int page) {
 		log.info("ItemController : getAllItems");
 		
-		return itemService.getAllItems(userId);
+		return itemService.getAllItems(userId, page);
 	}
 	
 	@GetMapping("/item/category")
 	@ApiOperation("선택된 카테고리의 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByCategory(@RequestParam String[] category) {
+	public ResponseEntity<BasicResponse> getItemsByCategory(@RequestParam String[] category, @RequestParam int page) {
 		log.info("ItemController : getItemsByCategory");
 		
 		ItemSearchRequest search = ItemSearchRequest.builder()
-				.category(category).build();
+				.category(category)
+				.page(page).build();
 		
 		return itemService.getItemsByCategory(search);
 	}
 	
 	@GetMapping("/item/keyword")
 	@ApiOperation("키워드 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam String keyword) {
+	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam String keyword,
+															@RequestParam int page) {
 		log.info("ItemController : getItemsByKeyword");
 		
 		ItemSearchRequest search = ItemSearchRequest.builder()
 				.category(category)
-				.keyword(keyword).build();
+				.keyword(keyword)
+				.page(page).build();
 		
 		return itemService.getItemsByKeyword(search);
 	}

@@ -9,4 +9,6 @@ public class BasicResponse {
 	public String message;
 	@ApiModelProperty(value = "data", position = 3)
 	public Object data;
+	@ApiModelProperty(value = "pageMaker", position = 4)
+	public PageMaker pageMaker;
 }
