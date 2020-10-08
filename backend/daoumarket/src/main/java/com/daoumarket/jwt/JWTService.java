@@ -8,10 +8,12 @@ import java.util.Map;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.daoumarket.dto.TokenRequest;
 import com.daoumarket.dto.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,12 +26,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JWTService implements IJWTService {
     private String secretKey = "ThisisDaouMarketSecretKeyWelcomeJwt";
     
+    @Autowired
+    private ObjectMapper objectMapper;
+    
     @Override
     public String makeJwt(User user) throws Exception {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         Date expireTime = new Date();
         // 토큰 만료시간 : 20분
-        expireTime.setTime(expireTime.getTime() + 100 * 60 * 1);
+        expireTime.setTime(expireTime.getTime() + 1000 * 60 * 20);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
@@ -41,19 +46,7 @@ public class JWTService implements IJWTService {
 
         Map<String, Object> map= new HashMap<String, Object>();
 
-        int userId = user.getUserId();
-        int empNum = user.getEmpNum();
-        String name = user.getName();
-        String password = user.getPassword();
-        String department = user.getDepartment();
-        String image = user.getImage();
-
-        map.put("userId", userId);
-        map.put("empNum", empNum);
-        map.put("name", name);
-        map.put("password", password);
-        map.put("department", department);
-        map.put("image", image);
+        map.put("user", user);
         
         JwtBuilder builder = Jwts.builder().setHeader(headerMap)
                 .setClaims(map)
@@ -66,19 +59,13 @@ public class JWTService implements IJWTService {
     @Override
     public User checkJwt(TokenRequest accessToken) throws Exception {
     	// checkJwt메소드에서는 try문에서 받아온 Jwt를 이용하여 파싱
-    	User user = new User();
+    	User user = null;
         try {
         	// 정상수행된다면 해당 토큰은 정상 토큰으로 간주하고 파싱되지 않는다면 catch문에서 잡히도록 수행
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                     .parseClaimsJws(accessToken.getToken()).getBody(); 
-//            System.out.println("expireTime :" + claims.getExpiration());
-            
-            user.setUserId(Integer.parseInt(claims.get("userId") + ""));
-            user.setEmpNum(Integer.parseInt(claims.get("empNum") + ""));
-            user.setName((String) claims.get("name") + "");
-            user.setPassword((String) claims.get("password") + "");
-            user.setDepartment((String) claims.get("department") + "");
-            user.setImage((String) claims.get("image") + "");
+
+            user = objectMapper.convertValue(claims.get("user"), User.class);
             
             return user;
         

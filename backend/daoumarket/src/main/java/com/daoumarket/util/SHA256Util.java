@@ -6,13 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import com.daoumarket.dto.User;
 
 public class SHA256Util {
-//	public static void main(String[] args) throws Exception {
-//        System.out.println(sha256("needjarvis"));      
-//        System.out.println(sha256("daoumarket"));
-//        System.out.println(sha256("abc123123"));
-//        System.out.println(sha256("1"));
-//    }
- 
 	// SHA-256으로 해싱하는 메소드
 	public static User sha256(User user) throws NoSuchAlgorithmException {
 	    MessageDigest md = MessageDigest.getInstance("SHA-256");

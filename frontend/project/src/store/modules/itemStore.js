@@ -43,9 +43,9 @@ const itemStore = {
         "Content-Type": "multipart/form-data"},
       },)
         .then(res => {
-        console.log("글쓰기" + res.data.status)
+        console.log("글쓰기" + res.data.isSuccess)
         
-          if(res.data.status){
+          if(res.data.isSuccess){
             
             //성공 메시지
             const Toast = Swal.mixin({
@@ -65,7 +65,7 @@ const itemStore = {
               })
               
               //this.getAllItem(this.myaccount.userId)
-              console.log(res.data.object)
+              console.log(res.data.data)
               console.log(commit)
               router.push(info.to)
          }
@@ -101,11 +101,11 @@ const itemStore = {
           .then(res => {
           console.log("after : patchAllItem - " + res.data.status)
           
-            if(res.data.status){
+            if(res.data.isSuccess){
               
                 //상태 저장
-                commit("SET_ITEMS", res.data.object)
-                console.log(res.data.object)
+                commit("SET_ITEMS", res.data.data)
+                console.log(res.data.data)
                 console.log(commit)
                 router.push(info.to)
            }
@@ -131,19 +131,20 @@ const itemStore = {
             })
           })
       },
+      //아이템 상세보기
       patchDetailItem({commit}, info){
         console.log("before : patchDetailItem - " + info.location)
         axios.get(SERVER.URL + info.location + "/" + info.data.itemId , 
             {params:{userId:info.data.userId}},
           )
           .then(res => {
-          console.log("after : patchDetailItem - " + res.data.status)
+          console.log("after : patchDetailItem - " + res.data.isSuccess)
           
-            if(res.data.status){
+            if(res.data.isSuccess){
               
-                commit("SET_DETAIL_ITEMS", res.data.object)
+                commit("SET_DETAIL_ITEMS", res.data.data)
                 
-                console.log(res.data.object)
+                console.log(res.data.data)
                 console.log(commit)
                 //router.push(info.to)
            }
@@ -169,6 +170,7 @@ const itemStore = {
             })
           })
       },
+      //상세보기 수정
       patchUpdateDetailItem({commit}, info){
         console.log("before : patchUpdateDetailItem - " + info.location)
         console.log("before : patchUpdateDetailItem - " + info.data.title)
@@ -177,7 +179,7 @@ const itemStore = {
           .then(res => {
           console.log("after : patchUpdateDetailItem - " + res.data.data)
           
-            if(res.data.status){
+            if(res.data.isSuccess){
                 commit("SET_DETAIL_ITEMS", info.data)
                 
                 console.log(commit)
@@ -205,7 +207,42 @@ const itemStore = {
             })
           })
       },
-      
+       //키워드로 검색 
+       patchItemByKeyword({commit}, info){
+        console.log("before : patchItemByKeyword - " + info.location)
+        console.log("before : patchItemByKeyword - " + info.data.keyword)
+
+        axios.get(SERVER.URL + info.location ,
+            {params:{category: info.data.category, keyword : info.data.keyword}})
+          .then(res => {
+          console.log("after : patchItemByKeyword - " + res.data.data)
+          
+            if(res.data.status){
+                commit("SET_ITEMS", info.data.object)
+                console.log(commit)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'error',
+              title: err.response.data
+            })
+          })
+      },
      
 
 
@@ -243,7 +280,19 @@ const itemStore = {
         }
         dispatch('patchUpdateDetailItem',info)
       },
-    }
+    getItemByKeyword({dispatch}, keywordDataReq){
+        const info = {
+            data: keywordDataReq,
+            location: SERVER.ROUTES.getitembykeword,
+            //to: '/board'
+         }
+         console.log("info loc " + info.location)
+         console.log("info loc " + info.data.keyword)
+         console.log(SERVER.ROUTES.getitembykeword)
+         
+        dispatch('patchItemByKeyword',info)
+    },
+  }
 }
 
 export default itemStore
