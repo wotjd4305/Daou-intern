@@ -75,7 +75,7 @@ public class UserController {
 		try {
 			userJwt = jwtService.checkJwt(accessToken);
 			
-			if (userJwt.getUserId() == 0) {
+			if (userJwt == null) {
 				response.isSuccess = false;
 				response.message = "Token Mismatch";
 				responseEntity = new ResponseEntity<>(response, HttpStatus.OK);

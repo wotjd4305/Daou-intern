@@ -39,12 +39,12 @@ public class UserService implements IUserService {
 		
 		if (res > 0) {
 			response.isSuccess = true;
-			response.data = "Success in signup";
+			response.message = "Success in signup";
 			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			
 		} else {
 			response.isSuccess = false;
-			response.data = "Fail in signup";
+			response.message = "Fail in signup";
 			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -60,12 +60,12 @@ public class UserService implements IUserService {
 		
 		if (userRes == null) {
 			response.isSuccess = false;
-			response.data = "No Duplication of Employee Number";
+			response.message = "No Duplication of Employee Number";
 			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			
 		} else {
 			response.isSuccess = true;
-			response.data = "Duplication of Employee Number";
+			response.message = "Duplication of Employee Number";
 			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -93,11 +93,11 @@ public class UserService implements IUserService {
 		
 		if (userRes == null) {
 			response.isSuccess = false;
-			response.data = "Discorrect";
+			response.message = "Discorrect";
 			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			response.isSuccess = true;
-			response.data = "Correct";
+			response.message = "Correct";
 			
 			try {
 				String token = jwtService.makeJwt(userRes);
@@ -147,12 +147,12 @@ public class UserService implements IUserService {
 			}
 			
 			response.isSuccess = true;
-			response.data = "Modify";
+			response.message = "Modify";
 			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 			
 		} else {
 			response.isSuccess = false;
-			response.data = "Unable to Modify";
+			response.message = "Unable to Modify";
 			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
