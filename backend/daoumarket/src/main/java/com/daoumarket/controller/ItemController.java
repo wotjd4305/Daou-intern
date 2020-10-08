@@ -21,6 +21,7 @@ import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemSearchRequest;
 import com.daoumarket.dto.ItemUpdateRequest;
+import com.daoumarket.service.IImageService;
 import com.daoumarket.service.IItemService;
 
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ItemController {
 	
 	private final IItemService itemService;
+	private final IImageService imageService;
 	
 	@GetMapping("/item/{itemId}")
 	@ApiOperation("물건 상세정보 조회")
@@ -54,10 +56,7 @@ public class ItemController {
 													@RequestPart(required = false) MultipartFile[] images) {
 		log.info("ItemController : insertItem");
 		
-		log.info(item.toString());
-		
-		return null;
-//		return itemService.insertItem(item, images);
+		return itemService.insertItem(item, images);
 	}
 	
 	@PatchMapping("/item/info")
