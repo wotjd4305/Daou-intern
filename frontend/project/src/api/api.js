@@ -26,5 +26,8 @@ export default {
       updateitemstatus:'/item/:itemId/status',
       updateitem:'/item/info',
       getitembykeword:'/item/keyword',
+      getitembyidA:'/item/',
+      getitembyidB:'/list',
+      getfavoriteitembyid:'/item',
     }
 }

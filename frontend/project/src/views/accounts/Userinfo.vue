@@ -1,10 +1,10 @@
 <template>
-  <div class="background">
-    <div class="container p-1 mt-5 bg-light-ivory signup-form">
+  <div>
+    <div class="shadow01 container p-1 mt-5 bg-light-ivory signup-form">
       <h3>회원 수정</h3>
 
       <!-- 프로필과 입력창 -->
-      <div class="row">
+      <div class="row ">
 
         <!-- 프로필 -->
         <b-col align-self="stretch center">
@@ -86,7 +86,137 @@
         <button class="btn signup-button" :class="{disabled: !isSubmit}" @click="clickUpdate">수정하기</button>
       </div>
       
+    </div> 
+
+    <div class="container">
+     <hr class="featurette-divider" />
+        <div class="detail-title-text"> 작성한 게시글 </div>
     </div>
+
+
+      <!-- 작성 목록 창-->
+     <div class="container ">
+        <div class="row ">
+            <div class="col-3 mt-4" v-for="(item, idx) in iditems" :key="idx">
+                <div class="forHover">
+                    <div class="item-list-card shadow01">
+                           <b-img
+                            type="image"
+                            @click="goToDetail(item.itemId)"
+                            style="cursor:pointer"
+                            :src= getItemImgUrl(idx)
+                            class="mt-3 mb-2 pr-1 pl-1 item-list-image"
+                            ></b-img>
+                        <div class="row" style="display:block;">
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    제품명 : 
+                                </span>
+                                <span class="  item-list-title-contents">
+                                    {{item.title}} 
+                                </span>
+                            </div>
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    카테고리 : 
+                                </span>
+                                <span class="  item-list-title-contents">
+                                    {{item.category}} 
+                                </span>
+                            </div>
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    등록일 : 
+                                </span>
+                                <span class="item-list-title-contents">
+                                    {{item.date | calculateTime}} 
+                                </span>
+                            </div>
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    가격 : 
+                                </span>
+                                <span class="item-list-title-contents">
+                                    {{item.price | comma}} 
+                                </span>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div>
+                    <hr class="featurette-divider" />
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!--/목록 창-->
+
+    <div class="container">
+     <hr class="featurette-divider" />
+        <div class="detail-title-text"> 찜 목록 </div>
+    </div>
+
+    <!-- 찜 목록 창-->
+     <div class="container ">
+        <div class="row ">
+            <div class="col-3 mt-4" v-for="(item, idx) in favorititems" :key="idx">
+                <div class="forHover">
+                    <div class="item-list-card shadow01">
+                           <b-img
+                            type="image"
+                            @click="goToDetail(item.itemId)"
+                            style="cursor:pointer"
+                            :src= getItemImgUrl(idx)
+                            class="mt-3 mb-2 pr-1 pl-1 item-list-image"
+                            ></b-img>
+                        <div class="row" style="display:block;">
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    제품명 : 
+                                </span>
+                                <span class="  item-list-title-contents">
+                                    {{item.title}} 
+                                </span>
+                            </div>
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    카테고리 : 
+                                </span>
+                                <span class="  item-list-title-contents">
+                                    {{item.category}} 
+                                </span>
+                            </div>
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    등록일 : 
+                                </span>
+                                <span class="item-list-title-contents">
+                                    {{item.date | calculateTime}} 
+                                </span>
+                            </div>
+                            <div class="ml-4 pl-2 text-left">
+                                <span class="item-list-title-text">
+                                    가격 : 
+                                </span>
+                                <span class="item-list-title-contents">
+                                    {{item.price | comma}} 
+                                </span>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div>
+                    <hr class="featurette-divider" />
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!--/ 찜 목록 창-->
+
 
 
 
@@ -131,7 +261,10 @@ export default {
     //패치
     this.findMyAccount();
     this.fetchDepartmentCategory();
-    
+    alert(this.myaccount.userId);
+    this.getItemById(this.myaccount.userId);
+    this.getFavoriteItemById(this.myaccount.userId);
+ 
     //this.checkPathNull();
    
    //입력란에 없기 때문에
@@ -150,12 +283,14 @@ export default {
   },
   computed:{
     ...mapState(['myaccount']),
-    ...mapState('categoryStore',['departmentCategorys'])
+    ...mapState('categoryStore',['departmentCategorys']),
+    ...mapState('itemStore', ['iditems','favorititems']),
  
   },
   methods: {
     ...mapActions("accountStore",["updateUser","uploadImg","deleteUserImg"]),
     ...mapActions('categoryStore', ['fetchDepartmentCategory']),
+    ...mapActions('itemStore', ['getItemById','getFavoriteItemById']),
     ...mapActions(['findMyAccount']),
 
     getImgUrl(serverPath){
@@ -163,19 +298,14 @@ export default {
        return serverPath + this.myaccount.image;
       
     },
-    
-    //  checkPathNull(){
-    //    if(this.myaccount.image == null || this.myaccount.image == ""){
-        
-    //     const formData = new FormData();
-    //     formData.append("image", this.serverPath + this.defaultPath);
-        
-    //     this.myaccount.image = formData;
-    //     console.log(formData.get("image"))
-    //     //Store
-    //     this.uploadImg(this.myaccount);
-    //    }
-    //  },
+    getItemImgUrl(idx){
+            //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
+            if(this.iditems[idx].picture[0]){
+                return this.serverPath + this.iditems[idx].picture[0];
+            }
+            return this.serverPath + "no-image-icon-23487.png" 
+            
+      },
     checkPasswordForm() {
       if (this.userUpdateData.password.length > 0 && this.userUpdateData.password.length < 8) {
           this.error.password = "비밀번호가 너무 짧아요"
@@ -203,6 +333,9 @@ export default {
         this.isSubmit = isSubmit;
       }
      
+    },
+    goToDetail(itemId){
+             this.$router.push({path: `/board/detail/${itemId}`})
     },
     clickUpDeleteImage(){
       this.deleteUserImg(this.myaccount);
@@ -315,5 +448,50 @@ input[type="password"] {
 }
 .custom-select{
   width:80%
+}
+
+
+
+/* 카테고리*/
+.item-list{
+    display: contents;
+}
+.item-list-checkbox{
+    display: flex;
+    font-weight: bold;
+}
+
+/* 아이템 */
+.item-list-card{
+    border-radius: 5px;
+    border : 1px #2682ba55 solid;
+    border-width:3px !important;
+    background-color : #f8f8f8;
+    
+}
+.item-list-title-text{
+    font-weight: bold;
+}
+.item-list-title-contents{
+    font-weight: bold;
+    color:#2682ba;
+}
+.shadow01 {
+    box-shadow: 1px 1px 3px 3px #2682ba55;
+}
+.forHover :hover {
+
+  
+   transform: translate(0%, -10%);
+
+}
+.item-list-image{
+    width: 11rem;
+    height: 11rem;
+}
+.detail-title-text{
+    color: #2682ba;
+    font-weight: bold;
+    font-size:1.2rem;
 }
 </style>

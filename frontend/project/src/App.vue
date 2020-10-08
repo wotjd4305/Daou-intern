@@ -37,7 +37,6 @@ export default {
 </script>
 
 <style>
- 
 @font-face {
   font-family: 'Daki';
   src:url('./assets/fonts/DAKIL.TTF');
@@ -82,4 +81,15 @@ input::placeholder {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+
+
+
+
+/*  */
+ 
+.shadow01 {
+    box-shadow: 1px 1px 3px 3px #2682ba55;
+    }
+
 </style>

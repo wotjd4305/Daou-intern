@@ -48,11 +48,13 @@
                 autofocus
                 title="검색"
                 v-model="inputText"
-                @click="clickSearchByKeyword(inputText)"
+                key
+                v-on:keyup.enter="clickSearchByKeyword(inputText)"
                 class="search_top_text "
                 />
                 
-                <button class=" btn ml-1 search-button" >검색</button>
+                <button 
+                @click="clickSearchByKeyword(inputText)" class=" btn ml-1 search-button" >검색</button>
             </div>
           </div>
     <!--/검색 창 -->
