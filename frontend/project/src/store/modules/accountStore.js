@@ -30,8 +30,8 @@ const accountStore = {
       //alert(SERVER.URL + info.location)
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
-          if(res.data.status){
-              console.log(res.data.object)
+          if(res.data.isSuccess){
+              console.log(res.data.data)
               console.log(commit)
               router.push('/login')
          }
@@ -53,7 +53,7 @@ const accountStore = {
            })
            Toast.fire({
             icon: 'error',
-            title: err.response.data
+            title: err.response.data.message
           })
         })
     },
@@ -64,9 +64,9 @@ const accountStore = {
  
       axios.post(SERVER.URL + info.location, info.data)
         .then(res => {
-          if(res.data.status){
-              console.log(res.data.object)
-              commit('SET_TOKEN', res.data.object, { root: true })
+          if(res.data.isSuccess){
+            console.log(res.data.data)
+              commit('SET_TOKEN', res.data.data, { root: true })
               const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -86,7 +86,7 @@ const accountStore = {
               router.push('/home')
          }
          else{
-           alert("에러" + res.data.status)
+           alert("에러" + res.data.isSuccess)
          }
         })
         .catch(err => {
@@ -103,7 +103,7 @@ const accountStore = {
            })
            Toast.fire({
             icon: 'error',
-            title: err.response.data.message
+            title: err.response.message + "검색된 결과가 없습니다."
           })
         })
     },
@@ -113,15 +113,15 @@ const accountStore = {
       console.log("유저수정 부분! " + info.location)
       axios.patch(SERVER.URL + info.location, info.data)
       .then(res => {
-        if(res.data.status){
-            console.log(res.data.object)
-            commit('SET_TOKEN', res.data.object, { root: true })
+        if(res.data.isSuccess){
+            console.log(res.data.data)
+            commit('SET_TOKEN', res.data.data, { root: true })
             
 
             router.push(info.to)
        }
        else{
-         alert("에러" + res.data.status)
+         alert("에러" + res.data.isSuccess)
        }
       })
       .catch(err => {
@@ -161,7 +161,7 @@ const accountStore = {
         )
         .then((response) => {
           console.log(response);
-          if (response.data.data == "업로드 성공") {
+          if (response.data.message == "업로드 성공") {
 
             
             alert("프로필 업로드 성공");
@@ -182,7 +182,7 @@ const accountStore = {
         )
         .then((response) => {
           console.log(response);
-          if (response.data.data == "삭제 성공") {
+          if (response.data.message == "삭제 성공") {
             info.data.image = "icons8-male-user-90.png"
             alert("프로필 이미지 삭제 성공");
             commit('SET_MY_ACCOUNT', info.data, { root: true })

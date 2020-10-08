@@ -25,5 +25,6 @@ export default {
       deletedetailitem:'/item',
       updateitemstatus:'/item/:itemId/status',
       updateitem:'/item/info',
+      getitembykeword:'/item/keyword',
     }
 }

@@ -293,9 +293,9 @@ export default {
         console.log("before : deleteDetailItem - " + itemId)
         axios.delete(SERVER.URL + SERVER.ROUTES.deletedetailitem + "/" + itemId)
           .then(res => {
-          console.log("after : deleteDetailItem - " + res.data.status)
-            if(res.data.status){
-                console.log(res.data.object)
+          console.log("after : deleteDetailItem - " + res.data.isSuccess)
+            if(res.data.isSuccess){
+                console.log(res.data.data)
            }
            else{
              alert("에러")
