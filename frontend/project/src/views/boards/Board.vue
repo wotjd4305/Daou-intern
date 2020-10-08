@@ -198,7 +198,7 @@ export default {
         clickSearchByKeyword(searchText){
 
             this.searchKeyReq.keyword = searchText;
-            this.searchKeyReq.category = this.categorys
+            this.searchKeyReq.category = this.checkedNames
             
             this.getItemByKeyword(this.searchKeyReq);
         },

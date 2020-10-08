@@ -39,11 +39,11 @@ const categoryStore = {
         
         axios.get(SERVER.URL + SERVER.ROUTES.itemcategory, )
           .then(res => {
-              commit('SET_ITEM_CATEGORY', res.data.object)
-              console.log(res.data.object)
+              commit('SET_ITEM_CATEGORY', res.data.data)
+              console.log(res.data.data)
           })
           .catch(err => 
-            console.log(err.response.object))
+            console.log(err.response.data))
       },
     //부서
     fetchDepartmentCategory({commit}) {
@@ -51,11 +51,11 @@ const categoryStore = {
         
         axios.get(SERVER.URL + SERVER.ROUTES.departmentcategory, )
           .then(res => {
-              commit('SET_DEPARTMENT_CATEGORY', res.data.object)
-              console.log(res.data.object)
+              commit('SET_DEPARTMENT_CATEGORY', res.data.data)
+              console.log(res.data.data)
           })
           .catch(err => 
-            console.log(err.response.object))
+            console.log(err.response.data))
       },
 
    
