@@ -36,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ItemController {
 	
 	private final IItemService itemService;
-	private final IImageService imageService;
 	
 	@GetMapping("/item/{itemId}")
 	@ApiOperation("물건 상세정보 조회")
@@ -111,7 +110,7 @@ public class ItemController {
 	@ApiOperation("키워드 물건 가져오기")
 	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam String keyword,
 															@RequestParam int page) {
-		log.info("ItemController : getItemsByKeyword");
+//		log.info("ItemController : getItemsByKeyword");
 		
 		ItemSearchRequest search = ItemSearchRequest.builder()
 				.category(category)
