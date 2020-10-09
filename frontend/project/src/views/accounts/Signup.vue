@@ -20,7 +20,7 @@
               style="text-transform:lowercase"
             />
             <label for="name"></label>
-            <div class="error-text ml-3" v-if="error.name">{{error.name}}</div>
+            <div class="error-text ml-3 text-center" style="padding-top:1em" v-if="error.name">{{error.name}}</div>
           </div>
 
           <div class="input-with-label">
@@ -37,7 +37,7 @@
               required
               @keydown="checkEmpNumEveryEvent"
               />
-            <span class="ml-2"><button @click="clickEmpNumCheck " :class="{disabled: !duplicateBtn}" class="btn duplication-btn">중복확인</button></span>
+            <span style="margin-left:5em"><button @click="clickEmpNumCheck " :class="{disabled: !duplicateBtn}" class="btn duplication-btn">중복확인</button></span>
             <label for="empNum"></label>
             <div class="error-text ml-3" v-if="error.empNum">{{error.empNum}}</div>
           </div>
@@ -71,7 +71,7 @@
             <label for="password-confirm"></label>
             <div class="error-text ml-3" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
           </div>
-          <div class="input-with-label mt-2">
+          <div class="input-with-label mt-2" style="padding-top:2em">
             <select v-model="signupData.department"  class=" custom-select">
               <option  v-for="(depart, idx) in departs" :key="idx">{{ depart }}</option>
             </select>
@@ -176,7 +176,7 @@ export default {
         } else this.error.password = false;
     },
     validPassword(password) {
-      var va = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
+      var va = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
       return va.test(password);
     },
     checkPasswordConfirmationForm() {

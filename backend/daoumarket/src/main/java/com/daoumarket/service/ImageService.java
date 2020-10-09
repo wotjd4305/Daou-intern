@@ -3,7 +3,9 @@ package com.daoumarket.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -35,9 +37,15 @@ public class ImageService implements IImageService {
 	private final IUserDao userDao;
 	private final IJWTService jwtService;
 	
+	private static final HashSet<String> imageExtention = new HashSet<>(Arrays.asList("jpg", "jpeg", "png", "gif", "bmp"));
+	
 	@Transactional
 	@Override
     public int insertItemImage(MultipartFile[] images, long itemId) { // 물건 이미지 업로드
+		
+		if(!checkExtention(images)) {
+			return 0;
+		}
 		
 		String[] picture = new String[images.length];
 		
@@ -73,8 +81,15 @@ public class ImageService implements IImageService {
 	@Transactional
     @Override
 	public ResponseEntity<BasicResponse> updateUserImage(MultipartFile image, int userId) { // 유저 이미지 업로드
-    	
+		
 		BasicResponse response = new BasicResponse();
+		
+		if(!checkExtention(image)) {
+			log.error("파일 확장자가 이미지가 아닙니다.");
+			response.message = "파일 확장자가 이미지가 아닙니다.";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+    	
 		
     	String imageName = image.getOriginalFilename();
 		String imageExtension = FilenameUtils.getExtension(imageName).toLowerCase();
@@ -92,15 +107,15 @@ public class ImageService implements IImageService {
 			imageDao.updateUserImage(Image.builder().id(userId).image(destinationImageName).build());
 			User user = userDao.getUserByUserId(userId);
 			String token = jwtService.makeJwt(user);
-			response.object = token;
+			response.data = token;
 			
 		} catch (Exception e) {
 			log.error("파일 업로드에 실패했습니다.");
-			response.data = "업로드 실패";
+			response.message = "업로드 실패";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		response.data = "업로드 성공";
+		response.message = "업로드 성공";
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
     
@@ -120,7 +135,7 @@ public class ImageService implements IImageService {
 		int result = imageDao.deleteUserImage(userId);
 		
 		if(result == 0) {
-			response.data = "삭제 실패";
+			response.message = "삭제 실패";
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
@@ -128,12 +143,25 @@ public class ImageService implements IImageService {
 		String token;
 		try {
 			token = jwtService.makeJwt(user);
-			response.object = token;
+			response.data = token;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		response.data = "삭제 성공";
+		response.message = "삭제 성공";
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Override
+	public boolean checkExtention(MultipartFile... image) {
+		
+		for (int i = 0; i < image.length; i++) {
+			String nowExtention = FilenameUtils.getExtension(image[i].getOriginalFilename()).toLowerCase();
+			
+			if(!imageExtention.contains(nowExtention)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }

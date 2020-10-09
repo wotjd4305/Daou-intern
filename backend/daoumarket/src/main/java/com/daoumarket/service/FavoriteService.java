@@ -24,18 +24,18 @@ public class FavoriteService implements IFavoriteService {
 	@Override
 	public ResponseEntity<BasicResponse> insertFavorite(Favorite favorite) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		int res = favoriteDao.insertFavorite(favorite);
 		
 		if (res > 0) {
-			basicResponse.status = true;
-			basicResponse.data = "Success in Insert";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.message = "Success in Insert";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Faliure in Insert";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.message = "Faliure in Insert";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
@@ -44,18 +44,18 @@ public class FavoriteService implements IFavoriteService {
 	@Override
 	public ResponseEntity<BasicResponse> deleteFavorite(long favoriteId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		
 		int res = favoriteDao.deleteFavorite(favoriteId);
 		
 		if (res > 0) {
-			basicResponse.status = true;
-			basicResponse.data = "Delete Completed";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.message = "Delete Completed";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Delete Failed";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.message = "Delete Failed";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;
@@ -64,21 +64,21 @@ public class FavoriteService implements IFavoriteService {
 	@Override
 	public ResponseEntity<BasicResponse> getFavoriteList(int userId) {
 		ResponseEntity<BasicResponse> responseEntity = null;
-		BasicResponse basicResponse = new BasicResponse();
+		BasicResponse response = new BasicResponse();
 		List<ItemResponse> favoriteList = favoriteDao.getFavoriteList(userId);
 		
 		if (!favoriteList.isEmpty()) {
 			for (ItemResponse item : favoriteList) {
 				imageService.setItemImages(item);
 			}
-			basicResponse.status = true;
-			basicResponse.data = "Favorite Extraction Completed";
-			basicResponse.object = favoriteList;
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = true;
+			response.message = "Favorite Extraction Completed";
+			response.data = favoriteList;
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			basicResponse.status = false;
-			basicResponse.data = "Favorite Extraction Failure";
-			responseEntity = new ResponseEntity<BasicResponse>(basicResponse, HttpStatus.OK);
+			response.isSuccess = false;
+			response.message = "Favorite Extraction Failure";
+			responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
 		return responseEntity;

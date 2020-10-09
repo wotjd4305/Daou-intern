@@ -3,6 +3,7 @@
     <!-- 검색 창 -->
     <div class="container">
         <div class="row align-self-center" style="display:block">
+          
             <div class="col align-self-center">
                 <b-img
                 type="image"
@@ -31,16 +32,58 @@
 
     <!-- 상세 창 -->
     <div class="container mt-5">
+         
         <div class="detail-card shadow01">
+            <div class="row">
+                <!-- 뒤로가기 -->
+                <div class="col text-left align-self-center write-title" style="display:block">
+                    <div class="mt-3" style="margin-left:10% ">
+                        <span> 
+                            <b-img
+                                v-bind:src="require('@/assets/img/icons8-chevron-left-48.png')"
+                                class="write-left-btn"
+                                @click="goToBoard()"
+                                style="cursor:pointer"
+                            />
+                        </span> 상세보기
+                    </div>
+                    <div>
+                    </div>
+                </div>
+                <!--/ 뒤로가기 -->
+
+                <!-- 상태 -->
+                
+                <div class="col text-right align-self-center write-title" style="display:block">
+                    <div class="mt-3 mr-5">
+                        <span> 
+                            {{detailitem.status | itemStatus}}
+                        </span>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+                <!--/ 상태 -->
+
+            </div>
             <!-- 수정 삭제 아이콘 -->
              <div  class ="text-right mt-2 mr-2">
                  <div v-if="isWriter()">
-                    <b-img
+                     <!-- 기본 -->
+                    <b-img v-if="!isUpdateChecked"
                             v-bind:src="require(`@/assets/img/icons8-pencil-120.png`)"
+                            @click="clickUpdate()"
+                            class="detail-icon"
+                    ></b-img>
+                    <!-- 수정 중 -->
+                    <b-img v-if="isUpdateChecked"
+                            v-bind:src="require(`@/assets/img/icons8-save-48.png`)"
+                            @click="clickSave()"
                             class="detail-icon"
                     ></b-img>
                     <b-img
                             v-bind:src="require(`@/assets/img/icons8-trash-144.png`)"
+                            @click="clickDetailDelete(detailitem.itemId)"
                             class="detail-icon"
                     ></b-img>
                  </div>
@@ -52,44 +95,99 @@
                 <div class="col-6 mr-4 ml-4 mb-4 mt-1 align-self-center">
                            <img
                                 class="detailImg"
-                                 src="https://t1.daumcdn.net/cfile/blog/216CB83A54295C1C0E"
+                                :src = getImgUrl()
                             />
                 </div>
                 <!-- 정보 -->
-                <div class="col-4 align-self-center">
-                    <div class="row">
+                <div class="col-4 align-self-center" style="margin-bottom:auto">
+                    <div v-if="!isUpdateChecked"  class="row">
                         <div class="detail-title-text">
-                           {{detailitem.title}}
+                           {{this.detailitem.title}}
                         </div>
                     </div>
+                    <div v-if="isUpdateChecked"  class="row">
+                        <div>
+                           <b-form-input
+                            class="detail-title-text ml-2"
+                            style="width:100%"
+                            v-model="detailitem.title"
+                          ></b-form-input>
+                          
+                        </div>
+                    </div>
+                    <!-- 기본 -->
+                    <div v-if="!isUpdateChecked"  class="row mt-4">
+                        <div class="col detail-price-text  text-right">
+                            가격 : {{detailitem.price | comma}}
+                        </div>
+                    </div>
+                    <!-- 수정 중 -->
+                     <div v-if="isUpdateChecked"  class="row mt-4">
+                           <span class="detail-price-text text-right"> 가격 : </span> 
+                           <b-form-input
+                            class="col detail-price-text detail-price-text-update text-right"
+                            v-model="detailitem.price"
+                          ></b-form-input>
+                    </div>
                     <div class="row">
-                        <div class="col detail-price-text"> 가격 : {{this.comma(detailitem.price)}}</div>
                         <div class="col detail-user-text text-right"> 
                             <span class=""> <img
                                 class="headerProfile"
-                                :src = getImgUrl()
+                                :src = getUserImgUrl()
                                 style="width: 2.5rem; height: 2.5rem;"      
                                 /> </span> 
                             
-                            판매자 : {{ detailitem.user.name}}
+                            판매자 : {{ this.detailitem.user.name}}
                         </div>
                     </div>
+                    
                      <hr class="featurette-divider" />
-                    <div class="row detail-date-text text-right">
-                        <div class="col">
+                    <div style="height:20px" class="row detail-date-text text-right">
+                        <div class="col" style="height:10%">
                             <span> 
                                 <b-img
+                                    style="height:1000%"
                                     class="detail-clock-img"
                                     v-bind:src="require(`@/assets/img/icons8-clock-96.png`)"
                             />
                             </span>
                             <span class="ml-2">
-                                {{calculateTime(detailitem.date)}}
+                                {{detailitem.date | calculateTime}}
                             </span>
                         </div> 
                     </div>
-                    <div class="row"> {{detailitem.content}}</div>
-                    
+
+                    <div class="row">
+                        <!-- 수정중 -->
+                        <div v-if="isUpdateChecked" class="col ml-3 mt-3 text-right">
+                            <select v-model="detailitem.category" class="detail-category-text-update custom-select">
+                                <option v-for="(category, idx) in categorys" :key="idx">
+                                    {{ category }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- 기본-->
+                        <div v-if="!isUpdateChecked" class="detail-date-text col mt-3 text-right">
+                            카테고리 : {{detailitem.category}}
+                        </div>
+                    </div>
+
+                    <!-- 기본 -->
+                    <div v-if="!isUpdateChecked" class="row"> 
+                        {{detailitem.content}}
+                    </div>
+                    <!-- 수정 중 -->
+                     <div v-if="isUpdateChecked"  class="row">
+                        <div class="detail-title-text-update">
+                           <b-form-textarea
+                            style="z-index:10;"
+                            value="Contents"
+                            placeholder="내용을 입력하세요."
+                            rows="3"
+                            v-model="detailitem.content"
+                            ></b-form-textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- 메시지 버튼 -->
@@ -111,8 +209,9 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
-import moment from 'moment'
 
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default {
     data: () => {
@@ -122,9 +221,17 @@ export default {
             itemId:"",
             userId:"",
         },
+        deleteReq: "",
+        isUpdateChecked: false,
+        itemDetail:[],
+        categorys:[],
       };
-    },
-   
+  },
+  watch: {
+    itemUpdateReq: {
+      deep: true
+    }
+  },
     created(){
         //아이템 id 확인
         this.itemId = this.$route.params.itemId;
@@ -133,70 +240,124 @@ export default {
         //이미지 주소
         this.serverPath = SERVER.IMAGE_STORE,
 
-        this.calculateTime();
-
         //패치
         this.findMyAccount();
+        this.fetchItemCategory();
 
         //디테일 요청
         this.getDetailReq.itemId = this.itemId;
         this.getDetailReq.userId = this.myaccount.userId;
         this.getDetailItem(this.getDetailReq);
+
+        //적용
+        this.deleteReq = this.itemId;
+        this.categorys = this.itemCategorys;
+
     }
     ,
     computed:{
         ...mapState(['myaccount']),
-        ...mapState('itemStore',['detailitem'])
+        ...mapState('itemStore',['detailitem']),
+        ...mapState('categoryStore',['itemCategorys']),
     },
     methods:{
-        ...mapActions('itemStore', ['getDetailItem']),
+        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem']),
+        ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions(['findMyAccount']),
 
-    //가격 필터
-    comma(val){
-        return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-     },
-    //시간 필터
-    calculateTime(){
-        var nowTime = moment();
-        var writeTime = moment(this.detailitem.date, 'YYYY-MM-DD HH:mm:ss');
-
-        var diffHour = moment.duration(nowTime.diff(writeTime)).asHours();
-        var diffDay = moment.duration(nowTime.diff(writeTime)).asDays();
-    
-        //24시간 이내
-        if(diffHour < 24){
-            return parseInt(diffHour) + "시간 전";
-        }
-        //7일 이내
-        if(diffDay < 7){
-            return parseInt(diffDay) + "일 전";
-        }
-        return writeTime
-        
-      
-    },
     //디테일의 작성자 판단
     isWriter(){
-        if(this.myaccount.userId == this.detailitem.user.userId){
+        if(this.myaccount.userId == this.detailitem.userId){
             return true;
         }
         return false;
     },
-    getImgUrl(){
+    getUserImgUrl(){
             if(this.detailitem.user.image){
                 return this.serverPath +this.detailitem.user.image;
             }
+            return this.serverPath + "icons8-male-user-90.png" 
+        },
+    getImgUrl(){
+            if(this.detailitem.picture[0]){
+                return this.serverPath +this.detailitem.picture[0];
+            }
             return this.serverPath + "no-image-icon-23487.png" 
         },
-    },
     searchA(text){
         alert(text);
     },
+
+     deleteDetailItem(itemId){
+
+        console.log("before : deleteDetailItem - " + itemId)
+        axios.delete(SERVER.URL + SERVER.ROUTES.deletedetailitem + "/" + itemId)
+          .then(res => {
+          console.log("after : deleteDetailItem - " + res.data.isSuccess)
+            if(res.data.isSuccess){
+                console.log(res.data.data)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'error',
+              title: err.response.data
+            })
+          })
+    },
+
+
+
+     //push
+    goToBoard(){
+        this.$router.push({ path: "/board" });
+    },
+
+    //click
+    clickDetailDelete(){
+        this.deleteDetailItem(this.deleteReq)
+        this.goToBoard();
+    },
+    clickUpdate(){
+        this.isUpdateChecked = !this.isUpdateChecked;
+        return this.isUpdateChecked;
+    },
+    clickSave(){
+
+        this.updateDetailItem(this.detailitem)
+        this.isUpdateChecked = !this.isUpdateChecked;
+        return this.isUpdateChecked;
+    }
+    }
 }
 </script>
 
 <style scoped>
+/* 제목 */
+.write-title{
+    font-weight: bold !important;
+    color:  #2682ba !important;
+     font-size: 2rem;
+}
+.write-left-btn{
+    width: 3%;
+    opacity: 50%;
+}
+
 /* 검색 */
 .search-button {
   background-color: #2682ba !important;
@@ -236,7 +397,7 @@ export default {
 }
 .detailImg{
     width: 100%;
-    height: 100%;
+    height: 20rem;
 }
 .detail-icon{
     width: 4%;
@@ -245,10 +406,15 @@ export default {
     font-weight: bold;
     font-size:2rem;
 }
+.detail-title-text-update{
+    font-weight: bold;
+    width: 100%;
+    font-size:2rem;
+}
 .detail-price-text{
     font-weight: bold;
     color: #2682ba;
-    font-size:2rem
+    font-size:1.5rem
 }
 .detail-user-text{
     font-weight: bold;
@@ -263,6 +429,11 @@ export default {
     height: 20%;
     opacity: 50%;
 }
-
+.detail-price-text-update{
+    width: 60%;
+}
+.detail-category-text-update{
+    width: 50%;
+}
 </style>
 
