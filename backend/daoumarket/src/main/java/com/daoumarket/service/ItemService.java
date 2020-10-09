@@ -83,7 +83,7 @@ public class ItemService implements IItemService {
 			response.message = "게시물 등록 성공했으나, 이미지 등록 실패(이미지 파일 O)";
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		default :
-			response.status = true;
+			response.isSuccess = true;
 			response.data = "게시물과 이미지 등록 성공!(이미지 파일 O)";
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
@@ -158,6 +158,7 @@ public class ItemService implements IItemService {
 			response.message = "물건 가져오기 성공";
 			response.data = items;
 			response.pageMaker = pageMaker;
+			
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
@@ -205,6 +206,8 @@ public class ItemService implements IItemService {
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		
+		long start = System.currentTimeMillis();
+		
 		if(search.getCategory() == null) { // 카테고리가 선택되어 있지 않은 경우
 			List<ItemResponse> items = itemDao.getItemsByKeyword(search);
 			if(!items.isEmpty()) {
@@ -217,6 +220,11 @@ public class ItemService implements IItemService {
 				response.message = "물건 가져오기 성공";
 				response.data = items;
 				response.pageMaker = pageMaker;
+				
+				long end = System.currentTimeMillis();
+				
+				System.out.println((end - start) + "/ms");
+				
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			response.message = "물건이 존재하지 않음";

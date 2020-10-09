@@ -24,8 +24,8 @@ public class ChatroomService implements IChatroomService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		List<ChatroomResponse> roomList = chatroomDao.getJoinedRoomListByUserId(userId);
-		
+//		List<ChatroomResponse> roomList = chatroomDao.getJoinedRoomListByUserId(userId);
+//		
 //		for (int i = 0; i < roomList.size(); i++) {
 //			array_type array_element = roomList.size()[i];
 //			
