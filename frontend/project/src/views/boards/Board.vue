@@ -68,13 +68,18 @@
                 <div class="forHover">
 
                     <div class="item-list-card shadow01">
-                        <div class="text-right"><b-img
+                        <div v-if= !isWriter(item.userId) class="text-right"><b-img
                             type="image"
-                            @click="goToDetail(item.itemId)"
+                            @click="clickFavorite(item.itemId,item.favorite)"
                             style="cursor:pointer"
                             :src= $favoriteImage(item.favorite)
                             class="mr-2 pr-1 pl-1 item-list-heart"
                             ></b-img></div>
+                        <div v-if= isWriter(item.userId) class="text-right">
+                            <img
+                            src = "@/assets/img/icons8-account-48.png"
+                            class="mr-2 pr-1 pl-1 item-list-heart"
+                        /></div>
 
                            <b-img
                             type="image"
@@ -196,6 +201,11 @@ export default {
            category:[]
        },
        pageArray:[],
+       favoriteReq:{
+           itemId:"",
+           userId:"",
+       }
+       ,
        
       };
     },
@@ -214,7 +224,7 @@ export default {
         this.fetchItemCategory();
         this.findMyAccount();
         
-        this.searchAllReq = {keyword:this.inputText, page:1, category:[]};
+        this.searchAllReq = {userId : this.myaccount.userId,keyword:this.inputText, page:1, category:[]};
         this.getItemByKeyword(this.searchAllReq);
 
         //페이징 만들기
@@ -236,10 +246,16 @@ export default {
     },
     methods:{
           ...mapActions('categoryStore', ['fetchItemCategory']),
-          ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword']),
+          ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword','postFavoriteItemById','deleteFavoriteItemById']),
           ...mapActions(['findMyAccount']),
 
     
+         isWriter(detailitemId){
+        if(this.myaccount.userId == detailitemId){
+            return true;
+        }
+        return false;
+        },
 
          makePaging(startPage, endPage){
             this.pageArray = [];
@@ -265,7 +281,7 @@ export default {
         //클릭
         clickSearchByKeyword(searchText){
 
-            this.searchAllReq = {keyword:searchText, page:1, category:this.checkedNames};                
+            this.searchAllReq = {userId : this.myaccount.userId, keyword:searchText, page:1, category:this.checkedNames};                
 
             this.getItemByKeyword(this.searchAllReq);
             
@@ -273,12 +289,21 @@ export default {
          clickPageNum(pageNum){
 
         
-            this.searchAllReq = {keyword:this.inputText, page:pageNum, category:this.checkedNames};    
+            this.searchAllReq = {userId : this.myaccount.userId,keyword:this.inputText, page:pageNum, category:this.checkedNames};    
             
              this.getItemByKeyword(this.searchAllReq);
-
-            
         },
+        clickFavorite(itemId, isFavorite){
+            this.favoriteReq = {userId: this.myaccount.userId, itemId:itemId}
+            
+            if(isFavorite){//좋아요 눌러져있으면
+                this.deleteFavoriteItemById(this.favoriteReq);
+            }
+            else{// 좋아요 안눌러져있으면
+                this.postFavoriteItemById(this.favoriteReq);
+            }
+            this.getItemByKeyword(this.searchAllReq);
+        }
     },
 }
 </script>

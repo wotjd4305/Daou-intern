@@ -55,6 +55,15 @@
                 <!-- 상태 -->
                 
                 <div class="col text-right align-self-center write-title" style="display:block">
+                    <div>
+                        <div v-if="!isWriter()" class="text-right"><b-img
+                            type="image"
+                            @click="clickFavorite(detailitem.itemId, detailitem.favorite)"
+                            style="cursor:pointer"
+                            :src= $favoriteImage(detailitem.favorite)
+                            class="mr-2 pr-1 pl-1 item-list-heart"
+                            ></b-img></div>
+                    </div>
                     <div class="mt-3 mr-5">
                         <span> 
                             {{detailitem.status | itemStatus}}
@@ -245,8 +254,7 @@ export default {
         this.fetchItemCategory();
 
         //디테일 요청
-        this.getDetailReq.itemId = this.itemId;
-        this.getDetailReq.userId = this.myaccount.userId;
+        this.getDetailReq = {itemId:this.itemId, userId:this.myaccount.userId }
         this.getDetailItem(this.getDetailReq);
 
         //적용
@@ -261,7 +269,7 @@ export default {
         ...mapState('categoryStore',['itemCategorys']),
     },
     methods:{
-        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem']),
+        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem','postFavoriteItemById','deleteFavoriteItemById']),
         ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions(['findMyAccount']),
 
@@ -338,7 +346,20 @@ export default {
         this.updateDetailItem(this.detailitem)
         this.isUpdateChecked = !this.isUpdateChecked;
         return this.isUpdateChecked;
-    }
+    },
+    clickFavorite(itemId, isFavorite){
+            this.favoriteReq = {userId: this.myaccount.userId, itemId:itemId}
+            
+            if(isFavorite){//좋아요 눌러져있으면
+                this.deleteFavoriteItemById(this.favoriteReq);
+            }
+            else{// 좋아요 안눌러져있으면
+                this.postFavoriteItemById(this.favoriteReq);
+            }
+            this.getDetailReq = {itemId:this.deleteReq, userId:this.myaccount.userId }
+            this.getDetailItem(this.getDetailReq);
+
+        }
     }
 }
 </script>

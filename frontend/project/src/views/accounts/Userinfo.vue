@@ -164,6 +164,13 @@
             <div class="col-4 mt-4" v-for="(item, idx) in favorititems" :key="idx">
                 <div class="forHover">
                     <div class="item-list-card shadow01">
+                         <div class="text-right"><b-img
+                            type="image"
+                            @click="clickFavorite(item.itemId,item.favorite)"
+                            style="cursor:pointer"
+                            :src= $favoriteImage(!item.favorite)
+                            class="mr-2 pr-1 pl-1 item-list-heart"
+                            ></b-img></div>
                            <b-img
                             type="image"
                             @click="goToDetail(item.itemId)"
@@ -255,6 +262,10 @@ export default {
       isSubmit: false,
       defaultPath: "icons8-male-user-90.png",
       serverPath: SERVER.IMAGE_STORE,
+      favoriteReq:{
+           itemId:"",
+           userId:"",
+       }
     };
   },
   created() {
@@ -292,7 +303,7 @@ export default {
   methods: {
     ...mapActions("accountStore",["updateUser","uploadImg","deleteUserImg"]),
     ...mapActions('categoryStore', ['fetchDepartmentCategory']),
-    ...mapActions('itemStore', ['getItemById','getFavoriteItemById']),
+    ...mapActions('itemStore', ['getItemById','getFavoriteItemById','postFavoriteItemById','deleteFavoriteItemById']),
     ...mapActions(['findMyAccount']),
 
     getItemImgUrl(idx){
@@ -371,7 +382,18 @@ export default {
         //alert(this.userUpdateData.empNum)
         this.updateUser(this.userUpdateData)
       }
-    }
+    },
+      clickFavorite(itemId, isFavorite){
+            this.favoriteReq = {userId: this.myaccount.userId, itemId:itemId}
+            
+            if(isFavorite){//좋아요 눌러져있으면
+                this.deleteFavoriteItemById(this.favoriteReq);
+            }
+            else{// 좋아요 안눌러져있으면
+                this.postFavoriteItemById(this.favoriteReq);
+            }
+            this.getFavoriteItemById(this.myaccount.userId);
+        }
   }
 }
 </script>
@@ -503,5 +525,11 @@ input[type="password"] {
     color: #2682ba;
     font-weight: bold;
     font-size:1.2rem;
+}
+
+
+.item-list-heart{
+    width: 2rem;
+    height: 2rem;
 }
 </style>

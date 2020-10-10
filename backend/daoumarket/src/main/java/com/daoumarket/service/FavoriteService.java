@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.daoumarket.dao.IFavoriteDao;
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.Favorite;
+import com.daoumarket.dto.FavoriteDeleteReq;
 import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemResponse;
 
@@ -42,11 +43,11 @@ public class FavoriteService implements IFavoriteService {
 	}
 
 	@Override
-	public ResponseEntity<BasicResponse> deleteFavorite(long favoriteId) {
+	public ResponseEntity<BasicResponse> deleteFavorite(FavoriteDeleteReq favorite) {
 		ResponseEntity<BasicResponse> responseEntity = null;
 		BasicResponse response = new BasicResponse();
 		
-		int res = favoriteDao.deleteFavorite(favoriteId);
+		int res = favoriteDao.deleteFavorite(favorite);
 		
 		if (res > 0) {
 			response.isSuccess = true;

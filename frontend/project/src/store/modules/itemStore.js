@@ -234,7 +234,7 @@ const itemStore = {
         console.log(categoryListStr)
 
         axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
-            {params:{keyword : info.data.keyword, page : info.data.page}})
+            {params:{userId: info.data.userId, keyword : info.data.keyword, page : info.data.page}})
           .then(res => {
           console.log("after : patchItemByKeyword - " + res.data.data)
           
@@ -337,6 +337,73 @@ const itemStore = {
             })
           })
       },
+      patchPostFavoriteItemById({commit}, info){
+        console.log("before : patchPostFavoriteItemById - " + info.location)
+        console.log("before : patchPostFavoriteItemById - " + info.data)
+
+        axios.post(SERVER.URL + info.location,  info.data)
+          .then(res => {
+          console.log("after : patchPostFavoriteItemById - " + SERVER.URL + info.location)
+          
+            if(res.data.isSuccess){
+                console.log(commit)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'info',
+              title: err.response.data.message
+            })
+          })
+      },
+      patchDeleteFavoriteItemById({commit}, info){
+        console.log("before : patchDeleteFavoriteItemById - " + info.location)
+        console.log("before : patchDeleteFavoriteItemById - " + info.data)
+
+        axios.delete(SERVER.URL + info.location + "/" + info.data.itemId + "/" + info.data.userId)
+          .then(res => {
+          console.log("after : patchDeleteFavoriteItemById - " + SERVER.URL + info.location + "/" + info.data.itemId + "/" + info.data.userId)
+          
+            if(res.data.isSuccess){
+                console.log(commit)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'info',
+              title: err.response.data.message
+            })
+          })
+      },
+      
      
 
 
@@ -404,6 +471,23 @@ const itemStore = {
         console.log("getFavoriteItemById " + info.data)
         dispatch('patchFavoriteItemById',info)
     },
+    postFavoriteItemById({dispatch}, favorReq){
+      const info = {
+        data: favorReq,
+        location: SERVER.ROUTES.registerfavorite,
+        //to: '/board'
+     }
+    dispatch('patchPostFavoriteItemById',info)
+    }
+    ,
+    deleteFavoriteItemById({dispatch}, favorReq){
+      const info = {
+        data: favorReq,
+        location: SERVER.ROUTES.deletefavorite,
+        //to: '/board'
+     }
+    dispatch('patchDeleteFavoriteItemById',info)
+    }
 
   }
 }

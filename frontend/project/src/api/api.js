@@ -31,8 +31,11 @@ export default {
 
       //favorite
       getfavoriteitembyid:'/favorite',
+      registerfavorite:'/favorite',
+      deletefavorite:'/favorite',
 
       //rank
       getwriteranks:'/point/rank',
+      
     }
 }
