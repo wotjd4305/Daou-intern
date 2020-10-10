@@ -21,7 +21,6 @@ import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemSearchRequest;
 import com.daoumarket.dto.ItemUpdateRequest;
-import com.daoumarket.service.IImageService;
 import com.daoumarket.service.IItemService;
 
 import io.swagger.annotations.ApiOperation;

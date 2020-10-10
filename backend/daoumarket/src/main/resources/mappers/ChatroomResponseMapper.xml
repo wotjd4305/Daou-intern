@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chatroomResponse">
+
+	<select id="getChatroomInfo" parameterType="chatroomResponse" resultType="chatroomResponseEntity">
+		select
+		(select name from user where user_id=#{otherUserId}) as other_user_name,
+		(select image from user where user_id=#{otherUserId}) as other_user_image,
+		sub.recent_message,
+		sub.unread_message
+		from (
+			select
+				(select content from message where chatroom_id=#{chatroomId} order by send_time desc limit 1) as recent_message,
+				(select count(message_id) from message where chatroom_id=#{currUserId} and receiver_id=#{currUserId} and receive_time is null) as
+				unread_message
+			) as sub;
+	</select>
+
+</mapper>

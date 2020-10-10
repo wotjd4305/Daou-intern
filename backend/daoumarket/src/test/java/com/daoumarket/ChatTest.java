@@ -28,22 +28,4 @@ public class ChatTest {
 	@Autowired
 	private IChatroomDao chatroomDao;
 	
-	@Before
-	public void setUp() {
-		chatroom = ChatroomRequest.builder()
-				.itemId(itemId)
-				.sellerId(sellerId)
-				.buyerId(buyerId).build();
-	}
-	
-	@Test
-	public void getChatroomByUserId_userId로채팅방가져오기() {
-		
-		List<ChatroomResponse> chatList = chatroomDao.getJoinedRoomListByUserId(userId);
-		
-		assertEquals(0, chatList.size());
-	}
-	
-	
-	
 }
