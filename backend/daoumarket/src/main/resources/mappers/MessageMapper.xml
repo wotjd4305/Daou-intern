@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="message">
+
+	<insert id="insertMessage" parameterType="Message">
+		insert into message(chatroom_id, sender_id, receiver_id, content, send_time, receive_time)
+		values(#{chatroomId}, #{senderId}, #{receiverId}, #{content}, #{sendTime}, #{receiveTime})
+	</insert>
+
+	<update id="updateReadTime" parameterType="chatroomRequest">
+		update message
+		set receive_time = now()
+		where chatroom_id = #{chatroomId} and receiver_id = #{userId} and receive_time is null
+	</update>
+
+	<select id="getMessageByChatroomId" parameterType="messageRequest" resultType="Message">
+		select m.message_id, m.chatroom_id, m.sender_id, m.receiver_id, m.content, m.send_time, m.receive_time
+		from message m, (
+					select message_id
+					from message
+					where chatroom_id = #{chatroomId}
+					order by message_id desc
+					limit #{idx}, 10
+					) tmp
+		where m.message_id = tmp.message_id
+	</select>
+</mapper>

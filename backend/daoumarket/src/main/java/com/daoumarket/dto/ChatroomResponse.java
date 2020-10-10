@@ -1,34 +1,26 @@
 package com.daoumarket.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@NoArgsConstructor
 @Getter
+@ToString
 public class ChatroomResponse {
-	
-	private long chatroomId;
-	private long itemId;
-	private int sellerId;
-	private int buyerId;
-	private User otherInfo;
-	private String lastMessage;
-	private int unreadMessageCnt;
-	private LocalDateTime lastMessageDate;
-	
+	long chatroomId;
+	long currUserId;
+	long otherUserId;
+	ChatroomResponseEntity entity;
+
+	public void setEntity(ChatroomResponseEntity entity) {
+		this.entity = entity;
+	}
+
 	@Builder
-	public ChatroomResponse(long chatroomId, long itemId, int sellerId, int buyerId, User otherInfo, String lastMessage,
-			int unreadMessageCnt, LocalDateTime lastMessageDate) {
+	public ChatroomResponse(long chatroomId, long currUserId, long otherUserId, ChatroomResponseEntity entity) {
 		this.chatroomId = chatroomId;
-		this.itemId = itemId;
-		this.sellerId = sellerId;
-		this.buyerId = buyerId;
-		this.otherInfo = otherInfo;
-		this.lastMessage = lastMessage;
-		this.unreadMessageCnt = unreadMessageCnt;
-		this.lastMessageDate = lastMessageDate;
+		this.currUserId = currUserId;
+		this.otherUserId = otherUserId;
+		this.entity = entity;
 	}
 }
