@@ -52,15 +52,15 @@ export default new Vuex.Store({
             console.log("after : findMyAcount object.userId = " + res.data.data.userId)
             
             //만약 이미지가 없으면 기본 이미지
-            if(res.data.object.image == "null"){
+            if(res.data.data.image == "null"){
               console.log("after : findMyAcount 이미지가 없어요")
-              res.data.object.image = "icons8-male-user-90.png"
+              res.data.data.image = "icons8-male-user-90.png"
             }
 
-            commit('SET_MY_ACCOUNT', res.data.object)
+            commit('SET_MY_ACCOUNT', res.data.data)
         })
         .catch(err => 
-          console.log(err.response.object))
+          console.log(err.response.data))
     },
     logout({ commit }) {
       commit('SET_TOKEN', null)

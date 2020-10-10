@@ -119,6 +119,33 @@
     </div> 
     <!--/목록 창-->
 
+    <!-- 페이징 -->
+    <div>
+        <span v-if=!pages.prev> <b-img
+                                    v-bind:src="require('@/assets/img/icons8-chevron-left-26.png')"
+                                    @click="goToBoard()"
+                                    style="cursor:pointer"
+                                /> </span>
+        <span v-for="(pageNum, idx) in pageArray" :key="idx">
+           <b-button 
+            style="font-weight:bold;" 
+            class="ml-1 mr-2 shadow01 btn"
+            @click=clickPageNum(pageNum)
+            >
+                {{pageNum}}
+             </b-button>
+        </span>
+        <span v-if=!pages.next> <b-img
+                                    v-bind:src="require('@/assets/img/icons8-chevron-right-26.png')"
+                                    @click="goToBoard()"
+                                    style="cursor:pointer"
+                                />  </span>
+        
+
+    </div>
+    
+
+    <!--/ 페이징 -->
 
 
     <!-- 글작성 -->
@@ -153,7 +180,13 @@ export default {
        searchKeyReq:{
            category : [],
            keyword:"",
-       }
+           page:1,
+       },
+       searchAllReq:{
+           userId:"",
+           page:1,
+       },
+       pageArray:[],
       };
     },
     created(){
@@ -161,7 +194,11 @@ export default {
          //패치
         this.fetchItemCategory();
         this.findMyAccount();
-        this.getAllItem(this.myaccount.userId);
+        this.searchAllReq = {keyword:"", page:1, category:[]};
+        this.getItemByKeyword(this.searchAllReq);
+
+        //페이징 만들기
+        this.pageArray = this.makePaging(this.pages.startPage, this.pages.endPage);
         
         //적용
         this.categorys = this.itemCategorys;
@@ -173,7 +210,7 @@ export default {
     ,
     computed:{
         ...mapState('categoryStore',['itemCategorys']),
-        ...mapState('itemStore', ['searcheditems']),
+        ...mapState('itemStore', ['searcheditems','pages']),
         ...mapState(['myaccount']),
     },
     methods:{
@@ -181,6 +218,13 @@ export default {
           ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword']),
           ...mapActions(['findMyAccount']),
 
+        makePaging(startPage, endPage){
+            var arr = [];
+            for(var i =startPage; i<=endPage; i++){
+                arr.push(i);
+            }
+            return arr;
+        },
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
             if(this.searcheditems[idx].picture[0]){
@@ -201,8 +245,22 @@ export default {
 
             this.searchKeyReq.keyword = searchText;
             this.searchKeyReq.category = this.checkedNames
-            
+            this.searchKeyReq.page = 1;
+
             this.getItemByKeyword(this.searchKeyReq);
+
+            this.pageArray = this.makePaging(this.pages.startPage, this.pages.endPage);
+            
+        },
+        clickPageNum(pageNum){
+
+        
+            this.searchAllReq = {keyword:this.inputText, page:pageNum, category:this.checkedNames};    
+            
+            this.getItemByKeyword(this.searchAllReq);
+
+            this.pageArray = this.makePaging(this.pages.startPage, this.pages.endPage);
+            
         },
     },
 }

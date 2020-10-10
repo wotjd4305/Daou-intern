@@ -260,10 +260,9 @@ export default {
     
     //패치
     this.findMyAccount();
+    alert(this.myaccount.userId)
+    this.fetchAsync();
     this.fetchDepartmentCategory();
-    alert(this.myaccount.userId);
-    this.getItemById(this.myaccount.userId);
-    this.getFavoriteItemById(this.myaccount.userId);
  
     //this.checkPathNull();
    
@@ -293,6 +292,12 @@ export default {
     ...mapActions('itemStore', ['getItemById','getFavoriteItemById']),
     ...mapActions(['findMyAccount']),
 
+     async fetchAsync(){
+         await this.findMyAccount();
+         alert(this.myaccount.userId)
+         this.getItemById(this.myaccount.userId);
+         this.getFavoriteItemById(this.myaccount.userId);
+     },
     getImgUrl(serverPath){
       //alert(this.myaccount.image)
        return serverPath + this.myaccount.image;

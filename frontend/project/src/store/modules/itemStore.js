@@ -4,8 +4,7 @@ import Swal from 'sweetalert2'
 import router from '@/router'
 
 import createPersistedState from 'vuex-persistedstate';
-import { mapState } from 'vuex'
-
+import { mapActions, mapState } from 'vuex'
 
 // import cookies from 'vue-cookies'
 
@@ -19,6 +18,7 @@ const itemStore = {
     favorititems:null,
     searcheditems : null,
     detailitem : null,
+    pages:null,
   },
   computed:{
     ...mapState(['myaccount'])
@@ -26,6 +26,9 @@ const itemStore = {
   getters: {
     config: state =>
       ({ headers: { Authorization: `Token ${state.authToken}` } }),
+  },
+  methods:{
+    ...mapActions(['findMyAccount']),
   },
   mutations: {
 
@@ -40,6 +43,9 @@ const itemStore = {
      },
      SET_MY_FAVORITE_ITEMS(state, favorititems){
         state.favorititems= favorititems
+    },
+    SET_ITEMS_PAGE(state,pages){
+        state.pages= pages
     }
   },
   actions: {
@@ -104,7 +110,7 @@ const itemStore = {
     patchAllItem({commit}, info){
         console.log("before : patchAllItem - " + info.location)
         axios.get(SERVER.URL + info.location , 
-            {params:{userId:info.data}},
+            {params:{userId:info.data.userId, page:info.data.page}},
           )
           .then(res => {
           console.log("after : patchAllItem - " + res.data.status)
@@ -113,6 +119,7 @@ const itemStore = {
               
                 //상태 저장
                 commit("SET_ITEMS", res.data.data)
+                commit("SET_ITEMS_PAGE", res.data.pageMaker)
                 console.log(res.data.data)
                 console.log(commit)
                 router.push(info.to)
@@ -227,7 +234,7 @@ const itemStore = {
         console.log(categoryListStr)
 
         axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
-            {params:{keyword : info.data.keyword}})
+            {params:{keyword : info.data.keyword, page : info.data.page}})
           .then(res => {
           console.log("after : patchItemByKeyword - " + res.data.data)
           
@@ -294,13 +301,16 @@ const itemStore = {
           })
       },
      //내가 찜한 아이템 
-     patchFavoriteItemById({commit}, info){
+     async patchFavoriteItemById({commit}, info){
         console.log("before : patchFavoriteItemById - " + info.location)
         console.log("before : patchFavoriteItemById - " + info.data)
 
-        axios.get(SERVER.URL + info.location + "/" + info.data)
+        let temp = await this.findMyAccount();
+        alert("before : patchFavoriteItemById = 비동기 처리 : " + temp)
+
+        axios.get(SERVER.URL + info.location + "/" + temp)
           .then(res => {
-          console.log("after : patchFavoriteItemById - " + res.data.data)
+          console.log("after : patchFavoriteItemById - " + SERVER.URL + info.location + "/" + temp)
           
             if(res.data.isSuccess){
                 commit("SET_MY_FAVORITE_ITEMS", res.data.data)

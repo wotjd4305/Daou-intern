@@ -103,7 +103,7 @@ const accountStore = {
            })
            Toast.fire({
             icon: 'error',
-            title: err.response.message + "검색된 결과가 없습니다."
+            title: err.response.data.message
           })
         })
     },
@@ -116,7 +116,22 @@ const accountStore = {
         if(res.data.isSuccess){
             console.log(res.data.data)
             commit('SET_TOKEN', res.data.data, { root: true })
-            
+
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'success',
+              title: "유저 정보 수정 성공"
+            })
 
             router.push(info.to)
        }
