@@ -16,7 +16,7 @@
         </div>
 
         <!-- 로그인창 -->
-        <div class="col">
+        <div class="col shadow01 p-3">
           <h3 class="login-title">
             <strong>로그인</strong>
           </h3>
@@ -250,5 +250,8 @@ input[type="password"] {
 }
 .formatting {
   opacity: 0.9;
+}
+.shadow01 {
+    box-shadow: 1px 1px 3px 3px #2682ba55;
 }
 </style>

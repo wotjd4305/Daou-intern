@@ -1,6 +1,6 @@
 <template>
   <div class="background">
-    <div class="container p-1 mt-5 bg-light-ivory signup-form">
+    <div class="container p-5 mt-5 bg-light-ivory signup-form shadow01">
       <h3>회원가입</h3>
 
       <!--입력창 -->
@@ -213,7 +213,7 @@ export default {
       
       axios.get(SERVER.URL + SERVER.ROUTES.checkreduplication + "/" + info.data)
         .then ((res) => {
-          if(res.data.status){
+          if(res.data.isSuccess){
             alert(true)
             return(true)
           }
@@ -335,5 +335,7 @@ input[type="password"] {
 .custom-select{
   width:80%
 }
-
+.shadow01 {
+    box-shadow: 1px 1px 3px 3px #2682ba55;
+}
 </style>

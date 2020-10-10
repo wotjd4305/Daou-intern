@@ -7,6 +7,9 @@ import store from './store'
 //filter
 import "./filters"
 
+//공통함수
+import Common from "./common"
+
 //Time, Cookie
 import VueMoment from 'vue-moment'
 import VueCookies from 'vue-cookies'
@@ -16,15 +19,12 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-//JWT
-import VueJwtDecode from 'vue-jwt-decode'
-
 
 Vue.use(VueCookies)
 Vue.use(VueMoment)
 Vue.use(BootstrapVue)
 Vue.use(VueMoment)
-Vue.use(VueJwtDecode)
+Vue.use(Common)
 
 Vue.config.productionTip = false
 

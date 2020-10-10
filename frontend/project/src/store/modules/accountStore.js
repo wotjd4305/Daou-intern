@@ -103,7 +103,7 @@ const accountStore = {
            })
            Toast.fire({
             icon: 'error',
-            title: err.response.message + "검색된 결과가 없습니다."
+            title: err.response.data.message
           })
         })
     },
@@ -116,7 +116,22 @@ const accountStore = {
         if(res.data.isSuccess){
             console.log(res.data.data)
             commit('SET_TOKEN', res.data.data, { root: true })
-            
+
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'success',
+              title: "유저 정보 수정 성공"
+            })
 
             router.push(info.to)
        }
@@ -166,6 +181,8 @@ const accountStore = {
             
             alert("프로필 업로드 성공");
             commit('SET_MY_ACCOUNT', info.data, { root: true })
+            commit('SET_TOKEN', response.data.data,{ root: true })
+            
           } else {
             alert("프로필 업로드 실패");
           }
@@ -183,9 +200,11 @@ const accountStore = {
         .then((response) => {
           console.log(response);
           if (response.data.message == "삭제 성공") {
-            info.data.image = "icons8-male-user-90.png"
             alert("프로필 이미지 삭제 성공");
+            info.data.image = null;
             commit('SET_MY_ACCOUNT', info.data, { root: true })
+            commit('SET_TOKEN', response.data.data,{ root: true })
+            
           } else {
             alert("프로필 이미지 삭제 실패");
           }
@@ -197,7 +216,7 @@ const accountStore = {
     deleteUserImg({ dispatch }, accountData) {
       const info = {
         data: accountData,
-        location: SERVER.ROUTES.deleteuserimageA + "/" + accountData.id + SERVER.ROUTES.deleteuserimageB,
+        location: SERVER.ROUTES.deleteuserimageA + "/" + accountData.userId + SERVER.ROUTES.deleteuserimageB,
         //to: '/'
       }
       dispatch('patchDeleteProfile', info)

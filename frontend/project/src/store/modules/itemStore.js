@@ -4,8 +4,7 @@ import Swal from 'sweetalert2'
 import router from '@/router'
 
 import createPersistedState from 'vuex-persistedstate';
-import { mapState } from 'vuex'
-
+import { mapActions, mapState } from 'vuex'
 
 // import cookies from 'vue-cookies'
 
@@ -15,8 +14,11 @@ const itemStore = {
   ],
   namespaced: true,
   state: {
+    iditems:null,
+    favorititems:null,
     searcheditems : null,
     detailitem : null,
+    pages:null,
   },
   computed:{
     ...mapState(['myaccount'])
@@ -24,6 +26,9 @@ const itemStore = {
   getters: {
     config: state =>
       ({ headers: { Authorization: `Token ${state.authToken}` } }),
+  },
+  methods:{
+    ...mapActions(['findMyAccount']),
   },
   mutations: {
 
@@ -33,6 +38,15 @@ const itemStore = {
      SET_DETAIL_ITEMS(state, detailitem){
       state.detailitem = detailitem
     },
+     SET_MY_ITEMS(state, iditems){
+         state.iditems= iditems
+     },
+     SET_MY_FAVORITE_ITEMS(state, favorititems){
+        state.favorititems= favorititems
+    },
+    SET_ITEMS_PAGE(state,pages){
+        state.pages= pages
+    }
   },
   actions: {
     
@@ -96,7 +110,7 @@ const itemStore = {
     patchAllItem({commit}, info){
         console.log("before : patchAllItem - " + info.location)
         axios.get(SERVER.URL + info.location , 
-            {params:{userId:info.data}},
+            {params:{userId:info.data.userId, page:info.data.page}},
           )
           .then(res => {
           console.log("after : patchAllItem - " + res.data.status)
@@ -105,6 +119,7 @@ const itemStore = {
               
                 //상태 저장
                 commit("SET_ITEMS", res.data.data)
+                commit("SET_ITEMS_PAGE", res.data.pageMaker)
                 console.log(res.data.data)
                 console.log(commit)
                 router.push(info.to)
@@ -212,13 +227,57 @@ const itemStore = {
         console.log("before : patchItemByKeyword - " + info.location)
         console.log("before : patchItemByKeyword - " + info.data.keyword)
 
-        axios.get(SERVER.URL + info.location ,
-            {params:{category: info.data.category, keyword : info.data.keyword}})
+        let categoryListStr ="";
+        for(var i=0; i<info.data.category.length; i++){
+            categoryListStr = categoryListStr + "category=" + info.data.category[i]  +"&"
+        }
+        console.log(categoryListStr)
+
+        axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
+            {params:{keyword : info.data.keyword, page : info.data.page}})
           .then(res => {
           console.log("after : patchItemByKeyword - " + res.data.data)
           
-            if(res.data.status){
-                commit("SET_ITEMS", info.data.object)
+            if(res.data.isSuccess){
+                commit("SET_ITEMS", res.data.data)
+                commit("SET_ITEMS_PAGE", res.data.pageMaker)
+                console.log(commit)
+                console.log("after : patchItemByKeyword - " + res.data.pageMaker.endPage)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'info',
+              title: err.response.data.message
+            })
+          })
+      },
+      //내가 등록한 아이템 
+      patchItemById({commit}, info){
+        console.log("before : patchItemById - " + info.location)
+        console.log("before : patchItemById - " + info.data)
+
+        axios.get(SERVER.URL + info.location,
+            {params:{userId : info.data.userId}})
+          .then(res => {
+          console.log("after : patchItemById - " + res.data.data)
+          
+            if(res.data.isSuccess){
+                commit("SET_MY_ITEMS", res.data.data)
                 console.log(commit)
            }
            else{
@@ -238,8 +297,43 @@ const itemStore = {
                 }
              })
              Toast.fire({
-              icon: 'error',
-              title: err.response.data
+              icon: 'info',
+              title: err.response.data.message
+            })
+          })
+      },
+     //내가 찜한 아이템 
+    patchFavoriteItemById({commit}, info){
+        console.log("before : patchFavoriteItemById - " + info.location)
+        console.log("before : patchFavoriteItemById - " + info.data)
+
+        axios.get(SERVER.URL + info.location + "/" + info.data)
+          .then(res => {
+          console.log("after : patchFavoriteItemById - " + SERVER.URL + info.location + "/" + info.data)
+          
+            if(res.data.isSuccess){
+                commit("SET_MY_FAVORITE_ITEMS", res.data.data)
+                console.log(commit)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'info',
+              title: err.response.data.message
             })
           })
       },
@@ -292,6 +386,25 @@ const itemStore = {
          
         dispatch('patchItemByKeyword',info)
     },
+    getItemById({dispatch}, idReq){
+        const info = {
+            data: idReq,
+            location: SERVER.ROUTES.getitembyidA +idReq +SERVER.ROUTES.getitembyidB,
+            //to: '/board'
+         }
+        console.log("ㅇㅇ" + info.location)
+        dispatch('patchItemById',info)
+    },
+    getFavoriteItemById({dispatch}, idReq){
+        const info = {
+            data: idReq,
+            location: SERVER.ROUTES.getfavoriteitembyid,
+            //to: '/board'
+         }
+        console.log("getFavoriteItemById " + info.data)
+        dispatch('patchFavoriteItemById',info)
+    },
+
   }
 }
 

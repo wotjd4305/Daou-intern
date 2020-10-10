@@ -48,11 +48,13 @@
                 autofocus
                 title="검색"
                 v-model="inputText"
-                @click="clickSearchByKeyword(inputText)"
+                key
+                v-on:keyup.enter="clickSearchByKeyword(inputText)"
                 class="search_top_text "
                 />
                 
-                <button class=" btn ml-1 search-button" >검색</button>
+                <button 
+                @click="clickSearchByKeyword(inputText)" class=" btn ml-1 search-button" >검색</button>
             </div>
           </div>
     <!--/검색 창 -->
@@ -117,6 +119,33 @@
     </div> 
     <!--/목록 창-->
 
+    <!-- 페이징 -->
+    <div>
+        <span v-if=pages.prev> <b-img
+                                    v-bind:src="require('@/assets/img/icons8-chevron-left-26.png')"
+                                    @click="clickPageNum(pages.startPage-5)"
+                                    style="cursor:pointer"
+                                /> </span>
+        <span v-for="(pageNum, idx) in pageArray" :key="idx">
+           <b-button 
+            style="font-weight:bold;" 
+            class="ml-1 mr-2 shadow01 btn"
+            @click=clickPageNum(pageNum)
+            >
+                {{pageNum}}
+             </b-button>
+        </span>
+        <span v-if=pages.next> <b-img
+                                    v-bind:src="require('@/assets/img/icons8-chevron-right-26.png')"
+                                    @click="clickPageNum(pages.endPage+1)"
+                                    style="cursor:pointer"
+                                />  </span>
+        
+
+    </div>
+    
+
+    <!--/ 페이징 -->
 
 
     <!-- 글작성 -->
@@ -138,7 +167,10 @@ import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 
 export default {
-    
+    name:"Board",
+    props:
+        ["searchtextparam"]
+    ,
     data: () => {
     return {
       categorys: [],
@@ -148,18 +180,35 @@ export default {
 
        serverPath:"",
        inputText:"",
-       searchKeyReq:{
-           category : [],
+       searchAllReq:{
            keyword:"",
-       }
+           page:1,
+           category:[]
+       },
+       pageArray:[],
+       
       };
     },
+      watch: {
+    pages: {
+      deep: true,
+      handler() {
+        this.makePaging(this.pages.startPage, this.pages.endPage);
+    
+      }
+    }
+  },
     created(){
 
          //패치
         this.fetchItemCategory();
         this.findMyAccount();
-        this.getAllItem(this.myaccount.userId);
+        
+        this.searchAllReq = {keyword:this.inputText, page:1, category:[]};
+        this.getItemByKeyword(this.searchAllReq);
+
+        //페이징 만들기
+        this.makePaging(this.pages.startPage, this.pages.endPage);
         
         //적용
         this.categorys = this.itemCategorys;
@@ -167,18 +216,27 @@ export default {
         this.serverPath = SERVER.IMAGE_STORE,
         this.dateFormat = "YYYY-MM-DD hh-mm-ss";
 
-    }
-    ,
+    },
+    
     computed:{
         ...mapState('categoryStore',['itemCategorys']),
-        ...mapState('itemStore', ['searcheditems']),
+        ...mapState('itemStore', ['searcheditems','pages']),
         ...mapState(['myaccount']),
+        
     },
     methods:{
           ...mapActions('categoryStore', ['fetchItemCategory']),
           ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword']),
           ...mapActions(['findMyAccount']),
 
+    
+
+         makePaging(startPage, endPage){
+            this.pageArray = [];
+            for(var i =startPage; i<=endPage; i++){
+                this.pageArray.push(i);
+            }
+        },
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
             if(this.searcheditems[idx].picture[0]){
@@ -197,10 +255,19 @@ export default {
         //클릭
         clickSearchByKeyword(searchText){
 
-            this.searchKeyReq.keyword = searchText;
-            this.searchKeyReq.category = this.checkedNames
+            this.searchAllReq = {keyword:searchText, page:1, category:this.checkedNames};                
+
+            this.getItemByKeyword(this.searchAllReq);
             
-            this.getItemByKeyword(this.searchKeyReq);
+        },
+         clickPageNum(pageNum){
+
+        
+            this.searchAllReq = {keyword:this.inputText, page:pageNum, category:this.checkedNames};    
+            
+             this.getItemByKeyword(this.searchAllReq);
+
+            
         },
     },
 }
@@ -264,7 +331,7 @@ export default {
 
 }
 .item-list-image{
-    width: 11rem;
+    width: 100%;
     height: 11rem;
 }
 

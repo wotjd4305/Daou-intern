@@ -7,7 +7,8 @@
             <div class="row">
                 <div class="col text-left align-self-center write-title" style="display:block">
                     <div class="mt-3" style="margin-left:10% ">
-                       <span> <b-img
+                       <span> 
+                           <b-img
                                     v-bind:src="require('@/assets/img/icons8-chevron-left-48.png')"
                                     class="write-left-btn"
                                     @click="goToBoard()"
@@ -177,6 +178,7 @@ export default {
        clickBoardWrite() {
 
             const formData = new FormData();
+            
             
             formData.append("category", this.boardWriteData.category);
             formData.append("content", this.boardWriteData.content);

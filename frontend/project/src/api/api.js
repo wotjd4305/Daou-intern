@@ -8,7 +8,7 @@ export default {
       signup: '/user',
       login: '/user/login',
       checkreduplication: '/user',
-      updateuser: '/user/edit',
+      updateuser: '/user',
       uploaduserimageA: '/user',
       uploaduserimageB: '/image',
       deleteuserimageA:'/user',
@@ -26,5 +26,13 @@ export default {
       updateitemstatus:'/item/:itemId/status',
       updateitem:'/item/info',
       getitembykeword:'/item/keyword',
+      getitembyidA:'/item/',
+      getitembyidB:'/list',
+
+      //favorite
+      getfavoriteitembyid:'/favorite',
+
+      //rank
+      getwriteranks:'/point/rank',
     }
 }

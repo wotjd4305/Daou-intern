@@ -33,7 +33,7 @@ public class ImageDao implements IImageDao {
 	}
 
 	@Override
-	public int deleteUserImage(long id) {
+	public int deleteUserImage(int id) {
 		return sqlSession.update(ns + "deleteUserImage", id);
 	}
 	

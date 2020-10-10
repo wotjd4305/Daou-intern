@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 검색 창 -->
-    <div class="container">
+    <!-- <div class="container">
         <div class="row align-self-center" style="display:block">
           
             <div class="col align-self-center">
@@ -26,7 +26,7 @@
                 <button class=" btn ml-1 search-button" >검색</button>
             </div>
           </div>
-    </div>
+    </div> -->
     <!--/검색 창 -->
 
 
@@ -284,9 +284,6 @@ export default {
             }
             return this.serverPath + "no-image-icon-23487.png" 
         },
-    searchA(text){
-        alert(text);
-    },
 
      deleteDetailItem(itemId){
 
