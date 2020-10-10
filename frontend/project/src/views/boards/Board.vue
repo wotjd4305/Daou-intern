@@ -64,14 +64,24 @@
      <div class="container ">
         <div class="row ">
             <div class="col-3 mt-4" v-for="(item, idx) in searcheditems" :key="idx">
+                
                 <div class="forHover">
+
                     <div class="item-list-card shadow01">
+                        <div class="text-right"><b-img
+                            type="image"
+                            @click="goToDetail(item.itemId)"
+                            style="cursor:pointer"
+                            :src= $favoriteImage(item.favorite)
+                            class="mr-2 pr-1 pl-1 item-list-heart"
+                            ></b-img></div>
+
                            <b-img
                             type="image"
                             @click="goToDetail(item.itemId)"
                             style="cursor:pointer"
                             :src= getImgUrl(idx)
-                            class="mt-3 mb-2 pr-1 pl-1 item-list-image"
+                            class="mt-1 mb-2 pr-1 pl-1 item-list-image"
                             ></b-img>
                         <div class="row" style="display:block;">
                             <div class="ml-4 pl-2 text-left">
@@ -333,6 +343,10 @@ export default {
 .item-list-image{
     width: 100%;
     height: 11rem;
+}
+.item-list-heart{
+    width: 2rem;
+    height: 2rem;
 }
 
 
