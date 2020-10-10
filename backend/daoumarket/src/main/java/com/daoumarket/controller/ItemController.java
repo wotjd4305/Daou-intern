@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemInsertRequest;
 import com.daoumarket.dto.ItemSearchRequest;
 import com.daoumarket.dto.ItemUpdateRequest;
+import com.daoumarket.service.IImageService;
 import com.daoumarket.service.IItemService;
 
 import io.swagger.annotations.ApiOperation;
@@ -49,17 +51,9 @@ public class ItemController {
 	
 	@PostMapping(path = "/item", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ApiOperation("물건 등록")
-	public ResponseEntity<BasicResponse> insertItem(@RequestParam int userId, @RequestParam String title, @RequestParam int price,
-													@RequestParam String category, @RequestParam String content,
+	public ResponseEntity<BasicResponse> insertItem(@ModelAttribute ItemInsertRequest item,
 													@RequestPart(required = false) MultipartFile[] images) {
 		log.info("ItemController : insertItem");
-		
-		ItemInsertRequest item = ItemInsertRequest.builder()
-				.userId(userId)
-				.title(title)
-				.price(price)
-				.category(category)
-				.content(content).build();
 		
 		return itemService.insertItem(item, images);
 	}
@@ -116,7 +110,7 @@ public class ItemController {
 	@ApiOperation("키워드 물건 가져오기")
 	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam String keyword,
 															@RequestParam int page) {
-		log.info("ItemController : getItemsByKeyword");
+//		log.info("ItemController : getItemsByKeyword");
 		
 		ItemSearchRequest search = ItemSearchRequest.builder()
 				.category(category)

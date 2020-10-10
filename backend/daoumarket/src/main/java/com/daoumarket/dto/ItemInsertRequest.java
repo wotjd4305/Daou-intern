@@ -3,9 +3,13 @@ package com.daoumarket.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
+@Setter
+@ToString
 public class ItemInsertRequest {
 	
 	private long itemId;
@@ -24,4 +28,6 @@ public class ItemInsertRequest {
 		this.category = category;
 		this.content = content;
 	}
+	
+	
 }

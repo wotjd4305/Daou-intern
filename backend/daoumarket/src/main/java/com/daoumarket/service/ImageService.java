@@ -3,7 +3,9 @@ package com.daoumarket.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -35,9 +37,15 @@ public class ImageService implements IImageService {
 	private final IUserDao userDao;
 	private final IJWTService jwtService;
 	
+	private static final HashSet<String> imageExtention = new HashSet<>(Arrays.asList("jpg", "jpeg", "png", "gif", "bmp"));
+	
 	@Transactional
 	@Override
     public int insertItemImage(MultipartFile[] images, long itemId) { // 물건 이미지 업로드
+		
+		if(!isSuccessUpload(images)) {
+			return 0;
+		}
 		
 		String[] picture = new String[images.length];
 		
@@ -73,9 +81,15 @@ public class ImageService implements IImageService {
 	@Transactional
     @Override
 	public ResponseEntity<BasicResponse> updateUserImage(MultipartFile image, int userId) { // 유저 이미지 업로드
-    	
+		
 		BasicResponse response = new BasicResponse();
 		
+		if(!isSuccessUpload(image)) {
+			log.error("파일 확장자가 이미지가 아니거나, 업로드 할 수 없는 크기입니다.");
+			response.message = "파일 확장자가 이미지가 아니거나, 업로드 할 수 없는 크기입니다.";
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+    	
     	String imageName = image.getOriginalFilename();
 		String imageExtension = FilenameUtils.getExtension(imageName).toLowerCase();
 		File destinationImage;
@@ -136,4 +150,19 @@ public class ImageService implements IImageService {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Override
+	public boolean isSuccessUpload(MultipartFile... image) {
+		
+		for (int i = 0; i < image.length; i++) {
+			String nowExtention = FilenameUtils.getExtension(image[i].getOriginalFilename()).toLowerCase();
+			
+			if(!imageExtention.contains(nowExtention))
+				return false;
+			
+			if(image[i].getSize() == 0 || image[i].getSize() > 5242880)
+				return false;
+		}
+		
+		return true;
+	}
 }

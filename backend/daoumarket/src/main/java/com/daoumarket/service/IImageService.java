@@ -11,4 +11,5 @@ public interface IImageService {
 	public ResponseEntity<BasicResponse> updateUserImage(MultipartFile image, int userId);
 	public void setItemImages(ItemResponse item);
 	public ResponseEntity<BasicResponse> deleteUserImage(int userId);
+	boolean isSuccessUpload(MultipartFile... image);
 }

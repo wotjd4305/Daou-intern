@@ -48,14 +48,14 @@ function onError(error) {
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
-    if(messageContent.length > 0 && stompClient) {
+    if(messageContent.length > 0 && stompClient != null) {
         var chatMessage = {
-            chatroomId : chatroom,
-            senderId : sender,
-            receiverId : receiver,
-            content : messageContent.value,
+            chatroomId: chatroom,
+            senderId: sender,
+            receiverId: receiver,
+            content: messageInput.value,
             sendTime : new Date(),
-            receiveTime : null
+            receiveTime : null,
         };
         stompClient.send("/pub/message", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
@@ -80,7 +80,6 @@ function onMessageReceived(payload) {
         var usernameText = document.createTextNode(message.senderId);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
-    
 
         var textElement = document.createElement('p');
         var messageText = document.createTextNode(message.content);
