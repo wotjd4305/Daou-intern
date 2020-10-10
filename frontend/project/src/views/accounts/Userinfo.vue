@@ -24,7 +24,7 @@
                       class="profileImg headerProfile"
                       ref="uploadItemImage"
                       id="uploadImagdId"
-                      :src= getImgUrl(serverPath)
+                      :src= this.$commonUserImage(this.myaccount.image)
                       accept="image/jpeg, jpg, png/"
                       style="width: 10rem; height: 10rem;"
                     />
@@ -97,7 +97,7 @@
       <!-- 작성 목록 창-->
      <div class="container ">
         <div class="row ">
-            <div class="col-3 mt-4" v-for="(item, idx) in iditems" :key="idx">
+            <div class="col-4 mt-4" v-for="(item, idx) in iditems" :key="idx">
                 <div class="forHover">
                     <div class="item-list-card shadow01">
                            <b-img
@@ -161,14 +161,14 @@
     <!-- 찜 목록 창-->
      <div class="container ">
         <div class="row ">
-            <div class="col-3 mt-4" v-for="(item, idx) in favorititems" :key="idx">
+            <div class="col-4 mt-4" v-for="(item, idx) in favorititems" :key="idx">
                 <div class="forHover">
                     <div class="item-list-card shadow01">
                            <b-img
                             type="image"
                             @click="goToDetail(item.itemId)"
                             style="cursor:pointer"
-                            :src= getItemImgUrl(idx)
+                            :src= getFavoriteItemImgUrl(idx)
                             class="mt-3 mb-2 pr-1 pl-1 item-list-image"
                             ></b-img>
                         <div class="row" style="display:block;">
@@ -231,6 +231,9 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
+
+
+
 //import axios from 'axios'
 export default {
   name: 'Signup',
@@ -260,8 +263,8 @@ export default {
     
     //패치
     this.findMyAccount();
-    alert(this.myaccount.userId)
-    this.fetchAsync();
+    this.getItemById(this.myaccount.userId);
+    this.getFavoriteItemById(this.myaccount.userId);
     this.fetchDepartmentCategory();
  
     //this.checkPathNull();
@@ -292,21 +295,18 @@ export default {
     ...mapActions('itemStore', ['getItemById','getFavoriteItemById']),
     ...mapActions(['findMyAccount']),
 
-     async fetchAsync(){
-         await this.findMyAccount();
-         alert(this.myaccount.userId)
-         this.getItemById(this.myaccount.userId);
-         this.getFavoriteItemById(this.myaccount.userId);
-     },
-    getImgUrl(serverPath){
-      //alert(this.myaccount.image)
-       return serverPath + this.myaccount.image;
-      
-    },
     getItemImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
             if(this.iditems[idx].picture[0]){
                 return this.serverPath + this.iditems[idx].picture[0];
+            }
+            return this.serverPath + "no-image-icon-23487.png" 
+            
+      },
+    getFavoriteItemImgUrl(idx){
+            //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
+            if(this.favorititems[idx].picture[0]){
+                return this.serverPath + this.favorititems[idx].picture[0];
             }
             return this.serverPath + "no-image-icon-23487.png" 
             
@@ -347,6 +347,8 @@ export default {
 
       //myaccoount 갱신
       this.findMyAccount();
+      this.myaccount.image = null;
+
   },
     clickUploadImage(event){
       const formData = new FormData();
@@ -360,6 +362,9 @@ export default {
       //실패시 null..
       let itemImage = this.$refs.uploadItemImage; //img dom 접근
           itemImage.src = URL.createObjectURL(event.target.files[0]);
+
+      //myaccoount 갱신
+      this.findMyAccount();
     },
     clickUpdate() {
       if ( this.isSubmit ){
@@ -491,7 +496,7 @@ input[type="password"] {
 
 }
 .item-list-image{
-    width: 11rem;
+    width: 100%;
     height: 11rem;
 }
 .detail-title-text{

@@ -6,6 +6,7 @@ Vue.use(Vuex)
 import accountStore from '@/store/modules/accountStore'
 import categoryStore from '@/store/modules/categoryStore'
 import itemStore from '@/store/modules/itemStore'
+import rankStore from '@/store/modules/rankStore'
 
 import router from '@/router'
 import axios from 'axios'
@@ -96,5 +97,6 @@ export default new Vuex.Store({
     accountStore: accountStore,
     categoryStore: categoryStore,
     itemStore: itemStore,
+    rankStore: rankStore,
   }
 })

@@ -28,7 +28,8 @@ Vue.filter("calculateTime", (value) => {
   if(diffDay < 7){
       return parseInt(diffDay) + "일 전";
   }
-  return value;
+  var printTime = new Date();
+  return getFormatDate(printTime);
 });
 
 
@@ -41,3 +42,15 @@ Vue.filter("itemStatus", (status) => {
    return State.C
 });
 
+
+
+
+//날짜 계산
+function getFormatDate(date){
+  var year = date.getFullYear();              
+  var month = (1 + date.getMonth());         
+  month = month >= 10 ? month : '0' + month; 
+  var day = date.getDate();                  
+  day = day >= 10 ? day : '0' + day;          
+  return  year + '년' + month + '월' + day + '일';       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+}

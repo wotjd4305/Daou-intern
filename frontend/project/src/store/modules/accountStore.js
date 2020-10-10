@@ -181,6 +181,8 @@ const accountStore = {
             
             alert("프로필 업로드 성공");
             commit('SET_MY_ACCOUNT', info.data, { root: true })
+            commit('SET_TOKEN', response.data.data,{ root: true })
+            
           } else {
             alert("프로필 업로드 실패");
           }
@@ -198,9 +200,11 @@ const accountStore = {
         .then((response) => {
           console.log(response);
           if (response.data.message == "삭제 성공") {
-            info.data.image = "icons8-male-user-90.png"
             alert("프로필 이미지 삭제 성공");
+            info.data.image = null;
             commit('SET_MY_ACCOUNT', info.data, { root: true })
+            commit('SET_TOKEN', response.data.data,{ root: true })
+            
           } else {
             alert("프로필 이미지 삭제 실패");
           }
@@ -212,7 +216,7 @@ const accountStore = {
     deleteUserImg({ dispatch }, accountData) {
       const info = {
         data: accountData,
-        location: SERVER.ROUTES.deleteuserimageA + "/" + accountData.id + SERVER.ROUTES.deleteuserimageB,
+        location: SERVER.ROUTES.deleteuserimageA + "/" + accountData.userId + SERVER.ROUTES.deleteuserimageB,
         //to: '/'
       }
       dispatch('patchDeleteProfile', info)

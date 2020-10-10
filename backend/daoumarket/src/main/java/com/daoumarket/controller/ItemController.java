@@ -108,10 +108,10 @@ public class ItemController {
 	
 	@GetMapping("/item/keyword")
 	@ApiOperation("키워드 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam String keyword,
+	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam(required = false) String keyword,
 															@RequestParam int page) {
 //		log.info("ItemController : getItemsByKeyword");
-		
+		if(keyword == null) keyword = "";
 		ItemSearchRequest search = ItemSearchRequest.builder()
 				.category(category)
 				.keyword(keyword)

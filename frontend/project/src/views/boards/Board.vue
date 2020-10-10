@@ -121,9 +121,9 @@
 
     <!-- 페이징 -->
     <div>
-        <span v-if=!pages.prev> <b-img
+        <span v-if=pages.prev> <b-img
                                     v-bind:src="require('@/assets/img/icons8-chevron-left-26.png')"
-                                    @click="goToBoard()"
+                                    @click="clickPageNum(pages.startPage-5)"
                                     style="cursor:pointer"
                                 /> </span>
         <span v-for="(pageNum, idx) in pageArray" :key="idx">
@@ -135,9 +135,9 @@
                 {{pageNum}}
              </b-button>
         </span>
-        <span v-if=!pages.next> <b-img
+        <span v-if=pages.next> <b-img
                                     v-bind:src="require('@/assets/img/icons8-chevron-right-26.png')"
-                                    @click="goToBoard()"
+                                    @click="clickPageNum(pages.endPage+1)"
                                     style="cursor:pointer"
                                 />  </span>
         
@@ -167,7 +167,10 @@ import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 
 export default {
-    
+    name:"Board",
+    props:
+        ["searchtextparam"]
+    ,
     data: () => {
     return {
       categorys: [],
@@ -177,28 +180,35 @@ export default {
 
        serverPath:"",
        inputText:"",
-       searchKeyReq:{
-           category : [],
+       searchAllReq:{
            keyword:"",
            page:1,
-       },
-       searchAllReq:{
-           userId:"",
-           page:1,
+           category:[]
        },
        pageArray:[],
+       
       };
     },
+      watch: {
+    pages: {
+      deep: true,
+      handler() {
+        this.makePaging(this.pages.startPage, this.pages.endPage);
+    
+      }
+    }
+  },
     created(){
 
          //패치
         this.fetchItemCategory();
         this.findMyAccount();
-        this.searchAllReq = {keyword:"", page:1, category:[]};
+        
+        this.searchAllReq = {keyword:this.inputText, page:1, category:[]};
         this.getItemByKeyword(this.searchAllReq);
 
         //페이징 만들기
-        this.pageArray = this.makePaging(this.pages.startPage, this.pages.endPage);
+        this.makePaging(this.pages.startPage, this.pages.endPage);
         
         //적용
         this.categorys = this.itemCategorys;
@@ -206,24 +216,26 @@ export default {
         this.serverPath = SERVER.IMAGE_STORE,
         this.dateFormat = "YYYY-MM-DD hh-mm-ss";
 
-    }
-    ,
+    },
+    
     computed:{
         ...mapState('categoryStore',['itemCategorys']),
         ...mapState('itemStore', ['searcheditems','pages']),
         ...mapState(['myaccount']),
+        
     },
     methods:{
           ...mapActions('categoryStore', ['fetchItemCategory']),
           ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword']),
           ...mapActions(['findMyAccount']),
 
-        makePaging(startPage, endPage){
-            var arr = [];
+    
+
+         makePaging(startPage, endPage){
+            this.pageArray = [];
             for(var i =startPage; i<=endPage; i++){
-                arr.push(i);
+                this.pageArray.push(i);
             }
-            return arr;
         },
         getImgUrl(idx){
             //console.log(this.items[idx].id + " -- " + this.items[idx].picture)
@@ -243,23 +255,18 @@ export default {
         //클릭
         clickSearchByKeyword(searchText){
 
-            this.searchKeyReq.keyword = searchText;
-            this.searchKeyReq.category = this.checkedNames
-            this.searchKeyReq.page = 1;
+            this.searchAllReq = {keyword:searchText, page:1, category:this.checkedNames};                
 
-            this.getItemByKeyword(this.searchKeyReq);
-
-            this.pageArray = this.makePaging(this.pages.startPage, this.pages.endPage);
+            this.getItemByKeyword(this.searchAllReq);
             
         },
-        clickPageNum(pageNum){
+         clickPageNum(pageNum){
 
         
             this.searchAllReq = {keyword:this.inputText, page:pageNum, category:this.checkedNames};    
             
-            this.getItemByKeyword(this.searchAllReq);
+             this.getItemByKeyword(this.searchAllReq);
 
-            this.pageArray = this.makePaging(this.pages.startPage, this.pages.endPage);
             
         },
     },
@@ -324,7 +331,7 @@ export default {
 
 }
 .item-list-image{
-    width: 11rem;
+    width: 100%;
     height: 11rem;
 }
 

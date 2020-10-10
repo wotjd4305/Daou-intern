@@ -1,7 +1,7 @@
 <template>
   <!-- 검색 창 -->
     <div class="container">
-      <div>
+      <!-- <div>
         <form
           class="fleft"
           name="topSearchForm"
@@ -12,15 +12,14 @@
           <div class="search-input">
             <b-img
               type="image"
-              @click="searchA(search_input_text)"
               style="cursor:pointer"
               v-bind:src="require(`@/assets/img/icons8-search-120.png`)"
               width="25px"
             ></b-img>
             <input
               type="text"
-              placeholder="물건 혹은 카테고리"
-              v-on:keyup.enter="searchA(search_input_text)"
+              placeholder="물건명"
+              v-on:keyup.enter="clickParamSearch(search_input_text)"
               v-model="search_input_text"
               value
               autocomplete="off"
@@ -29,7 +28,7 @@
               class="search_top_text"
             />
             
-            <button class="ml-1 btn search-button"  >검색</button>
+            <button @click="clickParamSearch(search_input_text)" class="ml-1 btn search-button"  >검색</button>
             
           </div>
         </form>
@@ -39,7 +38,7 @@
           <div class="col-5"  style="float : none; margin: 0 auto;">
             <hr class="featurette-divider" />
           </div>
-      </div>
+      </div> -->
       <!--/ 검색 창 -->
 
       <!-- 이달의 다우인 -->
@@ -50,72 +49,26 @@
             </div>
         </div>
         
-        <div class ="row m-auto prize-list-row">
+        <div v-for="(prizeMember, idx) in ranks" :key="idx" class ="row m-auto prize-list-row">
             <div class="col-2">
                 <img
                 class=""
-                src="@/assets/img/icons8-gold-medal-48.png"
+                :src= $commonUserImage(prizeImg[idx])
                 style="width: 2rem; height: 2rem;"
                 />
             </div>
             <div class="col-2 ml-auto">
                 <img
                 class="headerProfile mr-2"
-                :src="prizeProfileImgsrc"
+                :src= $commonUserImage(prizeMember.image)
                 style="width: 2.5rem; height: 2.5rem;"
                 />
             </div>
             <div class="col-5 prize-name align-self-center">
-                박재성 인턴
+                {{prizeMember.name}}
             </div>
             <div class="col-3 prize-pointer align-self-center">
-                100 Pt
-            </div>
-        </div>
-    
-        <div class ="row m-auto prize-list-row">
-            <div class="col-2">
-                <img
-                class=""
-                src="@/assets/img/icons8-silver-medal-48.png"
-                style="width: 2rem; height: 2rem;"
-                />
-            </div>
-            <div class="col-2 ml-auto">
-                <img
-                class="headerProfile mr-2"
-                :src="prizeProfileImgsrc"
-                style="width: 2.5rem; height: 2.5rem;"
-                />
-            </div>
-            <div class="col-5 prize-name align-self-center">
-                최떙땡 인턴
-            </div>
-            <div class="col-3 prize-pointer align-self-center">
-                90 Pt
-            </div>
-        </div>
-
-        <div class ="row m-auto prize-list-row">
-            <div class="col-2">
-                <img
-                class=""
-                src="@/assets/img/icons8-bronze-medal-48.png"
-                style="width: 2rem; height: 2rem;"
-                />
-            </div>
-            <div class="col-2 ml-auto">
-                <img
-                class="headerProfile mr-2"
-                :src="prizeProfileImgsrc"
-                style="width: 2.5rem; height: 2.5rem;"
-                />
-            </div>
-            <div class="col-5 prize-name align-self-center">
-                김땡땡 인턴
-            </div>
-            <div class="col-3 prize-pointer align-self-center">
-                30 Pt
+                {{prizeMember.total}} Pt
             </div>
         </div>
     
@@ -129,7 +82,7 @@
     <!-- 3D 캐러셀 -->
     <div class="mt-5">
         <carousel-3d  :width="450" :height="400">
-            <div v-for="(num, i) in slidesLength" :key="i">
+            <div v-for="(item, i) in searcheditems" :key="i">
             <slide class="shadow01" id="carousel_card" :index="i">
                 <!-- 이미지 사원설명 제품명 가격 -->
                 <div class="item-card">
@@ -137,7 +90,7 @@
                     <div class="row item-list-row-2 p-3 pl-5 pr-5">
                          <img
                             class="item-list-img"
-                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg"
+                            :src= getImgUrl(i)
                             
                             />
                     </div>
@@ -149,7 +102,7 @@
                             <div>
                                 <img
                                 class="headerProfile"
-                                :src="prizeProfileImgsrc"
+                                :src= $commonUserImage(item.user.image)
                                 style="width: 2.5rem; height: 2.5rem;"      
                                 />
                             </div>
@@ -164,19 +117,19 @@
                         <div class="col-5 align-self-center">
                              <div class="item-list-profile-text">
                                  <div>
-                                    김사원 사원
+                                    {{item.user.name}}
                                  </div>
                             </div>
                              <div class="item-list-product-text align-self-center">
-                                    나들이 꽃나들
+                                    {{item.title}}
                             </div>
                              <div class=" item-list-price-text align-self-center">
-                                    10,300
+                                     {{ item.price | comma}}
                             </div>
                         </div>
                          <div class="col-4 align-self-center">
                                  <div class="item-list-detail-btn">
-                                    <button class="btn btn-info"  @click="goToDetail">상세보기</button>
+                                    <button class="btn btn-info"  @click="goToDetail(item.itemId)">상세보기</button>
                                 </div>
                         </div>
 
@@ -209,6 +162,8 @@
 <script>
 import { Carousel3d, Slide } from "vue-carousel-3d";
 import { mapActions, mapState } from "vuex";
+
+import SERVER from '@/api/api';
 //import axios from "axios";
 
 export default {
@@ -221,23 +176,48 @@ export default {
       slidesLength: 10,
       prizeProfileImgsrc:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
       search_input_text:"",
+      searchAllReq:{
+           page:1,
+           userId:"",
+       },
+          //이미지 주소
+      serverPath : SERVER.IMAGE_STORE,
+
+      //메달 이미지
+      prizeImg:['icons8-gold-medal-48.png'
+      ,'icons8-silver-medal-48.png',
+      'icons8-bronze-medal-48.png']
+
    };
   },
   created() {
     this.findMyAccount();
+    this.getAllItem(this.searchAllReq={page:1, userId:this.myaccount.userId});
+    this.getWriteRank();
   },
   computed:{
       ...mapState(["myaccount"]),
+      ...mapState('itemStore', ['searcheditems']),
+      ...mapState('rankStore',['ranks']),
   },
   methods: {
        ...mapActions(['findMyAccount']),
+       ...mapActions('itemStore', ['getAllItem']),
+       ...mapActions('rankStore',['getWriteRank']),
+       
     
-      goToDetail(){
-            this.$router.push({ path: "/board/detail" });
+        goToDetail(itemId){
+             this.$router.push({path: `/board/detail/${itemId}`})
         },
-      searchA(text){
-        console.log(text)
-      }
+      clickParamSearch(text){
+        this.$router.push({name: 'Board', params: {searchtextparam: text}})
+      },
+       getImgUrl(idx){
+            if(this.searcheditems[idx].picture[0]){
+                return this.serverPath +this.searcheditems[idx].picture[0];
+            }
+            return this.serverPath + "no-image-icon-23487.png" 
+        },
   }
 };
 </script>

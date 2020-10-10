@@ -240,7 +240,9 @@ const itemStore = {
           
             if(res.data.isSuccess){
                 commit("SET_ITEMS", res.data.data)
+                commit("SET_ITEMS_PAGE", res.data.pageMaker)
                 console.log(commit)
+                console.log("after : patchItemByKeyword - " + res.data.pageMaker.endPage)
            }
            else{
              alert("에러")
@@ -301,16 +303,13 @@ const itemStore = {
           })
       },
      //내가 찜한 아이템 
-     async patchFavoriteItemById({commit}, info){
+    patchFavoriteItemById({commit}, info){
         console.log("before : patchFavoriteItemById - " + info.location)
         console.log("before : patchFavoriteItemById - " + info.data)
 
-        let temp = await this.findMyAccount();
-        alert("before : patchFavoriteItemById = 비동기 처리 : " + temp)
-
-        axios.get(SERVER.URL + info.location + "/" + temp)
+        axios.get(SERVER.URL + info.location + "/" + info.data)
           .then(res => {
-          console.log("after : patchFavoriteItemById - " + SERVER.URL + info.location + "/" + temp)
+          console.log("after : patchFavoriteItemById - " + SERVER.URL + info.location + "/" + info.data)
           
             if(res.data.isSuccess){
                 commit("SET_MY_FAVORITE_ITEMS", res.data.data)

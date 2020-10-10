@@ -28,6 +28,11 @@ export default {
       getitembykeword:'/item/keyword',
       getitembyidA:'/item/',
       getitembyidB:'/list',
-      getfavoriteitembyid:'/item',
+
+      //favorite
+      getfavoriteitembyid:'/favorite',
+
+      //rank
+      getwriteranks:'/point/rank',
     }
 }
