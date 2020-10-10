@@ -206,8 +206,6 @@ public class ItemService implements IItemService {
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		
-		long start = System.currentTimeMillis();
-		
 		if(search.getCategory() == null) { // 카테고리가 선택되어 있지 않은 경우
 			List<ItemResponse> items = itemDao.getItemsByKeyword(search);
 			if(!items.isEmpty()) {
@@ -220,11 +218,6 @@ public class ItemService implements IItemService {
 				response.message = "물건 가져오기 성공";
 				response.data = items;
 				response.pageMaker = pageMaker;
-				
-				long end = System.currentTimeMillis();
-				
-				System.out.println((end - start) + "/ms");
-				
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			response.message = "물건이 존재하지 않음";

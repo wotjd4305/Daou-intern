@@ -66,30 +66,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getItemsByCategory" parameterType="itemSearchRequest" resultMap="itemResponse">
 		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
-		from item i, user u
-		where (i.user_id = u.user_id and i.delflag = 0) and (category in 
-		<foreach collection="category" item="cate" open="(" separator=", " close=")">
-		 	#{cate}
-		</foreach>)
-		order by i.date desc
+		from user u, item i, (
+				select item_id
+                from item
+                where delflag = 0 and (category in 
+				<foreach collection="category" item="cate" open="(" separator=", " close=")">
+		 			#{cate}
+				</foreach>)
+                order by date desc limit #{cri.pageStart}, #{cri.perPageNum}) tmp
+		where i.item_id = tmp.item_id and (i.user_id = u.user_id);
 	</select>
 	
 	<select id="getItemsByKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
 		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
-		from item i, user u
-		where (i.user_id = u.user_id and i.delflag = 0) and title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')
-		order by i.date desc
+		from user u, item i, (
+				select item_id
+                from item
+                where (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')) and delflag = 0
+                order by date desc limit #{cri.pageStart}, #{cri.perPageNum}) tmp
+		where i.item_id = tmp.item_id and u.user_id = i.user_id
 	</select>
 	
 	<select id="getItemsByCategoryAndKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
 		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date, u.name, u.image
-		from item i, user u
-		where (i.user_id = u.user_id and i.delflag = 0) and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
-		and (category in
-		<foreach collection="category" item="cate" open="(" separator=", " close=")">
-		 	#{cate}
-		</foreach>)
-		order by i.date desc
+		from user u, item i, (
+				select item_id
+                from item
+                where (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')) and delflag = 0
+                and (category in
+                <foreach collection="category" item="cate" open="(" separator=", " close=")">
+					#{cate}
+				</foreach>)
+                order by date desc limit #{cri.pageStart}, #{cri.perPageNum}) tmp
+		where i.item_id = tmp.item_id and u.user_id = i.user_id
 	</select>
 	
 	<select id="getItemsByUserId" parameterType="long" resultMap="itemResponse">
@@ -97,6 +106,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from item i, user u
 		where i.user_id = u.user_id and i.delflag = 0 and i.user_id=#{userId}
 		order by i.date desc
+	</select>
+	
+	<select id="getAllItemsCount" resultType="int">
+		select count(*) from item
+		where delflag = 0;
+	</select>
+	
+	<select id="getItemsByCategoryCount" resultType="int">
+		select count(*)
+		from item i, user u
+		where (i.user_id = u.user_id and i.delflag = 0) and (category in 
+		<foreach collection="category" item="cate" open="(" separator=", " close=")">
+		 	#{cate}
+		</foreach>)
+	</select>
+	
+	<select id="getItemsByKeywordCount" resultType="int">
+		select count(*)
+		from item i, user u
+		where (i.user_id = u.user_id and i.delflag = 0) and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
+	</select>
+	
+	<select id="getItemsByCategoryAndKeywordCount" resultType="int">
+		select count(*)
+		from item i, user u
+		where (i.user_id = u.user_id and i.delflag = 0) and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
+		and (category in
+		<foreach collection="category" item="cate" open="(" separator=", " close=")">
+		 	#{cate}
+		</foreach>)
 	</select>
 	
 </mapper>
