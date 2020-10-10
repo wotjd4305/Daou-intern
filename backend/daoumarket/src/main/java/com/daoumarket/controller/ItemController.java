@@ -95,11 +95,12 @@ public class ItemController {
 	
 	@GetMapping("/item/category")
 	@ApiOperation("선택된 카테고리의 물건 가져오기")
-	public ResponseEntity<BasicResponse> getItemsByCategory(@RequestParam String[] category, @RequestParam int page) {
+	public ResponseEntity<BasicResponse> getItemsByCategory(@RequestParam String[] category, @RequestParam int userId, @RequestParam int page) {
 		log.info("ItemController : getItemsByCategory");
 		
 		ItemSearchRequest search = ItemSearchRequest.builder()
 				.category(category)
+				.userId(userId)
 				.page(page).build();
 		
 		return itemService.getItemsByCategory(search);
@@ -108,11 +109,12 @@ public class ItemController {
 	@GetMapping("/item/keyword")
 	@ApiOperation("키워드 물건 가져오기")
 	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam(required = false) String keyword,
-															@RequestParam int page) {
+															@RequestParam int userId, @RequestParam int page) {
 //		log.info("ItemController : getItemsByKeyword");
 		if(keyword == null) keyword = "";
 		ItemSearchRequest search = ItemSearchRequest.builder()
 				.category(category)
+				.userId(userId)
 				.keyword(keyword)
 				.page(page).build();
 		
