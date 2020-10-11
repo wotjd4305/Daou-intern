@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `emp_num` int DEFAULT NULL,
   `name` varchar(10) DEFAULT NULL,
-  `password` char(30) DEFAULT NULL,
-  `department` char(20) DEFAULT NULL,
+  `password` char(64) DEFAULT NULL,
+  `department` varchar(20) DEFAULT NULL,
   `image` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 CREATE TABLE IF NOT EXISTS `item` (
   `item_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `title` char(100) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
   `content` text DEFAULT NULL,
   `category` varchar(20) DEFAULT NULL,
