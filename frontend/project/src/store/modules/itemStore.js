@@ -403,7 +403,39 @@ const itemStore = {
             })
           })
       },
-      
+      patchUpdateStatusByItemid({commit}, info){
+        console.log("before : patchUpdateStatusByItemid - " + info.location)
+        console.log("before : patchUpdateStatusByItemid - " + info.data.status)
+
+        axios.patch(SERVER.URL + info.location + "?status=" + info.data.status )
+          .then(res => {
+          console.log("after : patchUpdateStatusByItemid - " + SERVER.URL + info.location)
+          
+            if(res.data.isSuccess){
+                console.log(commit)
+           }
+           else{
+             alert("에러")
+           }
+          })
+          .catch(err => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'info',
+              title: err.response.data.message
+            })
+          })
+      },
      
 
 
@@ -487,7 +519,16 @@ const itemStore = {
         //to: '/board'
      }
     dispatch('patchDeleteFavoriteItemById',info)
-    }
+    },
+    updateItemStatus({dispatch}, statusReq){
+      const info = {
+        data: statusReq,
+        location: SERVER.ROUTES.updateitemstatusA + statusReq.itemId + SERVER.ROUTES.updateitemstatusB,
+        //to: '/board'
+     }
+    dispatch('patchUpdateStatusByItemid',info)
+    
+    },
 
   }
 }

@@ -65,9 +65,12 @@
                             ></b-img></div>
                     </div>
                     <div class="mt-3 mr-5">
-                        <span> 
+                        <span @click="clickChangeStatus" v-if="!isWriter() || !isClickedStatus">
                             {{detailitem.status | itemStatus}}
                         </span>
+                        <select  v-if="isWriter() && isClickedStatus" v-on:input="clickSelector($event.target.value)" style="height: 36.5px;">
+                            <option v-for="option in periods" :key="option.aptid">{{option | itemStatus}}</option>
+                        </select>
                     </div>
                     <div>
                     </div>
@@ -230,10 +233,16 @@ export default {
             itemId:"",
             userId:"",
         },
+        upDateStatusReq:{
+            itemId:"",
+            status:"",
+        },
         deleteReq: "",
         isUpdateChecked: false,
         itemDetail:[],
         categorys:[],
+        periods:["S", "I", "C"],
+        isClickedStatus:false,
       };
   },
   watch: {
@@ -269,7 +278,7 @@ export default {
         ...mapState('categoryStore',['itemCategorys']),
     },
     methods:{
-        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem','postFavoriteItemById','deleteFavoriteItemById']),
+        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem','postFavoriteItemById','deleteFavoriteItemById','updateItemStatus']),
         ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions(['findMyAccount']),
 
@@ -359,12 +368,30 @@ export default {
             this.getDetailReq = {itemId:this.deleteReq, userId:this.myaccount.userId }
             this.getDetailItem(this.getDetailReq);
 
-        }
+        },
+    clickSelector(input){
+        
+        alert(this.$itemStatusReverse(input))
+        this.upDateStatusReq = {itemId:this.itemId, status:this.$itemStatusReverse(input)}
+        this.updateItemStatus(this.upDateStatusReq);
+    },
+    clickChangeStatus(){
+        this.isClickedStatus = !this.isClickedStatus;
+    }
     }
 }
 </script>
 
 <style scoped>
+/* 판매중 버튼 */
+.register-button{
+     background-color: #2682ba !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+    height: 2.5rem;
+     width: 7rem;
+}
+
 /* 제목 */
 .write-title{
     font-weight: bold !important;

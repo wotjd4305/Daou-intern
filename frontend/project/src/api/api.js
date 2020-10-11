@@ -28,6 +28,8 @@ export default {
       getitembykeword:'/item/keyword',
       getitembyidA:'/item/',
       getitembyidB:'/list',
+      updateitemstatusA: '/item/',
+      updateitemstatusB: '/status',
 
       //favorite
       getfavoriteitembyid:'/favorite',
@@ -36,6 +38,7 @@ export default {
 
       //rank
       getwriteranks:'/point/rank',
+
       
     }
 }
