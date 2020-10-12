@@ -10,6 +10,9 @@ import "./filters"
 //공통함수
 import Common from "./common"
 
+//객체 모음
+import ObjectList from "./dtoReq.js"
+
 //Time, Cookie
 import VueMoment from 'vue-moment'
 import VueCookies from 'vue-cookies'
@@ -25,6 +28,7 @@ Vue.use(VueMoment)
 Vue.use(BootstrapVue)
 Vue.use(VueMoment)
 Vue.use(Common)
+Vue.use(ObjectList)
 
 Vue.config.productionTip = false
 
@@ -33,3 +37,4 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+

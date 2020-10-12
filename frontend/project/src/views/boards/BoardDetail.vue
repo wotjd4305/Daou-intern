@@ -218,6 +218,9 @@
   </div>
 </template>
 
+
+
+
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
@@ -225,18 +228,27 @@ import SERVER from '@/api/api'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
+
+function getDetailReq(itemId, userId){
+	this.itemId = itemId, // property
+	this.userId = userId;  // property
+}
+
+function upDateStatusReq(itemId, status){
+	this.itemId = itemId, // property
+	this.status = status;  // property
+}
+
+
+function favoriteReq(itemId, userId){
+	this.itemId = itemId, // property
+	this.userId = userId;  // property
+}
+
 export default {
     data: () => {
     return {
         itemId:"",
-        getDetailReq:{
-            itemId:"",
-            userId:"",
-        },
-        upDateStatusReq:{
-            itemId:"",
-            status:"",
-        },
         deleteReq: "",
         isUpdateChecked: false,
         itemDetail:[],
@@ -357,23 +369,23 @@ export default {
         return this.isUpdateChecked;
     },
     clickFavorite(itemId, isFavorite){
-            this.favoriteReq = {userId: this.myaccount.userId, itemId:itemId}
+            let req = new favoriteReq(this.myaccount.userId, itemId);
             
             if(isFavorite){//좋아요 눌러져있으면
-                this.deleteFavoriteItemById(this.favoriteReq);
+                this.deleteFavoriteItemById(req);
             }
             else{// 좋아요 안눌러져있으면
-                this.postFavoriteItemById(this.favoriteReq);
+                this.postFavoriteItemById(req);
             }
-            this.getDetailReq = {itemId:this.deleteReq, userId:this.myaccount.userId }
-            this.getDetailItem(this.getDetailReq);
+            let req2 = new getDetailReq(this.deleteReq, this.myaccount.userId)
+            this.getDetailItem(req2);
 
         },
     clickSelector(input){
         
         alert(this.$itemStatusReverse(input))
-        this.upDateStatusReq = {itemId:this.itemId, status:this.$itemStatusReverse(input)}
-        this.updateItemStatus(this.upDateStatusReq);
+        let req = new upDateStatusReq(this.itemId, this.$itemStatusReverse(input));
+        this.updateItemStatus(req);
     },
     clickChangeStatus(){
         this.isClickedStatus = !this.isClickedStatus;

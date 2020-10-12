@@ -239,7 +239,10 @@
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 
-
+function favoriteReq(itemId, userId){
+	this.itemId = itemId, // property
+	this.userId = userId;  // property
+}
 
 //import axios from 'axios'
 export default {
@@ -262,10 +265,7 @@ export default {
       isSubmit: false,
       defaultPath: "icons8-male-user-90.png",
       serverPath: SERVER.IMAGE_STORE,
-      favoriteReq:{
-           itemId:"",
-           userId:"",
-       }
+      
     };
   },
   created() {
@@ -384,13 +384,13 @@ export default {
       }
     },
       clickFavorite(itemId, isFavorite){
-            this.favoriteReq = {userId: this.myaccount.userId, itemId:itemId}
+            let req = new favoriteReq (this.myaccount.userId)
             
             if(isFavorite){//좋아요 눌러져있으면
-                this.deleteFavoriteItemById(this.favoriteReq);
+                this.deleteFavoriteItemById(req);
             }
             else{// 좋아요 안눌러져있으면
-                this.postFavoriteItemById(this.favoriteReq);
+                this.postFavoriteItemById(req);
             }
             this.getFavoriteItemById(this.myaccount.userId);
         }

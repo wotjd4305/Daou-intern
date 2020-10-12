@@ -159,28 +159,34 @@
     </div>
 </template>
 
-<script>
+
+<script >
 import { Carousel3d, Slide } from "vue-carousel-3d";
 import { mapActions, mapState } from "vuex";
 
 import SERVER from '@/api/api';
+
+
 //import axios from "axios";
+
+
+function searchAllReq(page, userId){
+	this.page = page, // property
+	this.userId = userId;  // property
+}
+
 
 export default {
   components: {
     Carousel3d,
     Slide,
-  },
+  }
+  ,
   data: () => {
     return {
-      slidesLength: 10,
-      prizeProfileImgsrc:"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
       search_input_text:"",
-      searchAllReq:{
-           page:1,
-           userId:"",
-       },
-          //이미지 주소
+      
+      //이미지 주소
       serverPath : SERVER.IMAGE_STORE,
 
       //메달 이미지
@@ -192,8 +198,10 @@ export default {
   },
   created() {
     this.findMyAccount();
-    this.getAllItem(this.searchAllReq={page:1, userId:this.myaccount.userId});
+    this.getAllItem(new searchAllReq(1, this.myaccount.userId));
     this.getWriteRank();
+
+    this.test();
   },
   computed:{
       ...mapState(["myaccount"]),

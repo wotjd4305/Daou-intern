@@ -1,5 +1,6 @@
 <template>
   <div>
+      <div v-if="isLoadingMethod"> 로딩중...... </div>
     <!-- 카테고리 -->
     <div class="board">
       <div class="category-title ml-2">
@@ -181,6 +182,19 @@
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 
+function searchAllReq(userId, keyword, page=1, category){
+    this.userId = userId;
+	this.keyword = keyword, // property
+    this.page = page;  // property
+    this.category = category;
+}
+
+function favoriteReq(userId, itemId){
+	this.userId = userId, // property
+	this.itemId = itemId;  // property
+}
+
+
 export default {
     name:"Board",
     props:
@@ -192,20 +206,10 @@ export default {
       checkedNames:[],
        dateFormat:"",
        items:[],
-
        serverPath:"",
        inputText:"",
-       searchAllReq:{
-           keyword:"",
-           page:1,
-           category:[]
-       },
        pageArray:[],
-       favoriteReq:{
-           itemId:"",
-           userId:"",
-       }
-       ,
+       pageNumTemp:1,
        
       };
     },
@@ -224,8 +228,8 @@ export default {
         this.fetchItemCategory();
         this.findMyAccount();
         
-        this.searchAllReq = {userId : this.myaccount.userId,keyword:this.inputText, page:1, category:[]};
-        this.getItemByKeyword(this.searchAllReq);
+        let req = new searchAllReq(this.myaccount.userId,this.inputText, 1, []);
+        this.getItemByKeyword(req);
 
         //페이징 만들기
         this.makePaging(this.pages.startPage, this.pages.endPage);
@@ -235,14 +239,17 @@ export default {
     
         this.serverPath = SERVER.IMAGE_STORE,
         this.dateFormat = "YYYY-MM-DD hh-mm-ss";
+        
 
     },
     
     computed:{
         ...mapState('categoryStore',['itemCategorys']),
-        ...mapState('itemStore', ['searcheditems','pages']),
+        ...mapState('itemStore', ['searcheditems','pages','isLoading']),
         ...mapState(['myaccount']),
-        
+        isLoadingMethod(){
+            return this.isLoading;
+        },
     },
     methods:{
           ...mapActions('categoryStore', ['fetchItemCategory']),
@@ -281,28 +288,33 @@ export default {
         //클릭
         clickSearchByKeyword(searchText){
 
-            this.searchAllReq = {userId : this.myaccount.userId, keyword:searchText, page:1, category:this.checkedNames};                
+            let req = new searchAllReq(this.myaccount.userId, searchText, 1, this.checkedNames);                
 
-            this.getItemByKeyword(this.searchAllReq);
+            this.getItemByKeyword(req);
+
+            this.pageNumTemp = 1;
             
         },
          clickPageNum(pageNum){
 
         
-            this.searchAllReq = {userId : this.myaccount.userId,keyword:this.inputText, page:pageNum, category:this.checkedNames};    
+            let req = new searchAllReq(this.myaccount.userId,this.inputText, pageNum, this.checkedNames);    
             
-             this.getItemByKeyword(this.searchAllReq);
+             this.getItemByKeyword(req);
+
+             this.pageNumTemp = pageNum;
         },
         clickFavorite(itemId, isFavorite){
-            this.favoriteReq = {userId: this.myaccount.userId, itemId:itemId}
+            let req = new favoriteReq(this.myaccount.userId, itemId);
             
             if(isFavorite){//좋아요 눌러져있으면
-                this.deleteFavoriteItemById(this.favoriteReq);
+                this.deleteFavoriteItemById(req);
             }
             else{// 좋아요 안눌러져있으면
-                this.postFavoriteItemById(this.favoriteReq);
+                this.postFavoriteItemById(req);
             }
-            this.getItemByKeyword(this.searchAllReq);
+            let req2 = new searchAllReq(this.myaccount.userId,this.inputText, this.pageNumTemp, this.checkedNames)
+            this.getItemByKeyword(req2);
         }
     },
 }

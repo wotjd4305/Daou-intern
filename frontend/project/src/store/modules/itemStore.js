@@ -19,6 +19,7 @@ const itemStore = {
     searcheditems : null,
     detailitem : null,
     pages:null,
+    isLoading:null,
   },
   computed:{
     ...mapState(['myaccount'])
@@ -29,6 +30,13 @@ const itemStore = {
   },
   methods:{
     ...mapActions(['findMyAccount']),
+    delay : (duration =500) =>{
+      return new Promise((resolve)=>{
+        setTimeout(() => {
+          resolve();
+        }, duration);
+      })
+    },
   },
   mutations: {
 
@@ -46,6 +54,9 @@ const itemStore = {
     },
     SET_ITEMS_PAGE(state,pages){
         state.pages= pages
+    },
+    SET_LOADING_STATE(state, status=true){
+      state.isLoading = status;
     }
   },
   actions: {
@@ -109,11 +120,13 @@ const itemStore = {
     //모든 아이템 검색
     patchAllItem({commit}, info){
         console.log("before : patchAllItem - " + info.location)
+        console.log("before : patchAllItem - " + info.data.userId)
+        
         axios.get(SERVER.URL + info.location , 
             {params:{userId:info.data.userId, page:info.data.page}},
           )
           .then(res => {
-          console.log("after : patchAllItem - " + res.data.status)
+          console.log("after : patchAllItem - " + res.data.isSuccess)
           
             if(res.data.isSuccess){
               
@@ -227,44 +240,57 @@ const itemStore = {
         console.log("before : patchItemByKeyword - " + info.location)
         console.log("before : patchItemByKeyword - " + info.data.keyword)
 
-        let categoryListStr ="";
-        for(var i=0; i<info.data.category.length; i++){
-            categoryListStr = categoryListStr + "category=" + info.data.category[i]  +"&"
-        }
-        console.log(categoryListStr)
+        
+        try{
+            commit("SET_LOADING_STATE",true);
 
-        axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
-            {params:{userId: info.data.userId, keyword : info.data.keyword, page : info.data.page}})
-          .then(res => {
-          console.log("after : patchItemByKeyword - " + res.data.data)
-          
-            if(res.data.isSuccess){
-                commit("SET_ITEMS", res.data.data)
-                commit("SET_ITEMS_PAGE", res.data.pageMaker)
-                console.log(commit)
-                console.log("after : patchItemByKeyword - " + res.data.pageMaker.endPage)
-           }
-           else{
-             alert("에러")
-           }
-          })
-          .catch(err => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: false,
-              onOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-             })
-             Toast.fire({
-              icon: 'info',
-              title: err.response.data.message
-            })
-          })
+            
+            let categoryListStr ="";
+            for(var i=0; i<info.data.category.length; i++){
+                categoryListStr = categoryListStr + "category=" + info.data.category[i]  +"&"
+            }
+            console.log(categoryListStr)
+
+            axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
+                {params:{userId: info.data.userId, keyword : info.data.keyword, page : info.data.page}})
+              .then(res => {
+              console.log("after : patchItemByKeyword - " + res.data.data)
+              
+                if(res.data.isSuccess){
+                    commit("SET_ITEMS", res.data.data)
+                    commit("SET_ITEMS_PAGE", res.data.pageMaker)
+                    console.log(commit)
+                    console.log("after : patchItemByKeyword - " + res.data.pageMaker.endPage)
+              }
+              else{
+                alert("에러")
+              }
+              })
+              .catch(err => {
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: false,
+                  onOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                Toast.fire({
+                  icon: 'info',
+                  title: err.response.data.message
+                })
+              })
+            
+    
+            
+        } catch(err){
+          console.error(err)
+        } finally{
+          commit("SET_LOADING_STATE", false)
+        }
       },
       //내가 등록한 아이템 
       patchItemById({commit}, info){
@@ -448,9 +474,9 @@ const itemStore = {
       }
       dispatch('patchBoardWrite', info)
     },
-    getAllItem({ dispatch }, userId) {
+    getAllItem({ dispatch }, userData) {
         const info = {
-          data: userId,
+          data: userData,
           location: SERVER.ROUTES.getallitem,
           //to: '/board'
         }
