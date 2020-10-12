@@ -51,8 +51,7 @@
             <div class="error-text ml-3" v-if="error.password">{{error.password}}</div>
           </div>
           <p class="my-3">
-            <span class="items" @click="clickSignup">회원가입하기</span>ㆍ
-            <span class="items" @click="clickPasswordFind">비밀번호 찾기</span>
+            <span class="items" @click="clickSignup">회원가입하기</span>
           </p>
           <div class="buttons mt-3">
             <button class="btn login-button" :class="{disabled: !isSubmit}" @click="clickLogin">로그인하기</button>
@@ -152,9 +151,6 @@ export default {
     },
     clickSignup() {
       this.$router.push({ name: "Signup" });
-    },
-    clickPasswordFind() {
-      this.$router.push({ name: "PasswordFind" });
     },
   },
 };

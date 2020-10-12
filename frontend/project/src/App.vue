@@ -40,6 +40,9 @@ export default {
 
 
 
+
+
+
 <style>
 @font-face {
   font-family: 'Daki';

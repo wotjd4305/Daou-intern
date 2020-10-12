@@ -58,9 +58,9 @@
                     <div>
                         <div v-if="!isWriter()" class="text-right"><b-img
                             type="image"
-                            @click="clickFavorite(detailitem.itemId, detailitem.favorite)"
+                            @click="clickFavorite(detailitem.itemId, isfavoriteBtn)"
                             style="cursor:pointer"
-                            :src= $favoriteImage(detailitem.favorite)
+                            :src= $favoriteImage(isfavoriteBtn)
                             class="mr-2 pr-1 pl-1 item-list-heart"
                             ></b-img></div>
                     </div>
@@ -204,7 +204,7 @@
             </div>
             <!-- 메시지 버튼 -->
             <div class ="mt-5 mb-5 msg-button-div align-self-center">
-                <button class="align-self-center btn ml-1 msg-button" >메시지 보내기</button>
+                <button v-if="!isWriter()" class="align-self-center btn ml-1 msg-button" >메시지 보내기</button>
             </div>
             <!--/ 메시지 버튼 -->
         </div>
@@ -240,9 +240,9 @@ function upDateStatusReq(itemId, status){
 }
 
 
-function favoriteReq(itemId, userId){
-	this.itemId = itemId, // property
-	this.userId = userId;  // property
+function favoriteReq(userId , itemId){
+    this.userId = userId,  // property
+	this.itemId = itemId; // property
 }
 
 export default {
@@ -255,17 +255,14 @@ export default {
         categorys:[],
         periods:["S", "I", "C"],
         isClickedStatus:false,
+        isfavoriteBtn:false,
       };
-  },
-  watch: {
-    itemUpdateReq: {
-      deep: true
-    }
-  },
+   },
     created(){
         //아이템 id 확인
         this.itemId = this.$route.params.itemId;
-        console.log("init : BoardDetail = " +this.itemId )
+
+        
         
         //이미지 주소
         this.serverPath = SERVER.IMAGE_STORE,
@@ -281,6 +278,7 @@ export default {
         //적용
         this.deleteReq = this.itemId;
         this.categorys = this.itemCategorys;
+        this.isfavoriteBtn = this.detailitem.favorite
 
     }
     ,
@@ -308,7 +306,7 @@ export default {
             return this.serverPath + "icons8-male-user-90.png" 
         },
     getImgUrl(){
-            if(this.detailitem.picture[0]){
+            if(this.detailitem.picture[0] ){
                 return this.serverPath +this.detailitem.picture[0];
             }
             return this.serverPath + "no-image-icon-23487.png" 
@@ -371,13 +369,14 @@ export default {
     clickFavorite(itemId, isFavorite){
             let req = new favoriteReq(this.myaccount.userId, itemId);
             
-            if(isFavorite){//좋아요 눌러져있으면
+            if(this.detailitem.favorite){//좋아요 눌러져있으면
                 this.deleteFavoriteItemById(req);
             }
             else{// 좋아요 안눌러져있으면
                 this.postFavoriteItemById(req);
             }
             let req2 = new getDetailReq(this.deleteReq, this.myaccount.userId)
+            this.isfavoriteBtn = !this.isfavoriteBtn;
             this.getDetailItem(req2);
 
         },

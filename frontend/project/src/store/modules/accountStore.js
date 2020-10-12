@@ -36,7 +36,7 @@ const accountStore = {
               router.push('/login')
          }
          else{
-           alert("에러")
+           alert("회원가입 에러 - " + res.data.message)
          }
         })
         .catch(err => {
@@ -86,7 +86,7 @@ const accountStore = {
               router.push('/home')
          }
          else{
-           alert("에러" + res.data.isSuccess)
+          alert("로그인 에러 - " + res.data.message)
          }
         })
         .catch(err => {
