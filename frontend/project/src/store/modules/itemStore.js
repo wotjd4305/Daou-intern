@@ -95,7 +95,7 @@ const itemStore = {
               router.push(info.to)
          }
          else{
-           alert("에러")
+          alert("글쓰기 에러 - " + res.data.message)
          }
         })
         .catch(err => {
@@ -138,7 +138,7 @@ const itemStore = {
                 router.push(info.to)
            }
            else{
-             alert("에러")
+             alert("아이템 검색 에러 - " + res.data.message)
            }
           })
           .catch(err => {
@@ -162,11 +162,14 @@ const itemStore = {
       //아이템 상세보기
       patchDetailItem({commit}, info){
         console.log("before : patchDetailItem - " + info.location)
+        console.log("before : patchDetailItem - " + info.data.itemId)
+        console.log("before : patchDetailItem - " + info.data.userId)
+        
         axios.get(SERVER.URL + info.location + "/" + info.data.itemId , 
             {params:{userId:info.data.userId}},
           )
           .then(res => {
-          console.log("after : patchDetailItem - " + res.data.isSuccess)
+          console.log("after : patchDetailItem - " + res.data.data.favorite)
           
             if(res.data.isSuccess){
               
@@ -177,7 +180,7 @@ const itemStore = {
                 //router.push(info.to)
            }
            else{
-             alert("에러")
+            alert("아이템 상세보기 에러 - " + res.data.message)
            }
           })
           .catch(err => {
@@ -214,7 +217,7 @@ const itemStore = {
                 //router.push(info.to)
            }
            else{
-             alert("에러")
+            alert("아이템 수정 에러 - " + res.data.message)
            }
           })
           .catch(err => {
@@ -236,7 +239,7 @@ const itemStore = {
           })
       },
        //키워드로 검색 
-       patchItemByKeyword({commit}, info){
+       async patchItemByKeyword({commit}, info){
         console.log("before : patchItemByKeyword - " + info.location)
         console.log("before : patchItemByKeyword - " + info.data.keyword)
 
@@ -251,7 +254,7 @@ const itemStore = {
             }
             console.log(categoryListStr)
 
-            axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
+            await axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
                 {params:{userId: info.data.userId, keyword : info.data.keyword, page : info.data.page}})
               .then(res => {
               console.log("after : patchItemByKeyword - " + res.data.data)
@@ -263,7 +266,7 @@ const itemStore = {
                     console.log("after : patchItemByKeyword - " + res.data.pageMaker.endPage)
               }
               else{
-                alert("에러")
+                alert("키워드 검색 에러 - " + res.data.message)
               }
               })
               .catch(err => {
@@ -307,7 +310,7 @@ const itemStore = {
                 console.log(commit)
            }
            else{
-             alert("에러")
+            alert("내가 작성한 아이템 출력 에러 - " + res.data.message)
            }
           })
           .catch(err => {
@@ -342,7 +345,7 @@ const itemStore = {
                 console.log(commit)
            }
            else{
-             alert("에러")
+            alert("내가 찜한 아이템 출력 에러 - " + res.data.message)
            }
           })
           .catch(err => {
@@ -365,7 +368,7 @@ const itemStore = {
       },
       patchPostFavoriteItemById({commit}, info){
         console.log("before : patchPostFavoriteItemById - " + info.location)
-        console.log("before : patchPostFavoriteItemById - " + info.data)
+        console.log("before : patchPostFavoriteItemById - " + info.data.userId + " - " + info.data.itemId)
 
         axios.post(SERVER.URL + info.location,  info.data)
           .then(res => {
@@ -375,7 +378,7 @@ const itemStore = {
                 console.log(commit)
            }
            else{
-             alert("에러")
+            alert("찜하기 에러 - " + res.data.message)
            }
           })
           .catch(err => {
@@ -408,7 +411,7 @@ const itemStore = {
                 console.log(commit)
            }
            else{
-             alert("에러")
+            alert("찜 삭제 에러 - " + res.data.message)
            }
           })
           .catch(err => {
@@ -441,7 +444,7 @@ const itemStore = {
                 console.log(commit)
            }
            else{
-             alert("에러")
+            alert("아이템 상태 변경 에러 - " + res.data.message)
            }
           })
           .catch(err => {

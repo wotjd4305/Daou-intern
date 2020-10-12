@@ -24,7 +24,7 @@
                       class="profileImg headerProfile"
                       ref="uploadItemImage"
                       id="uploadImagdId"
-                      :src= this.$commonUserImage(this.myaccount.image)
+                      :src= this.$commonUserImage(imageTemp)
                       accept="image/jpeg, jpg, png/"
                       style="width: 10rem; height: 10rem;"
                     />
@@ -265,6 +265,7 @@ export default {
       isSubmit: false,
       defaultPath: "icons8-male-user-90.png",
       serverPath: SERVER.IMAGE_STORE,
+      imageTemp: "",
       
     };
   },
@@ -283,6 +284,9 @@ export default {
    //입력란에 없기 때문에
     this.userUpdateData.empNum = this.myaccount.empNum;
     this.departs = this.departmentCategorys;
+
+    //
+    this.imageTemp = this.myaccount.image;
   },
   watch: {
     userUpdateData: {
@@ -292,6 +296,12 @@ export default {
         this.checkPasswordConfirmationForm();
       }
     },
+    myaccount:{
+      deep:true,
+      handler(){
+        this.imageTemp = this.myaccount.image;
+      }
+    }
    
   },
   computed:{

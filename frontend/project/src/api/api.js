@@ -39,6 +39,13 @@ export default {
       //rank
       getwriteranks:'/point/rank',
 
+      //chating
+      postchatingroom:'/chatroom',
+      getchatingmessage:'/chatroom/:chatroomId/message',
+      getchatingrooms:'/chatroom',
+      
+      
+
       
     }
 }

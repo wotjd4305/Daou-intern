@@ -201,7 +201,6 @@ export default {
     this.getAllItem(new searchAllReq(1, this.myaccount.userId));
     this.getWriteRank();
 
-    this.test();
   },
   computed:{
       ...mapState(["myaccount"]),
