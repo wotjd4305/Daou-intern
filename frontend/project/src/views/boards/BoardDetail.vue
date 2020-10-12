@@ -55,10 +55,22 @@
                 <!-- 상태 -->
                 
                 <div class="col text-right align-self-center write-title" style="display:block">
+                    <div>
+                        <div v-if="!isWriter()" class="text-right"><b-img
+                            type="image"
+                            @click="clickFavorite(detailitem.itemId, detailitem.favorite)"
+                            style="cursor:pointer"
+                            :src= $favoriteImage(detailitem.favorite)
+                            class="mr-2 pr-1 pl-1 item-list-heart"
+                            ></b-img></div>
+                    </div>
                     <div class="mt-3 mr-5">
-                        <span> 
+                        <span @click="clickChangeStatus" v-if="!isWriter() || !isClickedStatus">
                             {{detailitem.status | itemStatus}}
                         </span>
+                        <select  v-if="isWriter() && isClickedStatus" v-on:input="clickSelector($event.target.value)" style="height: 36.5px;">
+                            <option v-for="option in periods" :key="option.aptid">{{option | itemStatus}}</option>
+                        </select>
                     </div>
                     <div>
                     </div>
@@ -206,6 +218,9 @@
   </div>
 </template>
 
+
+
+
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
@@ -213,18 +228,33 @@ import SERVER from '@/api/api'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
+
+function getDetailReq(itemId, userId){
+	this.itemId = itemId, // property
+	this.userId = userId;  // property
+}
+
+function upDateStatusReq(itemId, status){
+	this.itemId = itemId, // property
+	this.status = status;  // property
+}
+
+
+function favoriteReq(itemId, userId){
+	this.itemId = itemId, // property
+	this.userId = userId;  // property
+}
+
 export default {
     data: () => {
     return {
         itemId:"",
-        getDetailReq:{
-            itemId:"",
-            userId:"",
-        },
         deleteReq: "",
         isUpdateChecked: false,
         itemDetail:[],
         categorys:[],
+        periods:["S", "I", "C"],
+        isClickedStatus:false,
       };
   },
   watch: {
@@ -245,8 +275,7 @@ export default {
         this.fetchItemCategory();
 
         //디테일 요청
-        this.getDetailReq.itemId = this.itemId;
-        this.getDetailReq.userId = this.myaccount.userId;
+        this.getDetailReq = {itemId:this.itemId, userId:this.myaccount.userId }
         this.getDetailItem(this.getDetailReq);
 
         //적용
@@ -261,7 +290,7 @@ export default {
         ...mapState('categoryStore',['itemCategorys']),
     },
     methods:{
-        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem']),
+        ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem','postFavoriteItemById','deleteFavoriteItemById','updateItemStatus']),
         ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions(['findMyAccount']),
 
@@ -338,12 +367,43 @@ export default {
         this.updateDetailItem(this.detailitem)
         this.isUpdateChecked = !this.isUpdateChecked;
         return this.isUpdateChecked;
+    },
+    clickFavorite(itemId, isFavorite){
+            let req = new favoriteReq(this.myaccount.userId, itemId);
+            
+            if(isFavorite){//좋아요 눌러져있으면
+                this.deleteFavoriteItemById(req);
+            }
+            else{// 좋아요 안눌러져있으면
+                this.postFavoriteItemById(req);
+            }
+            let req2 = new getDetailReq(this.deleteReq, this.myaccount.userId)
+            this.getDetailItem(req2);
+
+        },
+    clickSelector(input){
+        
+        alert(this.$itemStatusReverse(input))
+        let req = new upDateStatusReq(this.itemId, this.$itemStatusReverse(input));
+        this.updateItemStatus(req);
+    },
+    clickChangeStatus(){
+        this.isClickedStatus = !this.isClickedStatus;
     }
     }
 }
 </script>
 
 <style scoped>
+/* 판매중 버튼 */
+.register-button{
+     background-color: #2682ba !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+    height: 2.5rem;
+     width: 7rem;
+}
+
 /* 제목 */
 .write-title{
     font-weight: bold !important;

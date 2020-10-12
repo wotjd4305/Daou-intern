@@ -139,19 +139,21 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 
+function boardWriteDataReq(category, content, images, price, title ,userId){
+	this.category = category, // property
+    this.content = content;  // property
+    this.images = images, // property
+    this.price = price;  // property
+    this.title = title, // property
+	this.userId = userId;  // property
+}
+
+
 export default {
     data: () => {
     return {
-        //categorys : ["디지털/가전","가구/인테리어","생활/가공식품","유아동/유아도서", "무료나눔", "여성잡화", "여성의류"],
         categorys: [],
-        boardWriteData: {
-            category : "",
-            content : "",
-            images :[],
-            price : "",
-            title : "",
-            userId : "",
-      },
+        boardWriteData: new boardWriteDataReq(),
       };
     },
     created(){

@@ -96,6 +96,8 @@ import SERVER from '@/api/api'
 import axios from 'axios'
 
 
+
+
 export default {
   name: 'Signup',
   data() {

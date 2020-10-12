@@ -28,11 +28,17 @@ export default {
       getitembykeword:'/item/keyword',
       getitembyidA:'/item/',
       getitembyidB:'/list',
+      updateitemstatusA: '/item/',
+      updateitemstatusB: '/status',
 
       //favorite
       getfavoriteitembyid:'/favorite',
+      registerfavorite:'/favorite',
+      deletefavorite:'/favorite',
 
       //rank
       getwriteranks:'/point/rank',
+
+      
     }
 }

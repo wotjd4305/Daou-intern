@@ -49,7 +49,7 @@
                     class="profileImg"
                     ref="uploadItemImage"
                     accept="image/jpeg, jpg, png/"
-                    src="@/assets/img/logo.png"
+                    src="@/assets/img/daoulogo2.png"
                     style="width: 2.5rem; height: 2.5rem;"
                   /> <strong> Daou Market </strong>
               </div

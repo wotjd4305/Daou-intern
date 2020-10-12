@@ -31,10 +31,14 @@ export default {
     this.findMyAccount();
     this.fetchDepartmentCategory();
     this.fetchItemCategory();
-  }
+  },
+
 }
 
+
 </script>
+
+
 
 <style>
 @font-face {

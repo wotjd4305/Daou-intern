@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daoumarket.dto.BasicResponse;
 import com.daoumarket.dto.Favorite;
+import com.daoumarket.dto.FavoriteDeleteReq;
 import com.daoumarket.service.IFavoriteService;
 
 import io.swagger.annotations.ApiOperation;
@@ -34,12 +35,12 @@ public class FavoriteController {
 		return favoriteService.insertFavorite(favorite);
 	}
 	
-	@DeleteMapping("/favorite/{favoriteId}")
+	@DeleteMapping("/favorite/{itemId}/{userId}")
 	@ApiOperation("favorite id를 이용해서 키워드 삭제")
-	public ResponseEntity<BasicResponse> deleteFavorite(@PathVariable long favoriteId) {
-		log.info("FavoriteController : deleteFavorite => {}", favoriteId);
-		
-		return favoriteService.deleteFavorite(favoriteId);
+	public ResponseEntity<BasicResponse> deleteFavorite(@PathVariable int userId,@PathVariable long itemId) {
+		log.info("FavoriteController : deleteFavorite => {}", userId,itemId);
+		FavoriteDeleteReq temp = new FavoriteDeleteReq(userId, itemId);
+		return favoriteService.deleteFavorite(temp);
 	}
 	
 	@GetMapping("/favorite/{userId}")

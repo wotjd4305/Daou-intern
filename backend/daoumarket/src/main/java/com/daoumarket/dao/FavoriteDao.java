@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.daoumarket.dto.Favorite;
+import com.daoumarket.dto.FavoriteDeleteReq;
 import com.daoumarket.dto.ItemInfoRequest;
 import com.daoumarket.dto.ItemResponse;
 
@@ -24,8 +25,8 @@ public class FavoriteDao implements IFavoriteDao {
 	}
 
 	@Override
-	public int deleteFavorite(long favoriteId) {
-		return sqlSession.delete(ns + "deleteFavorite", favoriteId);
+	public int deleteFavorite(FavoriteDeleteReq favorite) {
+		return sqlSession.delete(ns + "deleteFavorite", favorite);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 <template>
   <div>
+      <div v-if="isLoadingMethod"> 로딩중...... </div>
     <!-- 카테고리 -->
     <div class="board">
       <div class="category-title ml-2">
@@ -68,13 +69,18 @@
                 <div class="forHover">
 
                     <div class="item-list-card shadow01">
-                        <div class="text-right"><b-img
+                        <div v-if= !isWriter(item.userId) class="text-right"><b-img
                             type="image"
-                            @click="goToDetail(item.itemId)"
+                            @click="clickFavorite(item.itemId,item.favorite)"
                             style="cursor:pointer"
                             :src= $favoriteImage(item.favorite)
                             class="mr-2 pr-1 pl-1 item-list-heart"
                             ></b-img></div>
+                        <div v-if= isWriter(item.userId) class="text-right">
+                            <img
+                            src = "@/assets/img/icons8-account-48.png"
+                            class="mr-2 pr-1 pl-1 item-list-heart"
+                        /></div>
 
                            <b-img
                             type="image"
@@ -176,6 +182,19 @@
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 
+function searchAllReq(userId, keyword, page=1, category){
+    this.userId = userId;
+	this.keyword = keyword, // property
+    this.page = page;  // property
+    this.category = category;
+}
+
+function favoriteReq(userId, itemId){
+	this.userId = userId, // property
+	this.itemId = itemId;  // property
+}
+
+
 export default {
     name:"Board",
     props:
@@ -187,15 +206,10 @@ export default {
       checkedNames:[],
        dateFormat:"",
        items:[],
-
        serverPath:"",
        inputText:"",
-       searchAllReq:{
-           keyword:"",
-           page:1,
-           category:[]
-       },
        pageArray:[],
+       pageNumTemp:1,
        
       };
     },
@@ -214,8 +228,8 @@ export default {
         this.fetchItemCategory();
         this.findMyAccount();
         
-        this.searchAllReq = {keyword:this.inputText, page:1, category:[]};
-        this.getItemByKeyword(this.searchAllReq);
+        let req = new searchAllReq(this.myaccount.userId,this.inputText, 1, []);
+        this.getItemByKeyword(req);
 
         //페이징 만들기
         this.makePaging(this.pages.startPage, this.pages.endPage);
@@ -225,21 +239,30 @@ export default {
     
         this.serverPath = SERVER.IMAGE_STORE,
         this.dateFormat = "YYYY-MM-DD hh-mm-ss";
+        
 
     },
     
     computed:{
         ...mapState('categoryStore',['itemCategorys']),
-        ...mapState('itemStore', ['searcheditems','pages']),
+        ...mapState('itemStore', ['searcheditems','pages','isLoading']),
         ...mapState(['myaccount']),
-        
+        isLoadingMethod(){
+            return this.isLoading;
+        },
     },
     methods:{
           ...mapActions('categoryStore', ['fetchItemCategory']),
-          ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword']),
+          ...mapActions('itemStore', ['getAllItem', 'getItemByKeyword','postFavoriteItemById','deleteFavoriteItemById']),
           ...mapActions(['findMyAccount']),
 
     
+         isWriter(detailitemId){
+        if(this.myaccount.userId == detailitemId){
+            return true;
+        }
+        return false;
+        },
 
          makePaging(startPage, endPage){
             this.pageArray = [];
@@ -265,20 +288,34 @@ export default {
         //클릭
         clickSearchByKeyword(searchText){
 
-            this.searchAllReq = {keyword:searchText, page:1, category:this.checkedNames};                
+            let req = new searchAllReq(this.myaccount.userId, searchText, 1, this.checkedNames);                
 
-            this.getItemByKeyword(this.searchAllReq);
+            this.getItemByKeyword(req);
+
+            this.pageNumTemp = 1;
             
         },
          clickPageNum(pageNum){
 
         
-            this.searchAllReq = {keyword:this.inputText, page:pageNum, category:this.checkedNames};    
+            let req = new searchAllReq(this.myaccount.userId,this.inputText, pageNum, this.checkedNames);    
             
-             this.getItemByKeyword(this.searchAllReq);
+             this.getItemByKeyword(req);
 
-            
+             this.pageNumTemp = pageNum;
         },
+        clickFavorite(itemId, isFavorite){
+            let req = new favoriteReq(this.myaccount.userId, itemId);
+            
+            if(isFavorite){//좋아요 눌러져있으면
+                this.deleteFavoriteItemById(req);
+            }
+            else{// 좋아요 안눌러져있으면
+                this.postFavoriteItemById(req);
+            }
+            let req2 = new searchAllReq(this.myaccount.userId,this.inputText, this.pageNumTemp, this.checkedNames)
+            this.getItemByKeyword(req2);
+        }
     },
 }
 </script>

@@ -3,6 +3,7 @@ import moment from "moment"
 
 const State= Object.freeze({ S: "판매중", I: "거래중", C: "거래완료" });
 
+
 Vue.filter("comma", (value) => {
   if(value == 0) return "무료나눔♥"
   return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -41,7 +42,6 @@ Vue.filter("itemStatus", (status) => {
   if(status == "C")
    return State.C
 });
-
 
 
 
