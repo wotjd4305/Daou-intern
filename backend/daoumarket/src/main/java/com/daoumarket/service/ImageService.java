@@ -154,9 +154,13 @@ public class ImageService implements IImageService {
 	public boolean isSuccessUpload(MultipartFile... image) {
 		
 		for (int i = 0; i < image.length; i++) {
-			String nowExtention = FilenameUtils.getExtension(image[i].getOriginalFilename()).toLowerCase();
+			String nowExtension = FilenameUtils.getExtension(image[i].getOriginalFilename()).toLowerCase();
+			String fileName = image[i].getOriginalFilename();
 			
-			if(!imageExtention.contains(nowExtention))
+			if(!imageExtention.contains(nowExtension))
+				return false;
+			
+			if(fileName.contains("%00") || fileName.contains("0x00"))
 				return false;
 			
 			if(image[i].getSize() == 0 || image[i].getSize() > 5242880)

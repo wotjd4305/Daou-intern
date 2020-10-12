@@ -37,7 +37,8 @@ function connect(event) {
 }
 
 function onConnected() {
-    stompClient.subscribe('/sub/' + sender, onMessageReceived);
+//    stompClient.subscribe('/sub/', onMessageReceived);
+ 	stompClient.subscribe('/sub/' + chatroom, onMessageReceived);
 
     connectingElement.classList.add('hidden');
 }
@@ -50,7 +51,7 @@ function onError(error) {
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
     if(messageContent.length > 0 && stompClient != null) {
-        var chatMessage = {
+        var message = {
             chatroomId: chatroom,
             senderId: sender,
             receiverId: receiver,
@@ -58,7 +59,7 @@ function sendMessage(event) {
             sendTime : new Date(),
             receiveTime : null,
         };
-        stompClient.send("/pub/message", {}, JSON.stringify(chatMessage));
+        stompClient.send("/pub/message", {}, JSON.stringify(message));
         messageInput.value = '';
     }
     event.preventDefault();

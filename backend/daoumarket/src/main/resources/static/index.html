@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Spring Boot WebSocket Chat Application</title>
+    <title>다우마켓 채팅</title>
     <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
 
 <div id="username-page">
     <div class="username-page-container">
-        <h1 class="title">what is your name?</h1>
+        <h1 class="title">정보를 입력해주세요</h1>
         <form id="usernameForm" name="usernameForm">
             <div class="form-group">
-                <input type="text" id="sender" placeholder="sender" autocomplete="off" class="form-control" />
-                <input type="text" id="receiver" placeholder="receiver" autocomplete="off" class="form-control" />
-                <input type="text" id="chatroom" placeholder="chatroom" autocomplete="off" class="form-control" />
+                <input type="text" id="sender" placeholder="보내는 사람" autocomplete="off" class="form-control" />
+                <input type="text" id="receiver" placeholder="받는 사람" autocomplete="off" class="form-control" />
+                <input type="text" id="chatroom" placeholder="채팅방 번호" autocomplete="off" class="form-control" />
             </div>
             <div class="form-group">
-                <button type="submit" class="accent username-submit">start chat</button>
+                <button type="submit" class="accent username-submit">채팅 시작하기</button>
             </div>
         </form>
     </div>
@@ -26,10 +27,10 @@
 <div id="chat-page" class="hidden">
     <div class="chat-container">
         <div class="chat-header">
-            <h2>Spring WebSocket Chat Demo</h2>
+            <h2>다우마켓 채팅</h2>
         </div>
         <div class="connecting">
-            connecting...
+            연결중...
         </div>
         <ul id="messageArea">
 
@@ -37,8 +38,8 @@
         <form id="messageForm" name="messageForm">
             <div class="form-group">
                 <div class="input-group clearfix">
-                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-                    <button type="submit" class="primary">send</button>
+                    <input type="text" id="message" placeholder="메시지를 입력하세요" autocomplete="off" class="form-control"/>
+                    <button type="submit" class="primary">보내기</button>
                 </div>
             </div>
         </form>
