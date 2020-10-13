@@ -110,12 +110,12 @@ public class ItemController {
 	@ApiOperation("키워드 물건 가져오기")
 	public ResponseEntity<BasicResponse> getItemsByKeyword(@RequestParam(required = false) String[] category, @RequestParam(required = false) String keyword,
 															@RequestParam int userId, @RequestParam int page) {
-//		log.info("ItemController : getItemsByKeyword");
-		if(keyword == null) keyword = "";
+		log.info("ItemController : getItemsByKeyword");
+		
 		ItemSearchRequest search = ItemSearchRequest.builder()
 				.category(category)
 				.userId(userId)
-				.keyword(keyword)
+				.keyword(keyword == null ? "" : keyword)
 				.page(page).build();
 		
 		return itemService.getItemsByKeyword(search);

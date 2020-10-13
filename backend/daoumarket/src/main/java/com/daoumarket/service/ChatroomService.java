@@ -131,7 +131,6 @@ public class ChatroomService implements IChatroomService {
 		
 		System.out.println(message.toString());
 		
-//		template.convertAndSend("/sub/", message);
 		template.convertAndSend("/sub/" + message.getChatroomId(), message);
 		
 		int result = messageDao.insertMessage(message);
