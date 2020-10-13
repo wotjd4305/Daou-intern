@@ -59,9 +59,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from user u, item i, (
 				select item_id
 				from item
+				where delflag = 0
 				order by date desc limit #{pageStart}, #{perPageNum}
 				) sub
-		where sub.item_id = i.item_id and i.user_id = u.user_id and i.delflag = 0
+		where sub.item_id = i.item_id and i.user_id = u.user_id
 	</select>
 	
 	<select id="getItemsByCategory" parameterType="itemSearchRequest" resultMap="itemResponse">

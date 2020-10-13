@@ -13,8 +13,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="checkExistChatroom" parameterType="chatroom" resultType="chatroom">
 		select chatroom_id
 		from chatroom
-		where (seller_id=#{sellerId} and buyer_id=#{buyerId})
-		or  (seller_id=#{buyerId} and buyer_id=#{sellerId})
+		where ((seller_id=#{sellerId} and buyer_id=#{buyerId})
+		or  (seller_id=#{buyerId} and buyer_id=#{sellerId})) and item_id=#{itemId}
 	</select>
 	
 	<insert id="insertChatroom" parameterType="chatroom" useGeneratedKeys="true" keyProperty="chatroomId" keyColumn="chatroom_id">

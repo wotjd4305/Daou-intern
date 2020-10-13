@@ -129,8 +129,9 @@ public class ChatroomService implements IChatroomService {
 		
 		BasicResponse response = new BasicResponse();
 		
-		template.convertAndSend("/sub/" + message.getReceiverId(), message);
-		template.convertAndSend("/sub/" + message.getSenderId(), message);
+		System.out.println(message.toString());
+		
+		template.convertAndSend("/sub/" + message.getChatroomId(), message);
 		
 		int result = messageDao.insertMessage(message);
 		

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class ImageService implements IImageService {
 	private final IUserDao userDao;
 	private final IJWTService jwtService;
 	
-	private static final HashSet<String> imageExtention = new HashSet<>(Arrays.asList("jpg", "jpeg", "png", "gif", "bmp"));
+	private static final HashSet<String> imageExtention = new HashSet<>(Arrays.asList("jpg", "jpeg", "png", "gif", "svg", "bmp"));
 	
 	@Transactional
 	@Override
@@ -93,17 +94,18 @@ public class ImageService implements IImageService {
     	String imageName = image.getOriginalFilename();
 		String imageExtension = FilenameUtils.getExtension(imageName).toLowerCase();
 		File destinationImage;
-		String destinationImageName;
+		String newImageName;
 		String imageUrl = SAVE_FOLDER;
 		
-		SimpleDateFormat timeFormat = new SimpleDateFormat("yyMMddHHmmss");
-		destinationImageName = timeFormat.format(new Date()) + "." + imageExtension;
-		destinationImage = new File(imageUrl + destinationImageName);
+		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		newImageName = UUID.randomUUID().toString() + "-" + timeFormat.format(new Date()) + "." + imageExtension;
 		
-		log.info("Image uploaded : {}", destinationImageName);
+		destinationImage = new File(imageUrl + newImageName);
+		
+		log.info("Image uploaded : {}", newImageName);
 		try {
 			image.transferTo(destinationImage);
-			imageDao.updateUserImage(Image.builder().id(userId).image(destinationImageName).build());
+			imageDao.updateUserImage(Image.builder().id(userId).image(newImageName).build());
 			User user = userDao.getUserByUserId(userId);
 			String token = jwtService.makeJwt(user);
 			response.data = token;
@@ -154,9 +156,14 @@ public class ImageService implements IImageService {
 	public boolean isSuccessUpload(MultipartFile... image) {
 		
 		for (int i = 0; i < image.length; i++) {
-			String nowExtention = FilenameUtils.getExtension(image[i].getOriginalFilename()).toLowerCase();
+			String nowExtension = FilenameUtils.getExtension(image[i].getOriginalFilename()).toLowerCase();
+			if(!imageExtention.contains(nowExtension))
+				return false;
 			
-			if(!imageExtention.contains(nowExtention))
+			
+			String fileName = image[i].getOriginalFilename();
+			
+			if(fileName.contains("%00") || fileName.contains("0x00"))
 				return false;
 			
 			if(image[i].getSize() == 0 || image[i].getSize() > 5242880)
