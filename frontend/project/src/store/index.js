@@ -7,6 +7,8 @@ import accountStore from '@/store/modules/accountStore'
 import categoryStore from '@/store/modules/categoryStore'
 import itemStore from '@/store/modules/itemStore'
 import rankStore from '@/store/modules/rankStore'
+import chatStore from '@/store/modules/chatStore'
+
 
 import router from '@/router'
 import axios from 'axios'
@@ -98,5 +100,6 @@ export default new Vuex.Store({
     categoryStore: categoryStore,
     itemStore: itemStore,
     rankStore: rankStore,
+    chatStore: chatStore,
   }
 })
