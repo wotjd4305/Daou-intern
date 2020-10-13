@@ -95,6 +95,7 @@ import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 import axios from 'axios'
 
+import Swal from 'sweetalert2'
 
 
 
@@ -216,21 +217,47 @@ export default {
       axios.get(SERVER.URL + SERVER.ROUTES.checkreduplication + "/" + info.data)
         .then ((res) => {
           if(res.data.isSuccess){
-            alert(true)
-            return(true)
+             const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'error',
+            title: "중복된 사번입니다."
+          })
+          return(true)
           }
-          alert(false)
+           const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            onOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+           })
+           Toast.fire({
+            icon: 'success',
+            title: "중복되지 않은 사번입니다."
+          })
           return false
         })
         .catch (err =>{
           console.log(err.response)
-          alert(true)
           return true
         })
     },
     clickEmpNumCheck(){
       if( this.duplicateBtn){
-        alert(this.signupData.empNum)
         this.isDuplicated = this.checkEmpNum(this.signupData.empNum);
       }
     }

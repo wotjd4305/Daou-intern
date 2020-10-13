@@ -5,9 +5,10 @@
       v-for="(item, idx) in recvList"
       :key="idx"
     >
-      <strong>{{ item.userName }}</strong> :
-      <div class="my_arrow_box mr-5 mt-2"> {{ item.content }} </div>
-      <div class="other_arrow_box ml-5 mt-2"> {{ item.content }} </div>
+      <strong class="text-left" v-if="isMyMessage(item.senderId)">나</strong>
+      <strong v-if="!isMyMessage(item.senderId)">상대</strong>
+      <div v-if="isMyMessage(item.senderId)" class="my_arrow_box mr-5 mt-2"> {{ item.content }} </div>
+      <div v-else class="other_arrow_box ml-5 mt-2"> {{ item.content }} </div>
     </div>
     
   
@@ -35,28 +36,45 @@
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
+import Swal from 'sweetalert2'
+import { mapActions, mapState } from 'vuex'
+
+function ChatRes(chatroomId, currUserId, otherUserId, otherUserName, otherUserImage){
+
+    this.chatroomId = chatroomId;// property
+    this.currUserId = currUserId;  // property
+    this.otherUserId = otherUserId; // property
+    this.otherUserName = otherUserName;  // property
+    this.otherUserImage = otherUserImage; // property
+}
 export default {
   name: 'Chat',
   data() {
     return {
-      userName: "",
       message: "",
-      recvList: []
+      recvList: [],
+      res : [],
     }
   },
   created() {
-    // App.vue가 생성되면 소켓 연결을 시도합니다.
-    //this.connect()
+    this.findMyAccount()
+  },
+  computed:{
+        ...mapState(['myaccount']),
   },
   methods: {
+    ...mapActions(['findMyAccount']),
+    isMyMessage(msgId){
+      return msgId == this.myaccount.userId;
+    },
     sendMessage (e) {
-      if(e.keyCode === 13 && this.userName !== '' && this.message !== ''){
+      if(e.keyCode === 13 && this.message !== ''){
         this.send()
         this.message = ''
       }
     },
     sendMessageBtn () {
-      if(this.userName !== '' && this.message !== ''){
+      if(this.message !== ''){
         this.send()
         this.message = ''
       }
@@ -64,14 +82,18 @@ export default {
     send() {
       console.log("Send message:" + this.message);
       if (this.stompClient && this.stompClient.connected) {
-        const msg = { 
-          userName: this.userName,
-          content: this.message 
+        var msg = { 
+            chatroomId: this.res.chatroomId,
+            senderId: this.res.currUserId,
+            receiverId: this.res.otherUserId,
+            content: this.message,
+            sendTime : new Date(),
+            receiveTime : null,
         };
-        this.stompClient.send("/receive", JSON.stringify(msg), {});
+        this.stompClient.send("/pub/message", JSON.stringify(msg));
       }
     },    
-    connect() {
+    connect(receivedRes) {
       const serverURL = "http://localhost:8080/ws"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
@@ -82,7 +104,7 @@ export default {
           // 소켓 연결 성공
           this.connected = true;
           console.log('소켓 연결 성공', frame);
-          this.stompClient.subscribe("/send", res => {
+          this.stompClient.subscribe("/sub/"+ receivedRes.chatroomId , res => {
             console.log('구독으로 받은 메시지 입니다.', res.body);
             this.recvList.push(JSON.parse(res.body))
           });
@@ -94,9 +116,24 @@ export default {
         }
       );        
     },
-    child(value){
-      alert(value + " 자식이 받아왔어!")
-      this.connect()
+    child(req){
+      this.res = new ChatRes(req.chatroomId, req.currUserId, req.otherUserId, req.otherUserName, req.otherUserImage);
+      const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+             })
+             Toast.fire({
+              icon: 'success',
+              title: req.otherUserName +"님과의 채팅이 시작되었습니다."
+            })
+      this.connect(this.res)
     },
   }
 }
