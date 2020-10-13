@@ -63,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				order by date desc limit #{pageStart}, #{perPageNum}
 				) sub
 		where sub.item_id = i.item_id and i.user_id = u.user_id
+		order by i.date desc
 	</select>
 	
 	<select id="getItemsByCategory" parameterType="itemSearchRequest" resultMap="itemResponse">
@@ -75,7 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 			#{cate}
 				</foreach>)
                 order by date desc limit #{cri.pageStart}, #{cri.perPageNum}) tmp
-		where i.item_id = tmp.item_id and (i.user_id = u.user_id);
+		where i.item_id = tmp.item_id and (i.user_id = u.user_id)
+		order by i.date desc
 	</select>
 	
 	<select id="getItemsByKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
@@ -86,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 where (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')) and delflag = 0
                 order by date desc limit #{cri.pageStart}, #{cri.perPageNum}) tmp
 		where i.item_id = tmp.item_id and u.user_id = i.user_id
+		order by i.date desc
 	</select>
 	
 	<select id="getItemsByCategoryAndKeyword" parameterType="itemSearchRequest" resultMap="itemResponse">
@@ -100,6 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</foreach>)
                 order by date desc limit #{cri.pageStart}, #{cri.perPageNum}) tmp
 		where i.item_id = tmp.item_id and u.user_id = i.user_id
+		order by i.date desc
 	</select>
 	
 	<select id="getItemsByUserId" parameterType="long" resultMap="itemResponse">
