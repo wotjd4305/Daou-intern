@@ -12,10 +12,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 	
 	<select id="getFavoriteList" parameterType="int" resultType="itemResponse">
-		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.delflag, i.date
-		from item i, favorite f
-		where f.user_id = #{userId} and i.item_id = f.item_id and delflag = 0
-		order by date desc
+		select i.item_id, i.user_id, i.title, i.price, i.content, i.category, i.status, i.date 
+		from (select * from item where delflag = 0) as i, (select item_id, date from favorite where user_id = #{userId}) as f 
+		where f.item_id = i.item_id 
+		order by f.date desc
 	</select>
 	
 	<select id="isFavorited" parameterType="itemInfoRequest" resultType="boolean">
