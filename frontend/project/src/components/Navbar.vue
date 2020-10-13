@@ -2,7 +2,7 @@
   <div id="navigationBar">
 
    <!-- 채팅 사이드바 -->
-    <b-sidebar id="sidebar-right" right shadow no-header>
+    <b-sidebar  id="sidebar-right" right shadow no-header>
       <div class="col-1">
           <div v-b-toggle.sidebar-right style="outline:none;">
             <img
@@ -12,26 +12,15 @@
                 >
           </div>
       </div>
-      <div>
-        <b-card no-body>
-          <b-tabs pills m-3 card  class="m-3" align="center">
-              <b-tab title="채팅1">
-                <Chat/>
+      <div  >
+        <b-card style="display:block" no-body>
+          <div >
+          <b-tabs  pills m-3 card  class="m-3" align="center">
+              <b-tab v-for="(chatroom,idx) in chatingRooms" :key="idx"  @click="chating(idx)" :title=chatroom.entity.otherUserName>
+                <Chat ref="chat" />
               </b-tab>
-              <b-tab title="채팅2">
-                <Chat/>
-              </b-tab>
-              <b-tab title="채팅2">
-                <Chat/>
-              </b-tab>
-              <b-tab title="채팅2">
-                <Chat/>
-              </b-tab>
-              <b-tab title="채팅2">
-                <Chat/>
-              </b-tab>
-            
           </b-tabs>
+          </div>
         </b-card>
       </div> 
     </b-sidebar>
@@ -91,7 +80,7 @@
                   </b-dropdown-item>
                   
                   <b-dropdown-item v-b-toggle.sidebar-right href="#" >
-                    <div class="drop-down-item-text text-right mr-2"> 채팅</div>
+                    <div @click="test()" class="drop-down-item-text text-right mr-2"> 채팅</div>
                     <!--
                     <b-modal id="chat" hide-footer>
                       <template v-slot:modal-title>채팅 테스트</template>
@@ -143,16 +132,28 @@ export default {
    },
   computed: {
      ...mapState(['myaccount','authToken']),
+     ...mapState('chatStore',['chatingRooms']),
+     
   },
   created(){
+    this.getChatingRooms(this.myaccount.userId);
   },
   methods: {
      ...mapActions(['logout']),
+     ...mapActions('chatStore',['getChatingRooms']),
+
        goToChatTest(){
       this.$router.push({ name: "Chat" });
     },
     goToHome(){
       this.$router.push({name:"Home"})
+    },
+    chating(idx){
+      alert("여긴채팅")
+      this.$refs.chat[idx].child(idx);
+    },
+    test(){
+      this.getChatingRooms(this.myaccount.userId);
     }
   },
 };
@@ -250,5 +251,8 @@ export default {
   color:black; 
   font-weight:bold;
 }
-
+.nav{
+  display: block !important;
+  text-align: left;
+}
 </style>

@@ -204,7 +204,7 @@
             </div>
             <!-- 메시지 버튼 -->
             <div class ="mt-5 mb-5 msg-button-div align-self-center">
-                <button v-if="!isWriter()" class="align-self-center btn ml-1 msg-button" >메시지 보내기</button>
+                <button v-if="!isWriter()" @click="clickMakeChatingRoom()" class="align-self-center btn ml-1 msg-button" >메시지 보내기</button>
             </div>
             <!--/ 메시지 버튼 -->
         </div>
@@ -243,6 +243,11 @@ function upDateStatusReq(itemId, status){
 function favoriteReq(userId , itemId){
     this.userId = userId,  // property
 	this.itemId = itemId; // property
+}
+function makeChatReq(buyerId , itemId, sellerId){
+    this.buyerId = buyerId,  // property
+    this.itemId = itemId, // property
+    this.sellerId = sellerId;  // property
 }
 
 export default {
@@ -291,6 +296,7 @@ export default {
         ...mapActions('itemStore', ['getDetailItem', 'updateDetailItem','postFavoriteItemById','deleteFavoriteItemById','updateItemStatus']),
         ...mapActions('categoryStore', ['fetchItemCategory']),
         ...mapActions(['findMyAccount']),
+        ...mapActions('chatStore', ['postChatingRoom','getChatingRooms']),
 
     //디테일의 작성자 판단
     isWriter(){
@@ -366,7 +372,7 @@ export default {
         this.isUpdateChecked = !this.isUpdateChecked;
         return this.isUpdateChecked;
     },
-    clickFavorite(itemId, isFavorite){
+    clickFavorite(itemId){
             let req = new favoriteReq(this.myaccount.userId, itemId);
             
             if(this.detailitem.favorite){//좋아요 눌러져있으면
@@ -388,7 +394,13 @@ export default {
     },
     clickChangeStatus(){
         this.isClickedStatus = !this.isClickedStatus;
-    }
+    },
+    async clickMakeChatingRoom(){
+        let req = new makeChatReq(this.myaccount.userId, this.itemId, this.detailitem.userId )
+        await this.postChatingRoom(req);
+
+        this.getChatingRooms(this.myaccount.userId);
+    },
     }
 }
 </script>
