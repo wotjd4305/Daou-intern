@@ -38,8 +38,8 @@ function connect(event) {
 
 function onConnected() {
 //    stompClient.subscribe('/sub/', onMessageReceived);
- 	stompClient.subscribe('/sub/' + chatroom, onMessageReceived);
-
+     stompClient.subscribe('/sub/' + chatroom, onMessageReceived);
+     
     connectingElement.classList.add('hidden');
 }
 

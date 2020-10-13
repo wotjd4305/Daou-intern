@@ -388,16 +388,16 @@ export default {
         },
     clickSelector(input){
         
-        alert(this.$itemStatusReverse(input))
+        //alert(this.$itemStatusReverse(input))
         let req = new upDateStatusReq(this.itemId, this.$itemStatusReverse(input));
         this.updateItemStatus(req);
     },
     clickChangeStatus(){
         this.isClickedStatus = !this.isClickedStatus;
     },
-    async clickMakeChatingRoom(){
+     clickMakeChatingRoom(){
         let req = new makeChatReq(this.myaccount.userId, this.itemId, this.detailitem.userId )
-        await this.postChatingRoom(req);
+         this.postChatingRoom(req);
 
         this.getChatingRooms(this.myaccount.userId);
     },

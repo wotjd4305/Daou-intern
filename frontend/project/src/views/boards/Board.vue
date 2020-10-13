@@ -220,6 +220,12 @@ export default {
         this.makePaging(this.pages.startPage, this.pages.endPage);
     
       }
+    },
+    checkedNames:{
+        depp:true,
+        handler(){
+            this.clickSearchByKeyword(this.inputText);
+        }
     }
   },
     created(){
@@ -239,6 +245,8 @@ export default {
     
         this.serverPath = SERVER.IMAGE_STORE,
         this.dateFormat = "YYYY-MM-DD hh-mm-ss";
+
+        //
         
 
     },

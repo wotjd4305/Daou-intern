@@ -16,7 +16,8 @@
         <b-card style="display:block" no-body>
           <div >
           <b-tabs  pills m-3 card  class="m-3" align="center">
-              <b-tab v-for="(chatroom,idx) in chatingRooms" :key="idx"  @click="chating(idx)" :title=chatroom.entity.otherUserName>
+              <b-tab v-for="(chatroom,idx) in chatingRooms" :key="idx"  @click="chating(idx, chatroom.chatroomId, 
+              chatroom.currUserId , chatroom.otherUserId ,chatroom.entity.otherUserName, chatroom.entity.otherUserImage)" :title = chatroom.entity.otherUserName + >
                 <Chat ref="chat" />
               </b-tab>
           </b-tabs>
@@ -118,6 +119,28 @@
 import { mapState,mapActions } from 'vuex'
 import Chat from "../views/chat/Chat.vue"
 
+
+
+function ChatReq(chatroomId, currUserId, otherUserId, otherUserName, otherUserImage){
+
+    this.chatroomId = chatroomId;// property
+    this.currUserId = currUserId;  // property
+    this.otherUserId = otherUserId; // property
+    this.otherUserName = otherUserName;  // property
+    this.otherUserImage = otherUserImage; // property
+}
+
+ ChatReq.prototype.toString = function()
+ {
+   console.log(this.chatroomId);
+   console.log(this.currUserId);
+   console.log(this.otherUserId);
+   console.log(this.otherUserImage);
+   console.log(this.otherUserImage);
+ }
+
+
+
 export default {
   
   data: function() {
@@ -148,9 +171,10 @@ export default {
     goToHome(){
       this.$router.push({name:"Home"})
     },
-    chating(idx){
-      alert("여긴채팅")
-      this.$refs.chat[idx].child(idx);
+    chating(idx, chatroomId, currUserId, otherUserId,otherUserName,otherUserImage){
+      let req = new ChatReq(chatroomId, currUserId, otherUserId, otherUserName, otherUserImage);
+      console.log(req)
+      this.$refs.chat[idx].child(req);
     },
     test(){
       this.getChatingRooms(this.myaccount.userId);
