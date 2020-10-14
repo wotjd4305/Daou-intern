@@ -17,7 +17,7 @@
           <div >
           <b-tabs  pills m-3 card  class="m-3" align="center">
               <b-tab v-for="(chatroom,idx) in chatingRooms" :key="idx"  @click="chating(idx, chatroom.chatroomId, 
-              chatroom.currUserId , chatroom.otherUserId ,chatroom.entity.otherUserName, chatroom.entity.otherUserImage)" :title = chatroom.entity.otherUserName + >
+              chatroom.currUserId , chatroom.otherUserId ,chatroom.entity.otherUserName, chatroom.entity.otherUserImage)" :title = chatroom.entity.otherUserName>
                 <Chat ref="chat" />
               </b-tab>
           </b-tabs>
