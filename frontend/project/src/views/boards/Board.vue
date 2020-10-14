@@ -211,6 +211,7 @@ export default {
        pageArray:[],
        pageNumTemp:1,
        
+       
       };
     },
       watch: {
@@ -222,7 +223,7 @@ export default {
       }
     },
     checkedNames:{
-        depp:true,
+        deep:true,
         handler(){
             this.clickSearchByKeyword(this.inputText);
         }
