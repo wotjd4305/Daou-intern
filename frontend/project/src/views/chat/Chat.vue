@@ -54,6 +54,7 @@ export default {
       message: "",
       recvList: [],
       res : [],
+      stompClient : "",
     }
   },
   created() {
@@ -96,25 +97,29 @@ export default {
     connect(receivedRes) {
       const serverURL = "http://localhost:8080/ws"
       let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
-      this.stompClient.connect(
-        {},
-        frame => {
-          // 소켓 연결 성공
-          this.connected = true;
-          console.log('소켓 연결 성공', frame);
-          this.stompClient.subscribe("/sub/"+ receivedRes.chatroomId , res => {
-            console.log('구독으로 받은 메시지 입니다.', res.body);
-            this.recvList.push(JSON.parse(res.body))
-          });
-        },
-        error => {
-          // 소켓 연결 실패
-          console.log('소켓 연결 실패', error);
-          this.connected = false;
-        }
-      );        
+      
+      //메시지 중복 제거, 중복연결..
+      if(!this.stompClient){
+        this.stompClient = Stomp.over(socket);
+        console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+        this.stompClient.connect(
+          {},
+          frame => {
+            // 소켓 연결 성공
+            this.connected = true;
+            console.log('소켓 연결 성공', frame);
+            this.stompClient.subscribe("/sub/"+ receivedRes.chatroomId , res => {
+              console.log('구독으로 받은 메시지 입니다.', res.body);
+              this.recvList.push(JSON.parse(res.body))
+            });
+          },
+          error => {
+            // 소켓 연결 실패
+            console.log('소켓 연결 실패', error);
+            this.connected = false;
+          }
+        );    
+      }    
     },
     child(req){
       this.res = new ChatRes(req.chatroomId, req.currUserId, req.otherUserId, req.otherUserName, req.otherUserImage);
@@ -133,7 +138,8 @@ export default {
               icon: 'success',
               title: req.otherUserName +"님과의 채팅이 시작되었습니다."
             })
-      this.connect(this.res)
+
+        this.connect(this.res)
     },
   }
 }
