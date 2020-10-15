@@ -58,7 +58,7 @@ public class ItemTest {
 		assertEquals(expectedCnt, actualCnt);
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void testGetCount_물건개수확인() {
 		assertEquals(itemDao.getCount(), 0);
