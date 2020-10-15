@@ -182,6 +182,18 @@
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 
+
+import Debounce from '@/debounceM.js'
+
+(function(j,en,ni,fer) {
+        j['dmndata']=[];j['jenniferFront']=function(args){window.dmndata.push(args)};
+        j['dmnaid']=fer;j['dmnatime']=new Date();j['dmnanocookie']=false;j['dmnajennifer']='JENNIFER_FRONT@INTG';
+        var b=Math.floor(new Date().getTime() / 60000) * 60000;var a=en.createElement(ni);
+        a.src='https://d-collect.jennifersoft.com/'+fer+'/demian.js?'+b;a.async=true;
+        en.getElementsByTagName(ni)[0].parentNode.appendChild(a);
+    }(window,document,'script','b48dc09b'));
+
+
 function searchAllReq(userId, keyword, page=1, category){
     this.userId = userId;
 	this.keyword = keyword, // property
@@ -196,6 +208,8 @@ function favoriteReq(userId, itemId){
 
 
 export default {
+    
+    mixins:[Debounce],
     name:"Board",
     props:
         ["searchtextparam"]
@@ -313,17 +327,28 @@ export default {
 
              this.pageNumTemp = pageNum;
         },
-        clickFavorite(itemId, isFavorite){
+         clickFavorite(itemId,isFavorite){
+        this.debounce(() => {
+          this.clickFavoriteDebounce(itemId,isFavorite);
+        }, 250);
+         },
+        async clickFavoriteDebounce(itemId, isFavorite){
             let req = new favoriteReq(this.myaccount.userId, itemId);
             
-            if(isFavorite){//좋아요 눌러져있으면
-                this.deleteFavoriteItemById(req);
+            try{
+                if(isFavorite){//좋아요 눌러져있으면
+                    await this.deleteFavoriteItemById(req);
+                }
+                else{// 좋아요 안눌러져있으면
+                    await this.postFavoriteItemById(req);
+                }
+            }catch{
+                alert("에러")
+            }finally{
+                
+                let req2 = new searchAllReq(this.myaccount.userId,this.inputText, this.pageNumTemp, this.checkedNames)
+                this.getItemByKeyword(req2);
             }
-            else{// 좋아요 안눌러져있으면
-                this.postFavoriteItemById(req);
-            }
-            let req2 = new searchAllReq(this.myaccount.userId,this.inputText, this.pageNumTemp, this.checkedNames)
-            this.getItemByKeyword(req2);
         }
     },
 }

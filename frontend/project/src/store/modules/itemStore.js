@@ -119,6 +119,7 @@ const itemStore = {
 
     //모든 아이템 검색
     patchAllItem({commit}, info){
+
         console.log("before : patchAllItem - " + info.location)
         console.log("before : patchAllItem - " + info.data.userId)
         
@@ -126,6 +127,7 @@ const itemStore = {
             {params:{userId:info.data.userId, page:info.data.page}},
           )
           .then(res => {
+          
           console.log("after : patchAllItem - " + res.data.isSuccess)
           
             if(res.data.isSuccess){
@@ -165,10 +167,17 @@ const itemStore = {
         console.log("before : patchDetailItem - " + info.data.itemId)
         console.log("before : patchDetailItem - " + info.data.userId)
         
+        var d1 = new Date();
+        var beforeTime = d1.getTime()
+
         axios.get(SERVER.URL + info.location + "/" + info.data.itemId , 
             {params:{userId:info.data.userId}},
           )
           .then(res => {
+            var d2 = new Date();
+            var afterTime = d2.getTime()
+
+          console.log("after : patchDetailItem - Time : " + (afterTime - beforeTime))
           console.log("after : patchDetailItem - " + res.data.data.favorite)
           
             if(res.data.isSuccess){
@@ -242,11 +251,12 @@ const itemStore = {
        async patchItemByKeyword({commit}, info){
         console.log("before : patchItemByKeyword - " + info.location)
         console.log("before : patchItemByKeyword - " + info.data.keyword)
-
         
+        var d1 = new Date();
+        var beforeTime = d1.getTime()
+
         try{
             commit("SET_LOADING_STATE",true);
-
             
             let categoryListStr ="";
             for(var i=0; i<info.data.category.length; i++){
@@ -257,7 +267,12 @@ const itemStore = {
             await axios.get(SERVER.URL + info.location + "?"+ categoryListStr,
                 {params:{userId: info.data.userId, keyword : info.data.keyword, page : info.data.page}})
               .then(res => {
+                var d2 = new Date();
+                var afterTime = d2.getTime();
+
+              console.log("after : patchItemByKeyword - Time : " + (afterTime - beforeTime))
               console.log("after : patchItemByKeyword - " + res.data.data)
+              
               
                 if(res.data.isSuccess){
                     commit("SET_ITEMS", res.data.data)
@@ -335,6 +350,7 @@ const itemStore = {
     patchFavoriteItemById({commit}, info){
         console.log("before : patchFavoriteItemById - " + info.location)
         console.log("before : patchFavoriteItemById - " + info.data)
+        
 
         axios.get(SERVER.URL + info.location + "/" + info.data)
           .then(res => {
@@ -370,8 +386,15 @@ const itemStore = {
         console.log("before : patchPostFavoriteItemById - " + info.location)
         console.log("before : patchPostFavoriteItemById - " + info.data.userId + " - " + info.data.itemId)
 
+        var d1 = new Date();
+        var beforeTime = d1.getTime()
+
         axios.post(SERVER.URL + info.location,  info.data)
           .then(res => {
+          var d2 = new Date();
+          var afterTime = d2.getTime()
+          
+          console.log("after : patchPostFavoriteItemById - Time : " + (afterTime - beforeTime))
           console.log("after : patchPostFavoriteItemById - " + SERVER.URL + info.location)
           
             if(res.data.isSuccess){
@@ -403,8 +426,15 @@ const itemStore = {
         console.log("before : patchDeleteFavoriteItemById - " + info.location)
         console.log("before : patchDeleteFavoriteItemById - " + info.data)
 
+        var d1 = new Date();
+        var beforeTime = d1.getTime()
+
         axios.delete(SERVER.URL + info.location + "/" + info.data.itemId + "/" + info.data.userId)
           .then(res => {
+          var d2 = new Date();
+          var afterTime = d2.getTime()
+          
+          console.log("after : patchDeleteFavoriteItemById - Time : " + (afterTime - beforeTime))
           console.log("after : patchDeleteFavoriteItemById - " + SERVER.URL + info.location + "/" + info.data.itemId + "/" + info.data.userId)
           
             if(res.data.isSuccess){

@@ -1,7 +1,7 @@
 # 다우마켓 - 온새미로
 ## About DaouMarket
 
-![](./images/daoumarket_item.png)
+![](./images/daoumarket_image.gif)
 
 다우기술의 임직원들을 위한 '다우마켓'으로 뜨거운 정을 나누자!
 
