@@ -28,8 +28,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ---
 
-Debounce
-validation
+Debounce  
+validation  
 axios
 async await
 filter
