@@ -27,9 +27,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ---
 
-### 사용 기술 및 라이브러리
-
----
+### 사용 기술 및 라이브러리  
 
 Debounce  
 validation  
