@@ -30,26 +30,26 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 Debounce  
 validation  
-axios
-async await
-filter
+axios  
+async await  
+filter  
 
 ---
 
-sweetalert2
-vue-cookies
-bootstrap-vue
-vue-carousel-3d
-mixin
-scoped
-store
-router nav guard
+sweetalert2  
+vue-cookies  
+bootstrap-vue  
+vue-carousel-3d  
+mixin  
+scoped  
+store  
+router nav guard  
 
 ---
 
-vuex-persistedstate
-vuex
-bootstrap
-moment
+vuex-persistedstate  
+vuex  
+bootstrap  
+moment  
 
 ---
