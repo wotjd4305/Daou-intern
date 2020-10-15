@@ -54,17 +54,18 @@ public class ImageService implements IImageService {
     		String imageName = images[i].getOriginalFilename();
     		String imageExtension = FilenameUtils.getExtension(imageName).toLowerCase();
     		File destinationImage;
-    		String destinationImageName;
+    		String newImageName;
     		String imageUrl = SAVE_FOLDER;
     		
-    		SimpleDateFormat timeFormat = new SimpleDateFormat("yyMMddHHmmss");
-    		destinationImageName = timeFormat.format(new Date()) + "_" + (i+1) + "." + imageExtension;
-    		destinationImage = new File(imageUrl + destinationImageName);
+    		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    		newImageName = UUID.randomUUID().toString() + "-" + timeFormat.format(new Date()) + "." + imageExtension;
     		
-    		log.info("Image uploaded : {}", destinationImageName);
+    		destinationImage = new File(imageUrl + newImageName);
+    		
+    		log.info("Image uploaded : {}", newImageName);
     		try {
     			images[i].transferTo(destinationImage);
-    			picture[i] = destinationImageName;
+    			picture[i] = newImageName;
     		} catch (RuntimeException | IOException e) {
     			log.error("파일 업로드에 실패했습니다.");
     			return 0;
@@ -157,9 +158,9 @@ public class ImageService implements IImageService {
 		
 		for (int i = 0; i < image.length; i++) {
 			String nowExtension = FilenameUtils.getExtension(image[i].getOriginalFilename()).toLowerCase();
+			
 			if(!imageExtention.contains(nowExtension))
 				return false;
-			
 			
 			String fileName = image[i].getOriginalFilename();
 			
