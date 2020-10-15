@@ -80,16 +80,8 @@
                     </b-nav-item>
                   </b-dropdown-item>
                   
-                  <b-dropdown-item v-b-toggle.sidebar-right href="#" >
-                    <div @click="test()" class="drop-down-item-text text-right mr-2"> 채팅</div>
-                    <!--
-                    <b-modal id="chat" hide-footer>
-                      <template v-slot:modal-title>채팅 테스트</template>
-                      <div class="d-block text-center">
-                        <Chat />
-                      </div>
-                    </b-modal> -->
-
+                  <b-dropdown-item @click="ClickMakeChatingRooms()" v-b-toggle.sidebar-right href="#" >
+                    <div  class="drop-down-item-text text-right mr-2"> 채팅</div>
                     <div v-b-toggle.sidebar-right style="outline:none;">
                       
                     </div>
@@ -176,7 +168,7 @@ export default {
       console.log(req)
       this.$refs.chat[idx].child(req);
     },
-    test(){
+    ClickMakeChatingRooms(){
       this.getChatingRooms(this.myaccount.userId);
     }
   },

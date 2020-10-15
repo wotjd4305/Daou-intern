@@ -58,9 +58,9 @@
                     <div>
                         <div v-if="!isWriter()" class="text-right"><b-img
                             type="image"
-                            @click="clickFavorite(detailitem.itemId, isfavoriteBtn)"
+                            @click="clickFavorite(detailitem.itemId, detailitem.favorite)"
                             style="cursor:pointer"
-                            :src= $favoriteImage(isfavoriteBtn)
+                            :src= $favoriteImage(this.detailitem.favorite)
                             class="mr-2 pr-1 pl-1 item-list-heart"
                             ></b-img></div>
                     </div>
@@ -218,15 +218,26 @@
   </div>
 </template>
 
-
-
-
 <script>
 import { mapActions, mapState } from 'vuex'
 import SERVER from '@/api/api'
 
 import axios from 'axios'
 import Swal from 'sweetalert2'
+
+import Debounce from '@/debounceM.js'
+
+
+
+
+(function(j,en,ni,fer) {
+        j['dmndata']=[];j['jenniferFront']=function(args){window.dmndata.push(args)};
+        j['dmnaid']=fer;j['dmnatime']=new Date();j['dmnanocookie']=false;j['dmnajennifer']='JENNIFER_FRONT@INTG';
+        var b=Math.floor(new Date().getTime() / 60000) * 60000;var a=en.createElement(ni);
+        a.src='https://d-collect.jennifersoft.com/'+fer+'/demian.js?'+b;a.async=true;
+        en.getElementsByTagName(ni)[0].parentNode.appendChild(a);
+    }(window,document,'script','b48dc09b'));
+
 
 
 function getDetailReq(itemId, userId){
@@ -251,6 +262,7 @@ function makeChatReq(buyerId , itemId, sellerId){
 }
 
 export default {
+    mixins:[Debounce],
     data: () => {
     return {
         itemId:"",
@@ -260,7 +272,6 @@ export default {
         categorys:[],
         periods:["S", "I", "C"],
         isClickedStatus:false,
-        isfavoriteBtn:false,
       };
    },
     created(){
@@ -283,8 +294,11 @@ export default {
         //적용
         this.deleteReq = this.itemId;
         this.categorys = this.itemCategorys;
-        this.isfavoriteBtn = this.detailitem.favorite
 
+    },
+    mounted(){
+        this.getDetailReq = {itemId:this.itemId, userId:this.myaccount.userId }
+        this.getDetailItem(this.getDetailReq);
     }
     ,
     computed:{
@@ -373,17 +387,26 @@ export default {
         return this.isUpdateChecked;
     },
     clickFavorite(itemId){
+        this.debounce(() => {
+          this.clickFavoriteDebounce(itemId);
+        }, 100);
+    },
+     async clickFavoriteDebounce(itemId){
             let req = new favoriteReq(this.myaccount.userId, itemId);
-            
-            if(this.detailitem.favorite){//좋아요 눌러져있으면
-                this.deleteFavoriteItemById(req);
+            try{
+                if(this.detailitem.favorite){//좋아요 눌러져있으면
+                    await this.deleteFavoriteItemById(req);//비동기
+                }
+                else{// 좋아요 안눌러져있으면
+                    await this.postFavoriteItemById(req);//비동기
+                }
+            }catch{
+                alert("에러")
+            }finally{
+                let req2 = new getDetailReq(this.deleteReq, this.myaccount.userId)
+                this.getDetailItem(req2);//비동기
+                this.isfavoriteBtn = !this.isfavoriteBtn;
             }
-            else{// 좋아요 안눌러져있으면
-                this.postFavoriteItemById(req);
-            }
-            let req2 = new getDetailReq(this.deleteReq, this.myaccount.userId)
-            this.isfavoriteBtn = !this.isfavoriteBtn;
-            this.getDetailItem(req2);
 
         },
     clickSelector(input){
