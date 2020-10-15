@@ -46,7 +46,8 @@
 
   - ##### Vue.js
 
-    - lowerCamelCase  
+    - lowerCamelCase : 메소드, 변수  
+    - UpperCamelCase : Vue
 
 - ##### Back-End  
 
