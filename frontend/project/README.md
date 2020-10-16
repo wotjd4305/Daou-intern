@@ -50,7 +50,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 [3] sudo git clone [ 주소 ]
 
-[4] sudo npm run serve | sudo npm run build(nginx로 build 파일 연동 시 선택)
-
+[4] sudo npm run serve | sudo npm run build(nginx로 build 파일 연동 시 선택)  
+  
+[배포 참고 자료](https://jay-ji.tistory.com/57)
 
 
