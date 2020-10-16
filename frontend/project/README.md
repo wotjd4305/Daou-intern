@@ -1,56 +1,56 @@
 # project
 
 ## Project setup
+
 ```
 npm install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
 npm run serve
 ```
 
 ### Install more library
+
 실행이 안될 시, Console에 찍히는 필요한 라이브러리 설치.
+
 ```
 npm install 'library name'
 ```
 
 
 ### Customize configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
----  
 
-### 트래픽 확인 사이트
-[제니퍼 프론트](https://front.jennifersoft.com/).  
 
----
+## 배포 순서
 
-### 사용 기술 및 라이브러리  
+### <u>**build 파일로 배포하기**</u>
 
-Debounce  
-validation  
-axios  
-async await  
-filter  
+[1] npm install ...
 
----
+[2] npm run build
+ -> dist 파일 생성 확인
 
-sweetalert2  
-vue-cookies  
-bootstrap-vue  
-vue-carousel-3d  
-mixin  
-scoped  
-store  
-router nav guard  
+[3] dist 파일 압축
 
----
+[4] sftp로 로컬서버에 전달 후 압축 풀기
 
-vuex-persistedstate  
-vuex  
-bootstrap  
-moment  
 
----
+
+### **<u>Git clone으로 배포하기</u>**
+
+[1] sudo apt-get install git
+
+[2] sudo apt-get npm
+
+[3] sudo git clone [ 주소 ]
+
+[4] sudo npm run serve | sudo npm run build(nginx로 build 파일 연동 시 선택)
+
+
+
